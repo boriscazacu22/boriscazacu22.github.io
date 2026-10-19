@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Greutatea mea</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root {
+  --bg: var(--tg-theme-bg-color, #ffffff);
+  --bg2: var(--tg-theme-secondary-bg-color, #f2f3f5);
+  --text: var(--tg-theme-text-color, #111111);
+  --hint: var(--tg-theme-hint-color, #8a8f98);
+  --link: var(--tg-theme-link-color, #2481cc);
+  --btn: var(--tg-theme-button-color, #2481cc);
+  --btn-text: var(--tg-theme-button-text-color, #ffffff);
+  --good: #2eb872;
+  --bad: #e5534b;
+  --line: color-mix(in srgb, var(--text) 10%, transparent);
+  --radius: 16px;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; background: var(--bg2); color: var(--text);
+  font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+main { max-width: 560px; margin: 0 auto; padding: 12px 12px 0; }
+.view { display: none; } .view.active { display: block; }
+.card { background: var(--bg); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--hint); margin: 0 0 12px; font-weight: 600; }
+.hero { text-align: center; padding: 20px 16px; }
+.hero .big { font-size: 52px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; }
+.hero .big small { font-size: 20px; font-weight: 500; color: var(--hint); margin-left: 4px; }
+.hero .sub { color: var(--hint); margin-top: 4px; font-size: 14px; }
+.pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; margin-top: 8px; background: var(--bg2); }
+.pill.good { color: var(--good); } .pill.bad { color: var(--bad); }
+
+.entry { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.entry button.step { width: 48px; height: 48px; border-radius: 50%; border: 0; background: var(--bg2); color: var(--text); font-size: 26px; cursor: pointer; }
+.entry input[type=number] { width: 130px; text-align: center; font-size: 36px; font-weight: 700; border: 0; background: transparent; color: var(--text); outline: none; -moz-appearance: textfield; }
+.entry input::-webkit-outer-spin-button, .entry input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.row { display: flex; gap: 8px; margin-top: 12px; }
+input[type=date], input[type=text], input[type=number].field, select {
+  flex: 1; min-width: 0; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--bg2); color: var(--text); font: inherit; outline: none; }
+.btn { width: 100%; margin-top: 12px; padding: 14px; border: 0; border-radius: 14px; background: var(--btn); color: var(--btn-text);
+  font: inherit; font-weight: 600; cursor: pointer; }
+.btn.ghost { background: var(--bg2); color: var(--text); }
+.btn.danger { background: transparent; color: var(--bad); }
+.btn:active, .step:active { opacity: .7; }
+
+.chips { display: flex; gap: 6px; margin-bottom: 8px; }
+.chip { flex: 1; padding: 6px 0; text-align: center; border-radius: 10px; background: var(--bg2); font-size: 13px; font-weight: 600; cursor: pointer; border: 0; color: var(--text); }
+.chip.on { background: var(--btn); color: var(--btn-text); }
+#chartWrap { position: relative; height: 230px; touch-action: pan-y; }
+#chartWrap svg { width: 100%; height: 100%; display: block; }
+#tip { position: absolute; pointer-events: none; background: var(--text); color: var(--bg); padding: 4px 8px; border-radius: 8px; font-size: 12px; white-space: nowrap; transform: translate(-50%, -100%); opacity: 0; transition: opacity .1s; }
+.legend { display: flex; gap: 14px; font-size: 12px; color: var(--hint); margin-top: 6px; flex-wrap: wrap; }
+.legend i { display: inline-block; width: 14px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 4px; }
+.empty { color: var(--hint); text-align: center; padding: 40px 0; font-size: 14px; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat { background: var(--bg2); border-radius: 12px; padding: 12px; }
+.stat b { display: block; font-size: 20px; }
+.stat span { font-size: 12px; color: var(--hint); }
+
+.bar { height: 14px; border-radius: 7px; background: var(--bg2); overflow: hidden; margin: 8px 0; }
+.bar > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--btn), var(--good)); border-radius: 7px; transition: width .5s; }
+.between { display: flex; justify-content: space-between; font-size: 13px; color: var(--hint); }
+.label { font-size: 13px; color: var(--hint); margin: 12px 0 4px; display: block; }
+
+.item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+.item:last-child { border: 0; }
+.item .d { flex: 1; } .item .d small { display: block; color: var(--hint); font-size: 12px; }
+.item .w { font-weight: 700; margin-right: 12px; }
+.item .delta { font-size: 13px; width: 56px; text-align: right; color: var(--hint); }
+.item .x { border: 0; background: none; color: var(--hint); font-size: 18px; padding: 4px 8px; cursor: pointer; }
+
+nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--bg); border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom); }
+nav button { flex: 1; border: 0; background: none; padding: 10px 0 8px; color: var(--hint); font: inherit; font-size: 11px; cursor: pointer; }
+nav button span { display: block; font-size: 22px; line-height: 1.2; }
+nav button.on { color: var(--btn); }
+#toast { position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px);
+  background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 14px; opacity: 0; transition: .25s; pointer-events: none; z-index: 10; }
+#toast.show { opacity: 1; transform: translateX(-50%); }
+</style>
+</head>
+<body>
+<main>
+  <!-- ACASĂ -->
+  <section class="view active" id="v-home">
+    <div class="card hero">
+      <div class="big"><span id="curW">—</span><small class="unit">kg</small></div>
+      <div class="sub" id="curSub">Adaugă prima ta măsurătoare</div>
+      <div class="pill" id="curDelta" hidden></div>
+    </div>
+
+    <div class="card">
+      <h2 id="formTitle">Cântărire de azi</h2>
+      <div class="entry">
+        <button class="step" id="minus" aria-label="Scade">−</button>
+        <input type="number" id="wIn" inputmode="decimal" step="0.1" placeholder="0.0">
+        <button class="step" id="plus" aria-label="Crește">+</button>
+      </div>
+      <div class="row">
+        <input type="date" id="dIn">
+        <input type="text" id="nIn" placeholder="Notiță (opțional)" maxlength="60">
+      </div>
+      <button class="btn" id="save">Salvează</button>
+      <button class="btn ghost" id="cancelEdit" hidden>Anulează editarea</button>
+    </div>
+
+    <div class="card">
+      <h2>Evoluție</h2>
+      <div class="chips" id="chips">
+        <button class="chip" data-r="7">7z</button>
+        <button class="chip" data-r="30">30z</button>
+        <button class="chip" data-r="90">3 luni</button>
+        <button class="chip" data-r="365">1 an</button>
+        <button class="chip" data-r="0">Tot</button>
+      </div>
+      <div id="chartWrap"><div id="tip"></div></div>
+      <div class="legend">
+        <span><i style="color:var(--btn)"></i>Greutate</span>
+        <span><i style="color:var(--hint);border-top-style:dotted"></i>Medie 7 zile</span>
+        <span><i style="color:var(--good);border-top-style:dashed"></i>Obiectiv</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Statistici</h2>
+      <div class="grid" id="stats"></div>
+    </div>
+  </section>
+
+  <!-- OBIECTIV -->
+  <section class="view" id="v-goal">
+    <div class="card">
+      <h2>Progres spre obiectiv</h2>
+      <div id="goalProgress"><div class="empty">Setează un obiectiv mai jos.</div></div>
+    </div>
+    <div class="card">
+      <h2>Obiectiv</h2>
+      <label class="label" for="gTarget">Greutate țintă (<span class="unit">kg</span>)</label>
+      <input type="number" class="field" id="gTarget" inputmode="decimal" step="0.1" style="width:100%">
+      <label class="label" for="gStart">Greutate de start (<span class="unit">kg</span>) — gol = prima măsurătoare</label>
+      <input type="number" class="field" id="gStart" inputmode="decimal" step="0.1" style="width:100%">
+      <label class="label" for="gDate">Data țintă (opțional)</label>
+      <input type="date" id="gDate" style="width:100%">
+      <button class="btn" id="saveGoal">Salvează obiectivul</button>
+    </div>
+    <div class="card">
+      <h2>Profil</h2>
+      <label class="label" for="height">Înălțime (cm) — pentru IMC</label>
+      <input type="number" class="field" id="height" inputmode="numeric" placeholder="ex. 175" style="width:100%">
+      <label class="label" for="unitSel">Unitate</label>
+      <select id="unitSel" style="width:100%"><option value="kg">Kilograme (kg)</option><option value="lb">Livre (lb)</option></select>
+      <button class="btn" id="saveProfile">Salvează profilul</button>
+    </div>
+    <div class="card">
+      <h2>Date</h2>
+      <button class="btn ghost" id="exportCsv" style="margin-top:0">Copiază datele (CSV)</button>
+      <button class="btn danger" id="wipe">Șterge toate datele</button>
+    </div>
+  </section>
+
+  <!-- ISTORIC -->
+  <section class="view" id="v-hist">
+    <div class="card">
+      <h2>Istoric</h2>
+      <div id="list"><div class="empty">Nicio măsurătoare încă.</div></div>
+    </div>
+  </section>
+</main>
+
+<nav>
+  <button data-v="home" class="on"><span>⚖️</span>Acasă</button>
+  <button data-v="goal"><span>🎯</span>Obiectiv</button>
+  <button data-v="hist"><span>📋</span>Istoric</button>
+</nav>
+<div id="toast"></div>
+
+<script>
+(() => {
+'use strict';
+const tg = window.Telegram && Telegram.WebApp;
+if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('secondary_bg_color'); } catch (e) {} }
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const haptic = (t = 'light') => { try { tg.HapticFeedback.impactOccurred(t); } catch (e) {} };
+const hapticOk = () => { try { tg.HapticFeedback.notificationOccurred('success'); } catch (e) {} };
+
+/* ---------- Storage: Telegram CloudStorage (chunked per month) + localStorage fallback ---------- */
+const useCloud = !!(tg && tg.initData && tg.CloudStorage && tg.isVersionAtLeast && tg.isVersionAtLeast('6.9'));
+const LS = 'viowh:';
+const cloud = {
+  keys: () => new Promise((res, rej) => tg.CloudStorage.getKeys((e, k) => e ? rej(e) : res(k || []))),
+  get: ks => new Promise((res, rej) => ks.length ? tg.CloudStorage.getItems(ks, (e, v) => e ? rej(e) : res(v || {})) : res({})),
+  set: (k, v) => new Promise((res, rej) => tg.CloudStorage.setItem(k, v, (e, ok) => e ? rej(e) : res(ok))),
+  del: ks => new Promise((res, rej) => ks.length ? tg.CloudStorage.removeItems(ks, (e) => e ? rej(e) : res()) : res()),
+};
+const local = {
+  all() { const o = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith(LS)) o[k.slice(LS.length)] = localStorage.getItem(k); } return o; },
+  set(k, v) { localStorage.setItem(LS + k, v); },
+  del(ks) { ks.forEach(k => localStorage.removeItem(LS + k)); },
+};
+
+/* ---------- State ---------- */
+const state = {
+  entries: {},            // 'YYYY-MM-DD' -> {w (kg), n}
+  s: { unit: 'kg', height: null, goal: null }, // goal: {target, start, date}
+  range: 30, editing: null,
+};
+const KG2LB = 2.2046226218;
+const unit = () => state.s.unit;
+const toDisp = kg => unit() === 'kg' ? kg : kg * KG2LB;
+const fromDisp = v => unit() === 'kg' ? v : v / KG2LB;
+const fmt = (kg, d = 1) => toDisp(kg).toFixed(d);
+
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const today = () => ymd(new Date());
+const dayDiff = (a, b) => Math.round((parse(b) - parse(a)) / 864e5);
+const MONTHS = ['ian', 'feb', 'mar', 'apr', 'mai', 'iun', 'iul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+const fmtDate = (s, withYear) => { const d = parse(s); return `${d.getDate()} ${MONTHS[d.getMonth()]}` + (withYear ? ` ${d.getFullYear()}` : ''); };
+const sorted = () => Object.keys(state.entries).sort().map(d => ({ d, w: state.entries[d].w, n: state.entries[d].n || '' }));
+
+async function load() {
+  let raw = {};
+  try {
+    if (useCloud) { const keys = await cloud.keys(); raw = await cloud.get(keys); }
+    else raw = local.all();
+  } catch (e) { raw = local.all(); }
+  for (const [k, v] of Object.entries(raw)) {
+    try {
+      if (k === 's') Object.assign(state.s, JSON.parse(v));
+      else if (k.startsWith('e')) Object.assign(state.entries, JSON.parse(v));
+    } catch (e) {}
+  }
+}
+async function put(k, val) {
+  const str = JSON.stringify(val);
+  local.set(k, str);                       // always keep a local mirror
+  if (useCloud) { try { await cloud.set(k, str); } catch (e) { toast('Sincronizare eșuată'); } }
+}
+async function saveMonth(ym) {
+  const chunk = {};
+  for (const d in state.entries) if (d.startsWith(ym)) chunk[d] = state.entries[d];
+  if (Object.keys(chunk).length) await put('e' + ym, chunk);
+  else { local.del(['e' + ym]); if (useCloud) try { await cloud.del(['e' + ym]); } catch (e) {} }
+}
+const saveSettings = () => put('s', state.s);
+
+/* ---------- UI helpers ---------- */
+let toastT;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2000); }
+function confirmBox(msg) {
+  return new Promise(res => tg && tg.showConfirm ? tg.showConfirm(msg, res) : res(confirm(msg)));
+}
+function setView(v) {
+  $$('.view').forEach(e => e.classList.toggle('active', e.id === 'v-' + v));
+  $$('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  window.scrollTo(0, 0); haptic();
+  if (v === 'home') renderChart();
+}
+$$('nav button').forEach(b => b.onclick = () => setView(b.dataset.v));
+
+/* ---------- Analytics ---------- */
+function regressionSlopePerDay(list) {
+  if (list.length < 3) return null;
+  const t0 = list[0].d, xs = list.map(e => dayDiff(t0, e.d)), ys = list.map(e => e.w);
+  if (xs[xs.length - 1] - xs[0] < 6) return null;
+  const n = xs.length, mx = xs.reduce((a, b) => a + b) / n, my = ys.reduce((a, b) => a + b) / n;
+  let num = 0, den = 0;
+  xs.forEach((x, i) => { num += (x - mx) * (ys[i] - my); den += (x - mx) ** 2; });
+  return den ? num / den : null;
+}
+function streak(list) {
+  if (!list.length) return 0;
+  const set = new Set(list.map(e => e.d));
+  let c = new Date(); if (!set.has(ymd(c))) c.setDate(c.getDate() - 1);
+  let n = 0; while (set.has(ymd(c))) { n++; c.setDate(c.getDate() - 1); }
+  return n;
+}
+const bmiLabel = b => b < 18.5 ? 'Subponderal' : b < 25 ? 'Normal' : b < 30 ? 'Supraponderal' : 'Obezitate';
+function goalInfo(list) {
+  const g = state.s.goal; if (!g || !list.length) return null;
+  const cur = list[list.length - 1].w, start = g.start ?? list[0].w, target = g.target;
+  const total = start - target;
+  const progress = total === 0 ? 1 : Math.max(0, Math.min(1, (start - cur) / total));
+  return { cur, start, target, progress, remaining: cur - target, reached: total > 0 ? cur <= target : cur >= target };
+}
+
+/* ---------- Render ---------- */
+function renderAll() {
+  $$('.unit').forEach(e => e.textContent = unit());
+  renderHero(); renderStats(); renderGoal(); renderList(); renderChart();
+  $('#height').value = state.s.height || '';
+  $('#unitSel').value = unit();
+  const g = state.s.goal;
+  $('#gTarget').value = g ? fmt(g.target) : '';
+  $('#gStart').value = g && g.start != null ? fmt(g.start) : '';
+  $('#gDate').value = g && g.date || '';
+}
+function renderHero() {
+  const list = sorted(), pill = $('#curDelta');
+  if (!list.length) { $('#curW').textContent = '—'; $('#curSub').textContent = 'Adaugă prima ta măsurătoare'; pill.hidden = true; return; }
+  const last = list[list.length - 1];
+  $('#curW').textContent = fmt(last.w);
+  $('#curSub').textContent = last.d === today() ? 'Astăzi' : `Ultima măsurătoare: ${fmtDate(last.d, true)}`;
+  if (list.length > 1) {
+    const diff = last.w - list[list.length - 2].w, g = state.s.goal;
+    const towardGoal = g ? (g.target < (g.start ?? list[0].w) ? diff < 0 : diff > 0) : diff < 0;
+    pill.hidden = false; pill.className = 'pill ' + (diff === 0 ? '' : towardGoal ? 'good' : 'bad');
+    pill.textContent = `${diff > 0 ? '+' : ''}${fmt(diff, 1)} ${unit()} față de precedenta`;
+  } else pill.hidden = true;
+}
+function renderStats() {
+  const list = sorted(), el = $('#stats');
+  if (!list.length) { el.innerHTML = '<div class="empty" style="grid-column:1/-1;padding:20px 0">Fără date încă.</div>'; return; }
+  const cur = list[list.length - 1], first = list[0], ws = list.map(e => e.w);
+  const last7 = list.filter(e => dayDiff(e.d, cur.d) < 7).map(e => e.w);
+  const avg7 = last7.reduce((a, b) => a + b) / last7.length;
+  const total = cur.w - first.w;
+  const slope = regressionSlopePerDay(list.filter(e => dayDiff(e.d, cur.d) <= 30));
+  const rows = [
+    [`${total > 0 ? '+' : ''}${fmt(total)} ${unit()}`, 'Total față de start'],
+    [`${fmt(avg7)} ${unit()}`, 'Medie 7 zile'],
+    [`${fmt(Math.min(...ws))} ${unit()}`, 'Minim'],
+    [`${fmt(Math.max(...ws))} ${unit()}`, 'Maxim'],
+    [slope == null ? '—' : `${slope * 7 > 0 ? '+' : ''}${fmt(slope * 7, 2)} ${unit()}`, 'Ritm / săptămână'],
+    [`${streak(list)} 🔥`, 'Zile consecutive'],
+  ];
+  const h = state.s.height;
+  if (h) { const b = cur.w / ((h / 100) ** 2); rows.push([b.toFixed(1), `IMC · ${bmiLabel(b)}`]); }
+  rows.push([String(list.length), 'Măsurători']);
+  el.innerHTML = rows.map(([b, s]) => `<div class="stat"><b>${b}</b><span>${s}</span></div>`).join('');
+}
+function renderGoal() {
+  const list = sorted(), el = $('#goalProgress'), gi = goalInfo(list);
+  if (!state.s.goal) { el.innerHTML = '<div class="empty">Setează un obiectiv mai jos.</div>'; return; }
+  if (!gi) { el.innerHTML = '<div class="empty">Adaugă o măsurătoare pentru a vedea progresul.</div>'; return; }
+  const g = state.s.goal, pct = Math.round(gi.progress * 100);
+  let html = `<div class="between"><span>Start: ${fmt(gi.start)} ${unit()}</span><span>Țintă: ${fmt(gi.target)} ${unit()}</span></div>
+    <div class="bar"><div style="width:${pct}%"></div></div>
+    <div style="text-align:center;font-size:28px;font-weight:700">${pct}%</div>`;
+  if (gi.reached) html += `<div style="text-align:center;margin-top:8px">🎉 Obiectiv atins! Felicitări!</div>`;
+  else {
+    html += `<div style="text-align:center;color:var(--hint)">Mai ai ${fmt(Math.abs(gi.remaining))} ${unit()} până la țintă</div>`;
+    const last = list[list.length - 1];
+    const slope = regressionSlopePerDay(list.filter(e => dayDiff(e.d, last.d) <= 30));
+    const need = gi.target - gi.cur;
+    const lines = [];
+    if (slope && slope * need > 0) {
+      const eta = new Date(); eta.setDate(eta.getDate() + Math.ceil(need / slope));
+      lines.push(`📈 La ritmul actual, estimat: <b>${fmtDate(ymd(eta), true)}</b>`);
+    } else if (slope) lines.push('⚠️ Tendința actuală te îndepărtează de obiectiv.');
+    if (g.date) {
+      const days = dayDiff(today(), g.date);
+      if (days > 0) lines.push(`📅 Până la ${fmtDate(g.date, true)}: ${days} zile · necesar <b>${fmt(need / days * 7, 2)} ${unit()}/săpt.</b>`);
+      else lines.push('📅 Data țintă a trecut.');
+    }
+    if (lines.length) html += `<div style="margin-top:12px;font-size:14px;line-height:1.7">${lines.join('<br>')}</div>`;
+  }
+  el.innerHTML = html;
+}
+function renderList() {
+  const list = sorted(), el = $('#list');
+  if (!list.length) { el.innerHTML = '<div class="empty">Nicio măsurătoare încă.</div>'; return; }
+  el.innerHTML = list.map((e, i) => {
+    const prev = list[i - 1], diff = prev ? e.w - prev.w : null;
+    return `<div class="item" data-d="${e.d}">
+      <div class="d">${fmtDate(e.d, true)}<small>${esc(e.n)}</small></div>
+      <div class="w">${fmt(e.w)} ${unit()}</div>
+      <div class="delta">${diff == null ? '' : (diff > 0 ? '+' : '') + fmt(diff)}</div>
+      <button class="x" data-del="${e.d}" aria-label="Șterge">✕</button></div>`;
+  }).reverse().join('');
+}
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* ---------- Chart (SVG) ---------- */
+function renderChart() {
+  const wrap = $('#chartWrap'); $$('svg,.empty', wrap).forEach(e => e.remove());
+  let list = sorted();
+  if (state.range) { const cut = new Date(); cut.setDate(cut.getDate() - state.range); const c = ymd(cut); list = list.filter(e => e.d >= c); }
+  $$('#chips .chip').forEach(c => c.classList.toggle('on', +c.dataset.r === state.range));
+  if (list.length < 2) { wrap.insertAdjacentHTML('afterbegin', '<div class="empty">Sunt necesare cel puțin 2 măsurători în perioada aleasă.</div>'); return; }
+
+  const W = wrap.clientWidth || 320, H = wrap.clientHeight || 230, P = { l: 38, r: 12, t: 12, b: 24 };
+  const goal = state.s.goal ? state.s.goal.target : null;
+  const vals = list.map(e => toDisp(e.w)); if (goal != null) vals.push(toDisp(goal));
+  let lo = Math.min(...vals), hi = Math.max(...vals); const span = Math.max(hi - lo, 1);
+  lo -= span * .12; hi += span * .12;
+  const t0 = parse(list[0].d).getTime(), t1 = parse(list[list.length - 1].d).getTime();
+  const X = d => P.l + (parse(d).getTime() - t0) / (t1 - t0) * (W - P.l - P.r);
+  const Y = v => P.t + (hi - v) / (hi - lo) * (H - P.t - P.b);
+  const pts = list.map(e => [X(e.d), Y(toDisp(e.w)), e]);
+  // 7-day moving average
+  const ma = list.map(e => { const win = list.filter(o => { const k = dayDiff(o.d, e.d); return k >= 0 && k < 7; }); return [X(e.d), Y(toDisp(win.reduce((a, o) => a + o.w, 0) / win.length))]; });
+  const path = a => a.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('');
+
+  let g = '';
+  for (let i = 0; i <= 4; i++) {
+    const v = lo + (hi - lo) * i / 4, y = Y(v);
+    g += `<line x1="${P.l}" x2="${W - P.r}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${P.l - 6}" y="${y + 4}" text-anchor="end" font-size="10" fill="var(--hint)">${v.toFixed(1)}</text>`;
+  }
+  [0, .5, 1].forEach((f, i) => {
+    const d = ymd(new Date(t0 + (t1 - t0) * f));
+    g += `<text x="${P.l + f * (W - P.l - P.r)}" y="${H - 6}" text-anchor="${i === 0 ? 'start' : i === 2 ? 'end' : 'middle'}" font-size="10" fill="var(--hint)">${fmtDate(d)}</text>`;
+  });
+  if (goal != null) { const y = Y(toDisp(goal)); g += `<line x1="${P.l}" x2="${W - P.r}" y1="${y}" y2="${y}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="6 4"/>`; }
+  const area = path(pts) + `L${pts[pts.length - 1][0]} ${H - P.b}L${pts[0][0]} ${H - P.b}Z`;
+  g += `<path d="${area}" fill="url(#gr)"/><path d="${path(ma)}" fill="none" stroke="var(--hint)" stroke-width="1.5" stroke-dasharray="2 3"/>`;
+  g += `<path d="${path(pts)}" fill="none" stroke="var(--btn)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  if (pts.length <= 45) g += pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="var(--bg)" stroke="var(--btn)" stroke-width="2"/>`).join('');
+  g += `<line id="cur" y1="${P.t}" y2="${H - P.b}" stroke="var(--hint)" stroke-width="1" opacity="0"/><circle id="curDot" r="6" fill="var(--btn)" opacity="0"/>`;
+
+  wrap.insertAdjacentHTML('afterbegin', `<svg viewBox="0 0 ${W} ${H}"><defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--btn)" stop-opacity=".25"/><stop offset="1" stop-color="var(--btn)" stop-opacity="0"/></linearGradient></defs>${g}</svg>`);
+  const svg = $('svg', wrap), tip = $('#tip'), cur = $('#cur', svg), dot = $('#curDot', svg);
+  const move = ev => {
+    const r = svg.getBoundingClientRect(), x = (ev.clientX - r.left) * W / r.width;
+    let best = pts[0]; for (const p of pts) if (Math.abs(p[0] - x) < Math.abs(best[0] - x)) best = p;
+    cur.setAttribute('x1', best[0]); cur.setAttribute('x2', best[0]); cur.setAttribute('opacity', 1);
+    dot.setAttribute('cx', best[0]); dot.setAttribute('cy', best[1]); dot.setAttribute('opacity', 1);
+    tip.textContent = `${fmtDate(best[2].d, true)} · ${fmt(best[2].w)} ${unit()}`;
+    tip.style.left = Math.min(Math.max(best[0] * r.width / W, 70), r.width - 70) + 'px';
+    tip.style.top = (best[1] * r.height / H - 10) + 'px'; tip.style.opacity = 1;
+  };
+  const leave = () => { tip.style.opacity = 0; cur.setAttribute('opacity', 0); dot.setAttribute('opacity', 0); };
+  svg.addEventListener('pointermove', move); svg.addEventListener('pointerdown', move);
+  svg.addEventListener('pointerleave', leave); svg.addEventListener('pointerup', () => setTimeout(leave, 1500));
+}
+$('#chips').onclick = e => { const c = e.target.closest('.chip'); if (c) { state.range = +c.dataset.r; haptic(); renderChart(); } };
+new ResizeObserver(() => $('#v-home').classList.contains('active') && renderChart()).observe($('#chartWrap'));
+
+/* ---------- Entry form ---------- */
+const wIn = $('#wIn'), dIn = $('#dIn'), nIn = $('#nIn');
+function resetForm() {
+  state.editing = null;
+  dIn.value = today(); dIn.max = today(); nIn.value = '';
+  const list = sorted();
+  wIn.value = list.length ? fmt(list[list.length - 1].w) : '';
+  $('#formTitle').textContent = 'Cântărire de azi'; $('#save').textContent = 'Salvează'; $('#cancelEdit').hidden = true;
+}
+function step(dir) {
+  const v = parseFloat(wIn.value.replace(',', '.')) || 0;
+  wIn.value = Math.max(0, v + dir * 0.1).toFixed(1); haptic();
+}
+$('#minus').onclick = () => step(-1); $('#plus').onclick = () => step(1);
+dIn.onchange = () => { const e = state.entries[dIn.value]; if (e) { wIn.value = fmt(e.w); nIn.value = e.n || ''; } };
+$('#cancelEdit').onclick = resetForm;
+
+$('#save').onclick = async () => {
+  const v = parseFloat(wIn.value.replace(',', '.')), d = dIn.value;
+  if (!(v > 0) || !d) return toast('Introdu o greutate validă');
+  const kg = Math.round(fromDisp(v) * 100) / 100;
+  if (kg < 20 || kg > 400) return toast('Valoare în afara intervalului');
+  const hadGoal = goalInfo(sorted());
+  const moved = state.editing && state.editing !== d;
+  if (moved) { delete state.entries[state.editing]; await saveMonth(state.editing.slice(0, 7)); }
+  state.entries[d] = { w: kg, n: nIn.value.trim() };
+  await saveMonth(d.slice(0, 7));
+  hapticOk(); toast('Salvat ✓');
+  resetForm(); renderAll();
+  const gi = goalInfo(sorted());
+  if (gi && gi.reached && !(hadGoal && hadGoal.reached)) setTimeout(() => { toast('🎉 Obiectiv atins!'); hapticOk(); }, 1200);
+};
+
+/* ---------- History ---------- */
+$('#list').onclick = async e => {
+  const del = e.target.closest('[data-del]');
+  if (del) {
+    e.stopPropagation(); const d = del.dataset.del;
+    if (await confirmBox(`Ștergi măsurătoarea din ${fmtDate(d, true)}?`)) {
+      delete state.entries[d]; await saveMonth(d.slice(0, 7)); haptic('medium'); renderAll();
+    }
+    return;
+  }
+  const it = e.target.closest('.item'); if (!it) return;
+  const d = it.dataset.d, en = state.entries[d];
+  state.editing = d; dIn.value = d; wIn.value = fmt(en.w); nIn.value = en.n || '';
+  $('#formTitle').textContent = `Editezi: ${fmtDate(d, true)}`; $('#save').textContent = 'Actualizează'; $('#cancelEdit').hidden = false;
+  setView('home');
+};
+
+/* ---------- Goal / profile / data ---------- */
+$('#saveGoal').onclick = async () => {
+  const t = parseFloat($('#gTarget').value.replace(',', '.')), s = parseFloat($('#gStart').value.replace(',', '.'));
+  if (!$('#gTarget').value.trim()) { state.s.goal = null; }
+  else if (!(t > 0)) return toast('Țintă invalidă');
+  else state.s.goal = { target: fromDisp(t), start: s > 0 ? fromDisp(s) : null, date: $('#gDate').value || null };
+  await saveSettings(); hapticOk(); toast('Obiectiv salvat ✓'); renderAll();
+};
+$('#saveProfile').onclick = async () => {
+  const h = parseInt($('#height').value, 10);
+  state.s.height = h >= 100 && h <= 250 ? h : null;
+  state.s.unit = $('#unitSel').value;
+  await saveSettings(); hapticOk(); toast('Profil salvat ✓'); renderAll(); resetForm();
+};
+$('#exportCsv').onclick = async () => {
+  const csv = 'data,greutate_kg,notita\n' + sorted().map(e => `${e.d},${e.w},"${e.n.replace(/"/g, '""')}"`).join('\n');
+  try { await navigator.clipboard.writeText(csv); toast('CSV copiat în clipboard'); }
+  catch (e) { const t = document.createElement('textarea'); t.value = csv; document.body.append(t); t.select(); document.execCommand('copy'); t.remove(); toast('CSV copiat'); }
+};
+$('#wipe').onclick = async () => {
+  if (!(await confirmBox('Sigur ștergi TOATE datele? Acțiunea nu poate fi anulată.'))) return;
+  const months = [...new Set(Object.keys(state.entries).map(d => 'e' + d.slice(0, 7)))].concat('s');
+  local.del(months); if (useCloud) try { await cloud.del(months); } catch (e) {}
+  state.entries = {}; state.s = { unit: 'kg', height: null, goal: null };
+  haptic('heavy'); toast('Datele au fost șterse'); resetForm(); renderAll();
+};
+
+/* ---------- Init ---------- */
+(async () => { await load(); resetForm(); renderAll(); })();
+})();
+</script>
+</body>
+</html>
