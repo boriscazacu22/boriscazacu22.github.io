@@ -78,7 +78,7 @@ input[type=date], input[type=text], input[type=number].field, select {
 nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--bg); border-top: 1px solid var(--line);
   padding-bottom: env(safe-area-inset-bottom); }
 nav button { flex: 1; border: 0; background: none; padding: 10px 0 8px; color: var(--hint); font: inherit; font-size: 11px; cursor: pointer; }
-nav button span { display: block; font-size: 22px; line-height: 1.2; }
+nav button svg { display: block; margin: 0 auto 2px; width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 nav button.on { color: var(--btn); }
 #toast { position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px);
   background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 14px; opacity: 0; transition: .25s; pointer-events: none; z-index: 10; }
@@ -149,6 +149,10 @@ nav button.on { color: var(--btn); }
       <input type="date" id="gDate" style="width:100%">
       <button class="btn" id="saveGoal">Salvează obiectivul</button>
     </div>
+  </section>
+
+  <!-- SETĂRI -->
+  <section class="view" id="v-set">
     <div class="card">
       <h2>Profil</h2>
       <label class="label" for="height">Înălțime (cm) — pentru IMC</label>
@@ -159,7 +163,18 @@ nav button.on { color: var(--btn); }
     </div>
     <div class="card">
       <h2>Date</h2>
-      <button class="btn ghost" id="exportCsv" style="margin-top:0">Copiază datele (CSV)</button>
+      <div class="row" style="margin-top:0">
+        <button class="btn ghost" id="exportCsv" style="margin-top:0">Copiază CSV</button>
+        <button class="btn ghost" id="downloadCsv" style="margin-top:0">Descarcă CSV</button>
+      </div>
+      <label class="label" for="csvText">Import CSV (data,greutate_kg,notita) — lipește textul sau alege un fișier</label>
+      <textarea id="csvText" rows="4" placeholder="2026-10-19,87.6,dimineața" style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font:13px monospace;outline:none;resize:vertical"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="importCsv" style="margin-top:0">Importă</button>
+        <button class="btn ghost" id="pickCsv" style="margin-top:0">Alege fișier</button>
+      </div>
+      <input type="file" id="csvFile" accept=".csv,text/csv,text/plain" hidden>
+      <div style="font-size:12px;color:var(--hint);margin-top:8px">Greutățile din CSV sunt în kg. Acceptă date YYYY-MM-DD sau ZZ.LL.AAAA și separator , sau ;. Zilele existente sunt suprascrise.</div>
       <button class="btn danger" id="wipe">Șterge toate datele</button>
     </div>
   </section>
@@ -174,9 +189,10 @@ nav button.on { color: var(--btn); }
 </main>
 
 <nav>
-  <button data-v="home" class="on"><span>⚖️</span>Acasă</button>
-  <button data-v="goal"><span>🎯</span>Obiectiv</button>
-  <button data-v="hist"><span>📋</span>Istoric</button>
+  <button data-v="home" class="on"><svg viewBox="0 0 24 24"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 10a4 4 0 0 1 8 0"/><path d="M12 10l2-2"/></svg>Acasă</button>
+  <button data-v="goal"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>Obiectiv</button>
+  <button data-v="hist"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Istoric</button>
+  <button data-v="set"><svg viewBox="0 0 24 24"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2"/><circle cx="8" cy="16" r="2"/></svg>Setări</button>
 </nav>
 <div id="toast"></div>
 
@@ -498,8 +514,56 @@ $('#saveProfile').onclick = async () => {
   state.s.unit = $('#unitSel').value;
   await saveSettings(); hapticOk(); toast('Profil salvat ✓'); renderAll(); resetForm();
 };
+const buildCsv = () => 'data,greutate_kg,notita\n' + sorted().map(e => `${e.d},${e.w},"${e.n.replace(/"/g, '""')}"`).join('\n');
+$('#downloadCsv').onclick = () => {
+  if (!sorted().length) return toast('Nu sunt date de exportat');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([buildCsv()], { type: 'text/csv' }));
+  a.download = `greutate-${today()}.csv`; document.body.append(a); a.click(); a.remove();
+  toast('Descărcare pornită (dacă nu merge, folosește „Copiază CSV”)');
+};
+function splitCsvLine(line, sep) {
+  const out = []; let cur = '', q = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (q) { if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true;
+    else if (c === sep) { out.push(cur); cur = ''; }
+    else cur += c;
+  }
+  return out.concat(cur).map(s => s.trim());
+}
+function parseCsv(text) {
+  const lines = text.replace(/^﻿/, '').split(/\r?\n/).filter(l => l.trim());
+  const res = { ok: {}, bad: 0 };
+  for (const line of lines) {
+    const sep = line.includes(';') ? ';' : ',';
+    const f = splitCsvLine(line, sep);
+    let m, d = null;
+    if ((m = f[0].match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))) d = `${m[1]}-${pad(+m[2])}-${pad(+m[3])}`;
+    else if ((m = f[0].match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})$/))) d = `${m[3]}-${pad(+m[2])}-${pad(+m[1])}`;
+    if (!d) { if (res.ok && Object.keys(res.ok).length === 0 && !res.bad && /[a-z]/i.test(f[0])) continue; res.bad++; continue; } // header
+    const w = parseFloat((f[1] || '').replace(',', '.'));
+    const dt = parse(d);
+    if (!(w >= 20 && w <= 400) || ymd(dt) !== d || d > today()) { res.bad++; continue; }
+    res.ok[d] = { w: Math.round(w * 100) / 100, n: (f[2] || '').slice(0, 60) };
+  }
+  return res;
+}
+async function importText(text) {
+  const { ok, bad } = parseCsv(text), days = Object.keys(ok);
+  if (!days.length) return toast('Nu am găsit rânduri valide');
+  const overwrite = days.filter(d => state.entries[d]).length;
+  if (!(await confirmBox(`Import ${days.length} măsurători${overwrite ? ` (${overwrite} existente vor fi suprascrise)` : ''}${bad ? `, ${bad} rânduri ignorate` : ''}?`))) return;
+  Object.assign(state.entries, ok);
+  for (const ym of new Set(days.map(d => d.slice(0, 7)))) await saveMonth(ym);
+  $('#csvText').value = ''; hapticOk(); toast(`Importate: ${days.length}`); resetForm(); renderAll();
+}
+$('#importCsv').onclick = () => importText($('#csvText').value);
+$('#pickCsv').onclick = () => $('#csvFile').click();
+$('#csvFile').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (f) importText(await f.text()); };
 $('#exportCsv').onclick = async () => {
-  const csv = 'data,greutate_kg,notita\n' + sorted().map(e => `${e.d},${e.w},"${e.n.replace(/"/g, '""')}"`).join('\n');
+  const csv = buildCsv();
   try { await navigator.clipboard.writeText(csv); toast('CSV copiat în clipboard'); }
   catch (e) { const t = document.createElement('textarea'); t.value = csv; document.body.append(t); t.select(); document.execCommand('copy'); t.remove(); toast('CSV copiat'); }
 };
