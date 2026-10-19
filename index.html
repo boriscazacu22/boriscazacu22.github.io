@@ -55,6 +55,9 @@ input[type=date], input[type=text], input[type=number].field, select {
 .btn.ghost { background: var(--bg2); color: var(--text); }
 .btn.danger { background: transparent; color: var(--bad); }
 .btn:active, .step:active { opacity: .7; }
+#wipe { transition: background .15s, color .15s; }
+#wipe:active { background: var(--bad); color: #fff; opacity: 1; }
+@media (hover: hover) { #wipe:hover { background: var(--bad); color: #fff; } }
 
 select { -webkit-appearance: none; appearance: none; height: 44px; padding-right: 36px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%238a8f98' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
@@ -194,8 +197,8 @@ nav button.on { color: var(--btn); }
   <section class="view" id="v-set">
     <div class="card">
       <h2>Profil</h2>
-      <label class="label" for="uname">Nume afișat (gol = numele din Telegram)</label>
-      <input type="text" class="field" id="uname" maxlength="30" placeholder="ex. Boris" style="width:100%">
+      <label class="label" for="uname">Nume afișat</label>
+      <input type="text" class="field" id="uname" maxlength="30" placeholder="Numele tău" style="width:100%">
       <label class="label" for="height">Înălțime (cm) — pentru IMC</label>
       <input type="number" class="field" id="height" inputmode="numeric" placeholder="ex. 175" style="width:100%">
       <label class="label" for="unitSel">Unitate</label>
@@ -216,7 +219,11 @@ nav button.on { color: var(--btn); }
       </div>
       <input type="file" id="csvFile" accept=".csv,text/csv,text/plain" hidden>
       <div style="font-size:12px;color:var(--hint);margin-top:8px">Greutățile din CSV sunt în kg. Acceptă date YYYY-MM-DD sau ZZ.LL.AAAA și separator , sau ;. Zilele existente sunt suprascrise.</div>
-      <button class="btn danger" id="wipe">Șterge toate datele</button>
+    </div>
+    <div class="card">
+      <h2>Ștergere date</h2>
+      <p style="text-align:center;font-size:14px;color:var(--hint);margin:0">Șterge toate măsurătorile și setările. Nu se poate anula.</p>
+      <button class="btn danger" id="wipe" style="border:1px solid var(--bad)">Șterge toate datele</button>
     </div>
   </section>
 
@@ -354,7 +361,7 @@ function renderAll() {
   $$('.unit').forEach(e => e.textContent = unit());
   renderHero(); renderStats(); renderGoal(); renderList(); renderChart();
   $('#height').value = state.s.height || '';
-  $('#uname').value = state.s.name || '';
+  $('#uname').value = state.s.name || tgName();
   $('#unitSel').value = unit();
   const g = state.s.goal;
   $('#gTarget').value = g ? fmt(g.target) : '';
@@ -601,7 +608,8 @@ $('#saveProfile').onclick = async () => {
   const h = parseInt($('#height').value, 10);
   state.s.height = h >= 100 && h <= 250 ? h : null;
   state.s.unit = $('#unitSel').value;
-  state.s.name = $('#uname').value.trim().slice(0, 30);
+  const un = $('#uname').value.trim().slice(0, 30);
+  state.s.name = un === tgName() ? '' : un;
   await saveSettings(); hapticOk(); toast('Profil salvat ✓'); renderAll(); resetForm();
 };
 const buildCsv = () => 'data,greutate_kg,notita\n' + sorted().map(e => `${e.d},${e.w},"${e.n.replace(/"/g, '""')}"`).join('\n');
