@@ -1,12 +1,19 @@
-# Greutatea mea — Telegram Mini App
+# Greutatea mea
 
-Aplicație dintr-un singur fișier (`index.html`, fără build și fără dependențe) pentru monitorizarea zilnică a greutății.
+O aplicație simplă în Telegram care te ajută să îți urmărești greutatea, zi de zi.
 
-## Funcții
-- Adăugare/editare/ștergere cântărire zilnică (cu dată și notiță), butoane ±0.1
-- Grafic al evoluției (7z / 30z / 3 luni / 1 an / tot) cu medie mobilă 7 zile și linie de obiectiv; tooltip la atingere
-- Obiectiv: greutate țintă, start, dată țintă opțională → progres %, estimare dată atingere, ritm necesar/săptămână
-- Statistici: total schimbat, medie 7 zile, min/max, ritm săptămânal, zile consecutive, IMC
-- kg / lb, temă automată din Telegram, feedback haptic, salut cu numele din Telegram (sau setat manual)
-- Import și export CSV (copiere, descărcare, fișier sau text lipit)
-- Date salvate în **Telegram CloudStorage** (sincronizate între dispozitive, împărțite pe luni din cauza limitei de 4096 caractere/cheie); în afara Telegram se folosește `localStorage`
+## Ce poți face
+
+- **Notezi greutatea în câteva secunde.** Alegi data, scrii greutatea și, dacă vrei, o mică notiță.
+- **Vezi cum evoluezi.** Un grafic îți arată dacă mergi în direcția bună, pe ultima săptămână, lună, an sau tot timpul.
+- **Îți propui un obiectiv.** Spui ce greutate vrei să ai, iar aplicația îți arată cât ai înaintat și când ai putea ajunge la țintă.
+- **Îți vezi statisticile.** Cât ai slăbit sau ai crescut, media ultimelor zile, cea mai mică și cea mai mare greutate, câte zile la rând te-ai cântărit și indicele de masă corporală.
+- **Îți vezi toate măsurătorile.** Le poți corecta sau șterge oricând.
+- **Îți păstrezi datele.** Le poți salva într-un fișier și le poți aduce înapoi când vrei.
+
+## Cum se simte
+
+- Arată bine pe telefon și se potrivește cu tema Telegram, deschisă sau închisă.
+- Poți folosi kilograme sau livre.
+- Te salută pe nume.
+- Datele tale rămân ale tale și le regăsești pe toate dispozitivele unde folosești Telegram.
