@@ -19,6 +19,8 @@
   --line: color-mix(in srgb, var(--text) 10%, transparent);
   --radius: 16px;
 }
+html[data-theme="light"] { --bg: #ffffff; --bg2: #f2f3f5; --text: #111111; --hint: #8a8f98; --btn: #1D9E75; --btn-text: #ffffff; color-scheme: light; }
+html[data-theme="dark"] { --bg: #1c1c1e; --bg2: #000000; --text: #f2f2f7; --hint: #8e8e93; --btn: #2FBF8F; --btn-text: #04241a; color-scheme: dark; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; background: var(--bg2); color: var(--text);
   font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -55,6 +57,8 @@ input[type=date], input[type=text], input[type=number].field, select {
 .btn.ghost { background: var(--bg2); color: var(--text); }
 .btn.danger { background: transparent; color: var(--bad); }
 .btn:active, .step:active { opacity: .7; }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn:disabled:active { opacity: .5; }
 #wipe { transition: background .15s, color .15s; }
 #wipe:active { background: var(--bad); color: #fff; opacity: 1; }
 @media (hover: hover) { #wipe:hover { background: var(--bad); color: #fff; } }
@@ -203,6 +207,8 @@ nav button.on { color: var(--btn); }
       <input type="number" class="field" id="height" inputmode="numeric" placeholder="ex. 175" style="width:100%">
       <label class="label" for="unitSel">Unitate</label>
       <select id="unitSel" style="width:100%"><option value="kg">Kilograme (kg)</option><option value="lb">Livre (lb)</option></select>
+      <label class="label" for="themeSel">Temă</label>
+      <select id="themeSel" style="width:100%"><option value="auto">Telegram (automat)</option><option value="light">Albă</option><option value="dark">Neagră</option></select>
       <button class="btn" id="saveProfile">Salvează profilul</button>
     </div>
     <div class="card">
@@ -272,7 +278,7 @@ const local = {
 /* ---------- State ---------- */
 const state = {
   entries: {},            // 'YYYY-MM-DD' -> {w (kg), n}
-  s: { unit: 'kg', height: null, goal: null, name: '' }, // goal: {target, start, date}
+  s: { unit: 'kg', height: null, goal: null, name: '', theme: 'auto' }, // goal: {target, start, date}
   range: 30, editing: null,
 };
 const KG2LB = 2.2046226218;
@@ -363,10 +369,19 @@ function renderAll() {
   $('#height').value = state.s.height || '';
   $('#uname').value = state.s.name || tgName();
   $('#unitSel').value = unit();
+  $('#themeSel').value = state.s.theme || 'auto'; applyTheme();
   const g = state.s.goal;
   $('#gTarget').value = g ? fmt(g.target) : '';
   $('#gStart').value = g && g.start != null ? fmt(g.start) : '';
   $('#gDate').value = g && g.date || '';
+}
+function applyTheme() {
+  const t = state.s.theme || 'auto', root = document.documentElement;
+  if (t === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
+  try {
+    if (t === 'auto') { tg.setHeaderColor('secondary_bg_color'); tg.setBackgroundColor('secondary_bg_color'); }
+    else { const c = getComputedStyle(root).getPropertyValue('--bg2').trim(); tg.setHeaderColor(c); tg.setBackgroundColor(c); }
+  } catch (e) {}
 }
 const tgName = () => { try { return tg.initDataUnsafe.user.first_name || ''; } catch (e) { return ''; } };
 function renderHero() {
@@ -545,20 +560,31 @@ dIn.addEventListener('valuechange', () => {
   $('#dLabel').textContent = !v ? 'Alege data' : v === today() ? `Astăzi · ${f}` : v === ymd(y) ? `Ieri · ${f}` : f;
 });
 $('.dbtn .dnat').addEventListener('click', e => { try { e.target.showPicker(); } catch (err) {} });
+function updateSaveBtn() {
+  const btn = $('#save'), d = dIn.value, en = state.entries[d];
+  btn.disabled = false;
+  if (state.editing) { btn.textContent = 'Actualizează'; return; }
+  if (!en) { btn.textContent = 'Salvează'; return; }
+  const v = parseFloat(wIn.value.replace(',', '.'));
+  const same = toDisp(en.w).toFixed(1) === (isNaN(v) ? '' : v.toFixed(1)) && nIn.value.trim() === (en.n || '');
+  if (same) { btn.disabled = true; btn.textContent = d === today() ? 'Ai adăugat pentru azi ✓' : `Adăugat pentru ${fmtDate(d, true)} ✓`; }
+  else btn.textContent = 'Actualizează';
+}
 function resetForm() {
   state.editing = null;
   dIn.value = today(); nIn.value = ''; showNoteQuiet(false);
   dIn.parentNode.querySelector('.dnat').max = today();
   const list = sorted();
   wIn.value = list.length ? fmt(list[list.length - 1].w) : '';
-  $('#formTitle').textContent = 'Cântărire de azi'; $('#save').textContent = 'Salvează'; $('#cancelEdit').hidden = true;
+  $('#formTitle').textContent = 'Cântărire de azi'; $('#cancelEdit').hidden = true; updateSaveBtn();
 }
 function step(dir) {
   const v = parseFloat(wIn.value.replace(',', '.')) || 0;
-  wIn.value = Math.max(0, v + dir * 0.1).toFixed(1); haptic();
+  wIn.value = Math.max(0, v + dir * 0.1).toFixed(1); haptic(); updateSaveBtn();
 }
 $('#minus').onclick = () => step(-1); $('#plus').onclick = () => step(1);
-dIn.onchange = () => { const e = state.entries[dIn.value]; if (e) { wIn.value = fmt(e.w); nIn.value = e.n || ''; showNoteQuiet(!!e.n); } };
+dIn.onchange = () => { const e = state.entries[dIn.value]; if (e) { wIn.value = fmt(e.w); nIn.value = e.n || ''; showNoteQuiet(!!e.n); } updateSaveBtn(); };
+['input', 'change'].forEach(ev => { wIn.addEventListener(ev, updateSaveBtn); nIn.addEventListener(ev, updateSaveBtn); });
 $('#cancelEdit').onclick = resetForm;
 
 $('#save').onclick = async () => {
@@ -592,7 +618,7 @@ $('#list').onclick = async e => {
   const it = e.target.closest('.item'); if (!it) return;
   const d = it.dataset.d, en = state.entries[d];
   state.editing = d; dIn.value = d; wIn.value = fmt(en.w); nIn.value = en.n || ''; showNoteQuiet(!!en.n);
-  $('#formTitle').textContent = `Editezi: ${fmtDate(d, true)}`; $('#save').textContent = 'Actualizează'; $('#cancelEdit').hidden = false;
+  $('#formTitle').textContent = `Editezi: ${fmtDate(d, true)}`; $('#cancelEdit').hidden = false; updateSaveBtn();
   setView('home');
 };
 
@@ -604,10 +630,12 @@ $('#saveGoal').onclick = async () => {
   else state.s.goal = { target: fromDisp(t), start: s > 0 ? fromDisp(s) : null, date: $('#gDate').value || null };
   await saveSettings(); hapticOk(); toast('Obiectiv salvat ✓'); renderAll();
 };
+$('#themeSel').onchange = e => { state.s.theme = e.target.value; applyTheme(); renderChart(); saveSettings(); haptic(); };
 $('#saveProfile').onclick = async () => {
   const h = parseInt($('#height').value, 10);
   state.s.height = h >= 100 && h <= 250 ? h : null;
   state.s.unit = $('#unitSel').value;
+  state.s.theme = $('#themeSel').value;
   const un = $('#uname').value.trim().slice(0, 30);
   state.s.name = un === tgName() ? '' : un;
   await saveSettings(); hapticOk(); toast('Profil salvat ✓'); renderAll(); resetForm();
@@ -669,7 +697,7 @@ $('#wipe').onclick = async () => {
   if (!(await confirmBox('Sigur ștergi TOATE datele? Acțiunea nu poate fi anulată.'))) return;
   const months = [...new Set(Object.keys(state.entries).map(d => 'e' + d.slice(0, 7)))].concat('s');
   local.del(months); if (useCloud) try { await cloud.del(months); } catch (e) {}
-  state.entries = {}; state.s = { unit: 'kg', height: null, goal: null, name: '' };
+  state.entries = {}; state.s = { unit: 'kg', height: null, goal: null, name: '', theme: 'auto' };
   haptic('heavy'); toast('Datele au fost șterse'); resetForm(); renderAll();
 };
 
