@@ -34,6 +34,7 @@ h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: v
 .hero .top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .hero .big { font-size: 48px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; }
 .hero .big small { font-size: 18px; font-weight: 500; color: var(--hint); margin-left: 4px; }
+.pill[hidden] { display: none; }
 .hero .pill { margin: 0 0 0 8px; vertical-align: middle; }
 .hero .sub { color: var(--hint); margin-top: 6px; font-size: 13px; }
 #spark { width: 120px; height: 52px; flex: none; }
@@ -48,11 +49,11 @@ h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: v
 .entry button.step { width: 48px; height: 48px; border-radius: 50%; border: 0; background: var(--bg2); color: var(--text); font-size: 26px; cursor: pointer; }
 .entry input[type=number] { width: 130px; text-align: center; font-size: 36px; font-weight: 700; border: 0; background: transparent; color: var(--text); outline: none; -moz-appearance: textfield; }
 .entry input::-webkit-outer-spin-button, .entry input::-webkit-inner-spin-button { -webkit-appearance: none; }
-.row { display: flex; gap: 8px; margin-top: 12px; }
+.row { display: flex; gap: 10px; margin-top: 16px; }
 input[type=date], input[type=text], input[type=number].field, select {
   flex: 1; min-width: 0; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line);
   background: var(--bg2); color: var(--text); font: inherit; outline: none; }
-.btn { width: 100%; margin-top: 12px; padding: 14px; border: 0; border-radius: 14px; background: var(--btn); color: var(--btn-text);
+.btn { width: 100%; margin-top: 20px; padding: 14px; border: 0; border-radius: 14px; background: var(--btn); color: var(--btn-text);
   font: inherit; font-weight: 600; cursor: pointer; }
 .btn.ghost { background: var(--bg2); color: var(--text); }
 .btn.danger { background: transparent; color: var(--bad); }
@@ -66,13 +67,13 @@ input[type=date], input[type=text], input[type=number].field, select {
 select { -webkit-appearance: none; appearance: none; height: 44px; padding-right: 36px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%238a8f98' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
-.dfoot { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.dfoot { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
 .dbtn { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px 6px 4px; color: var(--hint); font-size: 14px; cursor: pointer; }
 .dbtn svg, .iconbtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .dbtn .dnat { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; padding: 0; border: 0; cursor: pointer; }
 .iconbtn { width: 38px; height: 38px; border-radius: 50%; border: 0; background: var(--bg2); color: var(--hint); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .iconbtn.on { color: var(--btn); }
-.nfield { width: 100%; margin-top: 10px; }
+.nfield { width: 100%; margin-top: 14px; }
 .dwrap { position: relative; flex: 1; min-width: 0; }
 .dwrap input[type=text] { width: 100%; padding-right: 40px; }
 .dwrap svg { position: absolute; right: 12px; top: 50%; width: 20px; height: 20px; margin-top: -10px; fill: none; stroke: var(--hint); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
@@ -85,7 +86,33 @@ select { -webkit-appearance: none; appearance: none; height: 44px; padding-right
 #tip { position: absolute; pointer-events: none; background: var(--text); color: var(--bg); padding: 4px 8px; border-radius: 8px; font-size: 12px; white-space: nowrap; transform: translate(-50%, -100%); opacity: 0; transition: opacity .1s; }
 .legend { display: flex; gap: 14px; font-size: 12px; color: var(--hint); margin-top: 6px; flex-wrap: wrap; }
 .legend i { display: inline-block; width: 14px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 4px; }
-.empty { color: var(--hint); text-align: center; padding: 40px 0; font-size: 14px; }
+.empty { color: var(--hint); text-align: center; padding: 28px 8px; font-size: 14px; }
+.empty svg, #chartWrap .empty svg { display: block; width: 32px; height: 32px; margin: 0 auto 8px; fill: none; stroke: var(--hint); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.empty p { margin: 0; }
+.ebtn { margin-top: 18px; padding: 8px 16px; border-radius: 10px; border: 1.5px solid var(--btn); background: transparent; color: var(--btn); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 8px; }
+.badge { text-align: center; font-size: 12px; color: var(--hint); }
+.badge .bi { width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 6px; background: var(--bg2); display: flex; align-items: center; justify-content: center; }
+.badge .bi svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.badge.on { color: var(--text); }
+.badge.on .bi { background: color-mix(in srgb, var(--btn) 18%, transparent); color: var(--btn); }
+.modal { position: fixed; inset: 0; background: rgba(0, 0, 0, .5); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 20; }
+.modal[hidden] { display: none; }
+.sheet { background: var(--bg); border-radius: 20px; padding: 26px 22px 22px; width: 100%; max-width: 400px; max-height: 90vh; overflow: auto; }
+.sheet h3 { margin: 0 0 8px; font-size: 22px; }
+.wlogo { display: block; width: 64px; height: 64px; margin: 0 0 14px; color: var(--btn); }
+.sheet .wlead { margin: 0 0 18px; font-size: 14px; line-height: 1.55; }
+.sheet .wsub { margin: 0 0 20px; color: var(--hint); font-size: 14px; }
+.wsteps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
+.wsteps li { display: flex; gap: 14px; align-items: flex-start; }
+.wsteps .n { width: 30px; height: 30px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; background: color-mix(in srgb, var(--btn) 18%, transparent); color: var(--btn); }
+.wsteps b { display: block; font-size: 15px; margin-bottom: 2px; }
+.wsteps p { margin: 0; font-size: 13px; color: var(--hint); line-height: 1.5; }
+#hint { position: fixed; left: 12px; right: 12px; max-width: 536px; margin: 0 auto; bottom: calc(84px + env(safe-area-inset-bottom));
+  background: var(--text); color: var(--bg); border-radius: 14px; padding: 12px 14px; font-size: 14px; display: flex; align-items: center; gap: 10px;
+  opacity: 0; transform: translateY(16px); transition: .25s; pointer-events: none; z-index: 11; cursor: pointer; }
+#hint.show { opacity: 1; transform: none; pointer-events: auto; }
+#hint svg { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .stat { background: var(--bg2); border-radius: 12px; padding: 12px; }
@@ -95,7 +122,8 @@ select { -webkit-appearance: none; appearance: none; height: 44px; padding-right
 .bar { height: 14px; border-radius: 7px; background: var(--bg2); overflow: hidden; margin: 8px 0; }
 .bar > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--btn), var(--good)); border-radius: 7px; transition: width .5s; }
 .between { display: flex; justify-content: space-between; font-size: 13px; color: var(--hint); }
-.label { font-size: 13px; color: var(--hint); margin: 12px 0 4px; display: block; }
+.label { font-size: 13px; color: var(--hint); margin: 18px 0 6px; display: block; }
+.label:first-of-type { margin-top: 4px; }
 
 .item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
 .item:last-child { border: 0; }
@@ -183,7 +211,11 @@ nav button.on { color: var(--btn); }
   <section class="view" id="v-goal">
     <div class="card">
       <h2>Progres spre obiectiv</h2>
-      <div id="goalProgress"><div class="empty">Setează un obiectiv mai jos.</div></div>
+      <div id="goalProgress"></div>
+    </div>
+    <div class="card">
+      <h2>Realizări · <span id="badgeCount"></span></h2>
+      <div class="badges" id="badges"></div>
     </div>
     <div class="card">
       <h2>Obiectiv</h2>
@@ -219,12 +251,12 @@ nav button.on { color: var(--btn); }
       </div>
       <label class="label" for="csvText">Import CSV (data,greutate_kg,notita) — lipește textul sau alege un fișier</label>
       <textarea id="csvText" rows="4" placeholder="2026-10-19,87.6,dimineața" style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font:13px monospace;outline:none;resize:vertical"></textarea>
-      <div class="row" style="margin-top:8px">
+      <div class="row" style="margin-top:14px">
         <button class="btn" id="importCsv" style="margin-top:0">Importă</button>
         <button class="btn ghost" id="pickCsv" style="margin-top:0">Alege fișier</button>
       </div>
       <input type="file" id="csvFile" accept=".csv,text/csv,text/plain" hidden>
-      <div style="font-size:12px;color:var(--hint);margin-top:8px">Greutățile din CSV sunt în kg. Acceptă date YYYY-MM-DD sau ZZ.LL.AAAA și separator , sau ;. Zilele existente sunt suprascrise.</div>
+      <div style="font-size:12px;color:var(--hint);margin-top:14px;line-height:1.5">Greutățile din CSV sunt în kg. Acceptă date YYYY-MM-DD sau ZZ.LL.AAAA și separator , sau ;. Zilele existente sunt suprascrise.</div>
     </div>
     <div class="card">
       <h2>Ștergere date</h2>
@@ -237,7 +269,7 @@ nav button.on { color: var(--btn); }
   <section class="view" id="v-hist">
     <div class="card">
       <h2>Istoric</h2>
-      <div id="list"><div class="empty">Nicio măsurătoare încă.</div></div>
+      <div id="list"></div>
     </div>
   </section>
 </main>
@@ -249,6 +281,21 @@ nav button.on { color: var(--btn); }
   <button data-v="set"><svg viewBox="0 0 24 24"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2"/><circle cx="8" cy="16" r="2"/></svg>Setări</button>
 </nav>
 <div id="toast"></div>
+<div id="hint" role="status"></div>
+<div class="modal" id="welcome" role="dialog" aria-modal="true" aria-labelledby="wTitle" hidden>
+  <div class="sheet">
+    <svg class="wlogo" viewBox="0 0 96 96" aria-hidden="true"><circle cx="20" cy="30" r="6" fill="currentColor" opacity=".45"/><circle cx="34" cy="38" r="6" fill="currentColor" opacity=".45"/><circle cx="48" cy="34" r="6" fill="currentColor" opacity=".45"/><circle cx="62" cy="46" r="6" fill="currentColor" opacity=".45"/><circle cx="76" cy="54" r="7" fill="currentColor"/><rect x="18" y="68" width="60" height="6" rx="3" fill="currentColor" opacity=".3"/><rect x="18" y="68" width="40" height="6" rx="3" fill="currentColor"/></svg>
+    <h3 id="wTitle">Bine ai venit!</h3>
+    <p class="wlead">Aici îți urmărești greutatea zi de zi, simplu și în câteva secunde. Te ajutăm să vezi cum evoluezi și să ajungi la obiectivul tău.</p>
+    <p class="wsub">Trei pași rapizi ca să începi:</p>
+    <ol class="wsteps">
+      <li><span class="n">1</span><div><b>Adaugă prima cântărire</b><p>În Acasă, scrie greutatea de azi și apasă Salvează. Revino în fiecare zi ca să-ți vezi evoluția pe grafic.</p></div></li>
+      <li><span class="n">2</span><div><b>Setează-ți obiectivul</b><p>În tab-ul Obiectiv, alege greutatea țintă. Vei vedea progresul și data estimată de atingere.</p></div></li>
+      <li><span class="n">3</span><div><b>Adaugă înălțimea</b><p>În Setări, pentru ca aplicația să-ți calculeze indicele de masă corporală (IMC).</p></div></li>
+    </ol>
+    <button class="btn" id="wOk">Am înțeles</button>
+  </div>
+</div>
 
 <script>
 (() => {
@@ -328,6 +375,76 @@ function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.ad
 function confirmBox(msg) {
   return new Promise(res => tg && tg.showConfirm ? tg.showConfirm(msg, res) : res(confirm(msg)));
 }
+const PATHS = {
+  scale: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 10a4 4 0 0 1 8 0"/><path d="M12 10l2-2"/>',
+  target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6"/>',
+  flame: '<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5.3 1.5 1 2.2 2 2.2C11.5 8 11 5.5 12 3z"/>',
+  trophy: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5v2a3 3 0 0 0 3 3M16 6h3v2a3 3 0 0 1-3 3M12 13v4M9 20h6"/>',
+  down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+  check: '<circle cx="12" cy="12" r="8"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
+  chart: '<path d="M4 18l5-6 4 3 7-9"/>',
+  tick: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  stats: '<path d="M5 20V11M12 20V4M19 20v-6"/>',
+  list: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+};
+const ico = n => `<svg viewBox="0 0 24 24" aria-hidden="true">${PATHS[n]}</svg>`;
+const emptyBox = (icon, text, btn = '') => `<div class="empty">${ico(icon)}<p>${text}</p>${btn}</div>`;
+
+let hintT, hintAct = null;
+function showHint(html, act) {
+  const h = $('#hint'); h.innerHTML = html; hintAct = act || null;
+  h.classList.add('show'); clearTimeout(hintT); hintT = setTimeout(() => h.classList.remove('show'), 6000);
+}
+$('#hint').onclick = () => { $('#hint').classList.remove('show'); clearTimeout(hintT); if (hintAct) hintAct(); hintAct = null; };
+const seen = () => state.s.seen || (state.s.seen = {});
+const goGoal = () => setView('goal');
+
+function longestStreak(list) {
+  let best = 0, run = 0, prev = null;
+  for (const e of list) { run = prev && dayDiff(prev, e.d) === 1 ? run + 1 : 1; best = Math.max(best, run); prev = e.d; }
+  return best;
+}
+const BADGES = [
+  { id: 'first', label: 'Prima cântărire', icon: 'scale', quiet: true, ok: l => l.length >= 1 },
+  { id: 'goal', label: 'Primul obiectiv', icon: 'target', ok: () => !!state.s.goal },
+  { id: 's7', label: '7 zile la rând', icon: 'flame', ok: l => longestStreak(l) >= 7 },
+  { id: 's30', label: '30 de zile la rând', icon: 'trophy', ok: l => longestStreak(l) >= 30 },
+  { id: 'kg1', label: '1 kg schimbat', icon: 'down', ok: l => l.length > 1 && Math.abs(l[l.length - 1].w - l[0].w) >= 1 },
+  { id: 'done', label: 'Obiectiv atins', icon: 'check', quiet: true, ok: l => { const gi = goalInfo(l); return !!gi && gi.reached; } },
+];
+function checkBadges() {
+  const l = sorted(), b = state.s.badges || (state.s.badges = {}), fresh = [];
+  for (const d of BADGES) if (!b[d.id] && d.ok(l)) { b[d.id] = today(); fresh.push(d); }
+  if (fresh.length) saveSettings();
+  return fresh.filter(d => !d.quiet);
+}
+function renderBadges() {
+  const b = state.s.badges || {};
+  $('#badgeCount').textContent = `${BADGES.filter(d => b[d.id]).length} din ${BADGES.length}`;
+  $('#badges').innerHTML = BADGES.map(d => `<div class="badge${b[d.id] ? ' on' : ''}"><div class="bi">${ico(d.icon)}</div>${d.label}</div>`).join('');
+}
+function maybeWelcome() {
+  if (seen().welcome || sorted().length || state.s.goal) return;
+  const nm = (state.s.name || tgName()).trim();
+  $('#wTitle').textContent = nm ? `Bine ai venit, ${nm}!` : 'Bine ai venit!';
+  $('#welcome').hidden = false;
+}
+function closeWelcome() { $('#welcome').hidden = true; seen().welcome = 1; saveSettings(); }
+$('#wOk').onclick = closeWelcome;
+$('#welcome').addEventListener('click', e => { if (e.target.id === 'welcome') closeWelcome(); });
+function announce(fresh, afterSave) {
+  const seenH = seen();
+  let h = null;
+  if (fresh.length) h = [`${ico('trophy')}<span>Realizare nouă: ${fresh[0].label}</span>`, goGoal];
+  else if (afterSave) {
+    const l = sorted();
+    if (!seenH.streak3 && streak(l) >= 3) { seenH.streak3 = 1; h = [`${ico('flame')}<span>Ai o serie de 3 zile. Continuă!</span>`, null]; }
+    else if (!state.s.goal && !seenH.goal) { seenH.goal = 1; h = [`${ico('target')}<span>Setează un obiectiv ca să vezi progresul</span>`, goGoal]; }
+    else if (!seenH.avg && l.length >= 3) { seenH.avg = 1; h = [`<span>Linia punctată din grafic e media pe 7 zile</span>`, null]; }
+    if (h) saveSettings();
+  }
+  if (h) setTimeout(() => showHint(h[0], h[1]), 2400);
+}
 function setView(v) {
   $$('.view').forEach(e => e.classList.toggle('active', e.id === 'v-' + v));
   $$('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
@@ -365,7 +482,7 @@ function goalInfo(list) {
 /* ---------- Render ---------- */
 function renderAll() {
   $$('.unit').forEach(e => e.textContent = unit());
-  renderHero(); renderStats(); renderGoal(); renderList(); renderChart();
+  renderHero(); renderStats(); renderGoal(); renderList(); renderChart(); renderBadges();
   $('#height').value = state.s.height || '';
   $('#uname').value = state.s.name || tgName();
   $('#unitSel').value = unit();
@@ -418,7 +535,7 @@ function renderHero() {
 }
 function renderStats() {
   const list = sorted(), el = $('#stats');
-  if (!list.length) { el.innerHTML = '<div class="empty" style="grid-column:1/-1;padding:20px 0">Fără date încă.</div>'; return; }
+  if (!list.length) { el.innerHTML = `<div style="grid-column:1/-1">${emptyBox('stats', 'Statisticile apar după prima cântărire')}</div>`; return; }
   const cur = list[list.length - 1], first = list[0], ws = list.map(e => e.w);
   const last7 = list.filter(e => dayDiff(e.d, cur.d) < 7).map(e => e.w);
   const avg7 = last7.reduce((a, b) => a + b) / last7.length;
@@ -439,8 +556,8 @@ function renderStats() {
 }
 function renderGoal() {
   const list = sorted(), el = $('#goalProgress'), gi = goalInfo(list);
-  if (!state.s.goal) { el.innerHTML = '<div class="empty">Setează un obiectiv mai jos.</div>'; return; }
-  if (!gi) { el.innerHTML = '<div class="empty">Adaugă o măsurătoare pentru a vedea progresul.</div>'; return; }
+  if (!state.s.goal) { el.innerHTML = emptyBox('target', 'Încă nu ai un obiectiv', '<button class="ebtn" id="goToGoal">Setează obiectivul</button>'); return; }
+  if (!gi) { el.innerHTML = emptyBox('scale', 'Adaugă o măsurătoare pentru a vedea progresul'); return; }
   const g = state.s.goal, pct = Math.round(gi.progress * 100);
   let html = `<div class="between"><span>Start: ${fmt(gi.start)} ${unit()}</span><span>Țintă: ${fmt(gi.target)} ${unit()}</span></div>
     <div class="bar"><div style="width:${pct}%"></div></div>
@@ -467,7 +584,7 @@ function renderGoal() {
 }
 function renderList() {
   const list = sorted(), el = $('#list');
-  if (!list.length) { el.innerHTML = '<div class="empty">Nicio măsurătoare încă.</div>'; return; }
+  if (!list.length) { el.innerHTML = emptyBox('list', 'Nicio măsurătoare încă', '<button class="ebtn" id="goToAdd">Adaugă prima cântărire</button>'); return; }
   el.innerHTML = list.map((e, i) => {
     const prev = list[i - 1], diff = prev ? e.w - prev.w : null;
     return `<div class="item" data-d="${e.d}">
@@ -485,7 +602,11 @@ function renderChart() {
   let list = sorted();
   if (state.range) { const cut = new Date(); cut.setDate(cut.getDate() - state.range); const c = ymd(cut); list = list.filter(e => e.d >= c); }
   $$('#chips .chip').forEach(c => c.classList.toggle('on', +c.dataset.r === state.range));
-  if (list.length < 2) { wrap.insertAdjacentHTML('afterbegin', '<div class="empty">Sunt necesare cel puțin 2 măsurători în perioada aleasă.</div>'); return; }
+  if (list.length < 2) {
+    const total = sorted().length;
+    wrap.insertAdjacentHTML('afterbegin', emptyBox('chart', total === 0 ? 'Adaugă prima cântărire ca să începi graficul' : total === 1 ? 'Adaugă încă o măsurătoare ca să vezi evoluția' : 'Nu sunt destule măsurători în perioada aleasă'));
+    return;
+  }
 
   const W = wrap.clientWidth || 320, H = wrap.clientHeight || 230, P = { l: 38, r: 12, t: 12, b: 24 };
   const goal = state.s.goal ? state.s.goal.target : null;
@@ -586,6 +707,8 @@ $('#minus').onclick = () => step(-1); $('#plus').onclick = () => step(1);
 dIn.onchange = () => { const e = state.entries[dIn.value]; if (e) { wIn.value = fmt(e.w); nIn.value = e.n || ''; showNoteQuiet(!!e.n); } updateSaveBtn(); };
 ['input', 'change'].forEach(ev => { wIn.addEventListener(ev, updateSaveBtn); nIn.addEventListener(ev, updateSaveBtn); });
 $('#cancelEdit').onclick = resetForm;
+$('#goalProgress').addEventListener('click', e => { if (e.target.closest('#goToGoal')) { const t = $('#gTarget'); t.scrollIntoView({ block: 'center', behavior: 'smooth' }); t.focus({ preventScroll: true }); } });
+$('#list').addEventListener('click', e => { if (e.target.closest('#goToAdd')) { setView('home'); wIn.focus(); } });
 
 $('#save').onclick = async () => {
   const v = parseFloat(wIn.value.replace(',', '.')), d = dIn.value;
@@ -600,7 +723,9 @@ $('#save').onclick = async () => {
   state.entries[d] = { w: kg, n: nIn.value.trim() };
   await saveMonth(d.slice(0, 7));
   hapticOk(); toast('Salvat ✓');
+  const fresh = checkBadges();
   resetForm(); renderAll();
+  announce(fresh, true);
   const gi = goalInfo(sorted());
   if (gi && gi.reached && !(hadGoal && hadGoal.reached)) setTimeout(() => { toast('🎉 Obiectiv atins!'); hapticOk(); }, 1200);
 };
@@ -628,7 +753,8 @@ $('#saveGoal').onclick = async () => {
   if (!$('#gTarget').value.trim()) { state.s.goal = null; }
   else if (!(t > 0)) return toast('Țintă invalidă');
   else state.s.goal = { target: fromDisp(t), start: s > 0 ? fromDisp(s) : null, date: $('#gDate').value || null };
-  await saveSettings(); hapticOk(); toast('Obiectiv salvat ✓'); renderAll();
+  await saveSettings(); hapticOk(); toast('Obiectiv salvat ✓');
+  const fresh = checkBadges(); renderAll(); announce(fresh, false);
 };
 $('#themeSel').onchange = e => { state.s.theme = e.target.value; applyTheme(); renderChart(); saveSettings(); haptic(); };
 $('#saveProfile').onclick = async () => {
@@ -702,7 +828,7 @@ $('#wipe').onclick = async () => {
 };
 
 /* ---------- Init ---------- */
-(async () => { await load(); resetForm(); renderAll(); })();
+(async () => { await load(); checkBadges(); resetForm(); renderAll(); maybeWelcome(); })();
 })();
 </script>
 </body>
