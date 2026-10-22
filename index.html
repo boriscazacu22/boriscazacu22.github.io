@@ -20,7 +20,7 @@
   --radius: 16px;
 }
 html[data-theme="light"] { --bg: #ffffff; --bg2: #f2f3f5; --text: #111111; --hint: #8a8f98; --btn: #1D9E75; --btn-text: #ffffff; color-scheme: light; }
-html[data-theme="dark"] { --bg: #1c1c1e; --bg2: #000000; --text: #f2f2f7; --hint: #8e8e93; --btn: #2FBF8F; --btn-text: #04241a; color-scheme: dark; }
+html[data-theme="dark"] { --bg: #1c1c1e; --bg2: #000000; --text: #f2f2f7; --hint: #8e8e93; --btn: #1D9E75; --btn-text: #ffffff; color-scheme: dark; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; background: var(--bg2); color: var(--text);
   font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -91,6 +91,10 @@ select { -webkit-appearance: none; appearance: none; height: 44px; padding-right
 .empty p { margin: 0; }
 .ebtn { margin-top: 18px; padding: 8px 16px; border-radius: 10px; border: 1.5px solid var(--btn); background: transparent; color: var(--btn); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
 .badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 8px; }
+.binfo { margin-top: 16px; padding: 12px 14px; border-radius: 12px; background: var(--bg2); font-size: 13px; color: var(--hint); line-height: 1.5; }
+.binfo b { color: var(--text); font-weight: 600; }
+button.badge { border: 0; background: none; font: inherit; font-size: 12px; cursor: pointer; padding: 0; }
+.badge.sel .bi { box-shadow: 0 0 0 2px var(--btn); }
 .badge { text-align: center; font-size: 12px; color: var(--hint); }
 .badge .bi { width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 6px; background: var(--bg2); display: flex; align-items: center; justify-content: center; }
 .badge .bi svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
@@ -108,6 +112,50 @@ select { -webkit-appearance: none; appearance: none; height: 44px; padding-right
 .wsteps .n { width: 30px; height: 30px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; background: color-mix(in srgb, var(--btn) 18%, transparent); color: var(--btn); }
 .wsteps b { display: block; font-size: 15px; margin-bottom: 2px; }
 .wsteps p { margin: 0; font-size: 13px; color: var(--hint); line-height: 1.5; }
+.cmp { display: grid; grid-template-columns: 62px 1fr 92px; align-items: center; gap: 10px; padding: 12px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.cmp:first-of-type { border-top: 0; }
+.cmp .nm { font-weight: 600; }
+.cmp .vl { text-align: right; white-space: nowrap; font-size: 13px; }
+.cmp .vl b { font-weight: 600; }
+.tr { position: relative; height: 6px; border-radius: 3px; background: var(--bg2); margin: 0 6px; }
+.tr i { position: absolute; top: 0; height: 100%; border-radius: 3px; background: var(--hint); }
+.tr i.dn, .tr u.dn { background: var(--btn); }
+.tr i.up, .tr u.up { background: #BA7517; }
+.tr s, .tr u, .tr .tg { position: absolute; top: 50%; border-radius: 50%; transform: translate(-50%, -50%); text-decoration: none; }
+.tr s { width: 10px; height: 10px; background: var(--bg); box-shadow: inset 0 0 0 2px var(--hint); }
+.tr .tg { left: 100%; width: 10px; height: 10px; background: var(--bg); box-shadow: inset 0 0 0 2px var(--btn); }
+.tr u { width: 14px; height: 14px; background: var(--hint); box-shadow: 0 0 0 3px var(--bg); }
+.cmp .vl small { display: block; font-size: 11px; color: var(--hint); }
+.mleg { margin: 0 0 4px; font-size: 12px; color: var(--hint); line-height: 1.45; }
+.mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+.mrow { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+.mrow b { font-weight: 600; }
+.mrow small { color: var(--hint); font-weight: 400; margin-left: 6px; font-size: 12px; }
+.msub { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.msub h4 { margin: 0 0 2px; font-size: 13px; font-weight: 500; color: var(--hint); }
+.msub .mh { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 4px; }
+.msub .mh p { margin: 0; font-size: 14px; }
+.hrow { display: flex; justify-content: space-between; align-items: center; }
+.grow { display: flex; align-items: center; gap: 10px; padding: 13px 0; border-top: 1px solid var(--line); }
+.grow:first-child { border-top: 0; padding-top: 4px; }
+.grow.act { cursor: pointer; }
+.grow .gt { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+.grow .gt b { font-weight: 600; margin-right: 8px; }
+.grow .gt span { color: var(--hint); font-size: 13px; }
+.gs { flex: none; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.gs.ok { background: var(--btn); color: var(--btn-text); }
+.gs.run { background: color-mix(in srgb, var(--btn) 18%, transparent); color: var(--btn); }
+.gs.no { background: color-mix(in srgb, #BA7517 20%, transparent); color: #BA7517; }
+.plus { width: 36px; height: 36px; flex: none; border-radius: 50%; border: 0; background: var(--bg2); color: var(--btn); font-size: 22px; line-height: 1; cursor: pointer; }
+.plus:active { opacity: .7; }
+.sheet.cele { position: relative; text-align: center; overflow: hidden; }
+.cele .trophy { width: 120px; height: 120px; display: block; margin: 4px auto 10px; }
+.cele h3 { font-size: 24px; }
+.cele p { margin: 0 0 6px; font-size: 15px; }
+.cele .cs { color: var(--hint); font-size: 14px; }
+.conf { position: absolute; top: -16px; width: 8px; height: 12px; border-radius: 2px; pointer-events: none; animation: conf-fall 2.8s ease-in 2; opacity: 0; }
+@keyframes conf-fall { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(520px) rotate(540deg); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .conf { display: none; } }
 #hint { position: fixed; left: 12px; right: 12px; max-width: 536px; margin: 0 auto; bottom: calc(84px + env(safe-area-inset-bottom));
   background: var(--text); color: var(--bg); border-radius: 14px; padding: 12px 14px; font-size: 14px; display: flex; align-items: center; gap: 10px;
   opacity: 0; transform: translateY(16px); transition: .25s; pointer-events: none; z-index: 11; cursor: pointer; }
@@ -120,7 +168,7 @@ select { -webkit-appearance: none; appearance: none; height: 44px; padding-right
 .stat span { font-size: 12px; color: var(--hint); }
 
 .bar { height: 14px; border-radius: 7px; background: var(--bg2); overflow: hidden; margin: 8px 0; }
-.bar > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--btn), var(--good)); border-radius: 7px; transition: width .5s; }
+.bar > div { height: 100%; width: 0; background: linear-gradient(90deg, #E24B4A, #F2B33D 50%, #1D9E75); background-size: 100% 100%; border-radius: 7px; transition: width .5s; }
 .between { display: flex; justify-content: space-between; font-size: 13px; color: var(--hint); }
 .label { font-size: 13px; color: var(--hint); margin: 18px 0 6px; display: block; }
 .label:first-of-type { margin-top: 4px; }
@@ -130,6 +178,8 @@ select { -webkit-appearance: none; appearance: none; height: 44px; padding-right
 .item .d { flex: 1; } .item .d small { display: block; color: var(--hint); font-size: 12px; }
 .item .w { font-weight: 700; margin-right: 12px; }
 .item .delta { font-size: 13px; width: 56px; text-align: right; color: var(--hint); }
+.item .tag { color: var(--hint); margin-right: 4px; display: flex; }
+.item .tag svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .item .x { border: 0; background: none; color: var(--hint); font-size: 18px; padding: 4px 8px; cursor: pointer; }
 
 nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--bg); border-top: 1px solid var(--line);
@@ -213,19 +263,14 @@ nav button.on { color: var(--btn); }
       <h2>Progres spre obiectiv</h2>
       <div id="goalProgress"></div>
     </div>
+    <div class="card" id="goalCard" hidden>
+      <h2 class="hrow">Obiective<button type="button" class="plus" id="addGoal" aria-label="Obiectiv nou">+</button></h2>
+      <div id="goalView"></div>
+    </div>
     <div class="card">
       <h2>Realizări · <span id="badgeCount"></span></h2>
       <div class="badges" id="badges"></div>
-    </div>
-    <div class="card">
-      <h2>Obiectiv</h2>
-      <label class="label" for="gTarget">Greutate țintă (<span class="unit">kg</span>)</label>
-      <input type="number" class="field" id="gTarget" inputmode="decimal" step="0.1" style="width:100%">
-      <label class="label" for="gStart">Greutate de start (<span class="unit">kg</span>) — gol = prima măsurătoare</label>
-      <input type="number" class="field" id="gStart" inputmode="decimal" step="0.1" style="width:100%">
-      <label class="label" for="gDate">Data țintă (opțional)</label>
-      <div class="dwrap" style="flex:none;width:100%"><input type="text" id="gDate" inputmode="numeric" placeholder="zz.ll.aaaa" maxlength="10" autocomplete="off"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><input type="date" class="dnat" tabindex="-1" aria-label="Alege din calendar"></div>
-      <button class="btn" id="saveGoal">Salvează obiectivul</button>
+      <div class="binfo" id="badgeInfo">Atinge o insignă ca să vezi cum o câștigi.</div>
     </div>
   </section>
 
@@ -237,6 +282,8 @@ nav button.on { color: var(--btn); }
       <input type="text" class="field" id="uname" maxlength="30" placeholder="Numele tău" style="width:100%">
       <label class="label" for="height">Înălțime (cm) — pentru IMC</label>
       <input type="number" class="field" id="height" inputmode="numeric" placeholder="ex. 175" style="width:100%">
+      <label class="label" for="sexSel">Sex (pentru standardele de măsurători)</label>
+      <select id="sexSel" style="width:100%"><option value="">Nespecificat</option><option value="f">Femeie</option><option value="m">Bărbat</option></select>
       <label class="label" for="unitSel">Unitate</label>
       <select id="unitSel" style="width:100%"><option value="kg">Kilograme (kg)</option><option value="lb">Livre (lb)</option></select>
       <label class="label" for="themeSel">Temă</label>
@@ -269,6 +316,11 @@ nav button.on { color: var(--btn); }
   <section class="view" id="v-hist">
     <div class="card">
       <h2>Istoric</h2>
+      <div class="chips" id="hChips" style="margin-bottom:6px">
+        <button class="chip" data-f="all">Toate</button>
+        <button class="chip" data-f="w">Cântăriri</button>
+        <button class="chip" data-f="m">Măsurători</button>
+      </div>
       <div id="list"></div>
     </div>
   </section>
@@ -282,6 +334,54 @@ nav button.on { color: var(--btn); }
 </nav>
 <div id="toast"></div>
 <div id="hint" role="status"></div>
+<div class="modal" id="goalDone" role="dialog" aria-modal="true" aria-labelledby="gdTitle" hidden>
+  <div class="sheet cele">
+    <svg class="trophy" viewBox="0 0 120 120" role="img" aria-label="Trofeu">
+      <circle cx="60" cy="60" r="54" fill="var(--btn)" opacity=".12"/>
+      <path d="M38 26h44v22a22 22 0 0 1-44 0z" fill="#F2B33D"/>
+      <path d="M38 32H24v8a16 16 0 0 0 16 16M82 32h14v8a16 16 0 0 1-16 16" fill="none" stroke="#F2B33D" stroke-width="6" stroke-linecap="round"/>
+      <rect x="54" y="70" width="12" height="16" fill="#E0A02B"/>
+      <rect x="40" y="86" width="40" height="10" rx="4" fill="#BA7517"/>
+      <path d="M60 34l4.4 9 9.9 1.4-7.2 7 1.7 9.8L60 56.5l-8.8 4.7 1.7-9.8-7.2-7 9.9-1.4z" fill="#fff" opacity=".9"/>
+    </svg>
+    <h3 id="gdTitle">Felicitări!</h3>
+    <p id="gdLine"></p>
+    <p class="cs" id="gdStat"></p>
+    <p class="cs">Ține-o tot așa. Poți seta oricând un obiectiv nou.</p>
+    <div class="row" style="margin-top:22px">
+      <button class="btn" id="gdOk" style="margin-top:0">Mulțumesc</button>
+      <button class="btn ghost" id="gdNew" style="margin-top:0">Obiectiv nou</button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="measModal" role="dialog" aria-modal="true" aria-labelledby="mmTitle" hidden>
+  <div class="sheet">
+    <h3 id="mmTitle">Adaugă măsurători</h3>
+    <label class="label" for="mDate">Data</label>
+    <div class="dwrap" style="flex:none;width:100%"><input type="text" id="mDate" inputmode="numeric" placeholder="zz.ll.aaaa" maxlength="10" autocomplete="off"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><input type="date" class="dnat" tabindex="-1" aria-label="Alege din calendar"></div>
+    <div class="mgrid"><div><label class="label" for="m_neck">Gât (cm)</label><input type="number" class="field" id="m_neck" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div><div><label class="label" for="m_chest">Piept (cm)</label><input type="number" class="field" id="m_chest" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div><div><label class="label" for="m_waist">Talie (cm)</label><input type="number" class="field" id="m_waist" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div><div><label class="label" for="m_hips">Șolduri (cm)</label><input type="number" class="field" id="m_hips" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div><div><label class="label" for="m_arm">Braț (cm)</label><input type="number" class="field" id="m_arm" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div><div><label class="label" for="m_thigh">Coapsă (cm)</label><input type="number" class="field" id="m_thigh" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div></div>
+    <div style="font-size:12px;color:var(--hint);margin-top:14px">Completează doar ce ai măsurat. Valorile sunt în centimetri.</div>
+    <div class="row" style="margin-top:24px">
+      <button class="btn" id="saveMeas" style="margin-top:0">Salvează</button>
+      <button class="btn ghost" id="cancelMeas" style="margin-top:0">Anulează</button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="goalModal" role="dialog" aria-modal="true" aria-labelledby="gmTitle" hidden>
+  <div class="sheet">
+    <h3 id="gmTitle">Setează obiectivul</h3>
+      <label class="label" for="gTarget">Greutate țintă (<span class="unit">kg</span>)</label>
+      <input type="number" class="field" id="gTarget" inputmode="decimal" step="0.1" style="width:100%">
+      <label class="label" for="gStart">Greutate de start (<span class="unit">kg</span>) — gol = prima măsurătoare</label>
+      <input type="number" class="field" id="gStart" inputmode="decimal" step="0.1" style="width:100%">
+      <label class="label" for="gDate">Data țintă (opțional)</label>
+      <div class="dwrap" style="flex:none;width:100%"><input type="text" id="gDate" inputmode="numeric" placeholder="zz.ll.aaaa" maxlength="10" autocomplete="off"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><input type="date" class="dnat" tabindex="-1" aria-label="Alege din calendar"></div>
+    <div class="row" style="margin-top:24px">
+      <button class="btn" id="saveGoal" style="margin-top:0">Salvează</button>
+      <button class="btn ghost" id="cancelGoal" style="margin-top:0">Anulează</button>
+    </div>
+  </div>
+</div>
 <div class="modal" id="welcome" role="dialog" aria-modal="true" aria-labelledby="wTitle" hidden>
   <div class="sheet">
     <svg class="wlogo" viewBox="0 0 96 96" aria-hidden="true"><circle cx="20" cy="30" r="6" fill="currentColor" opacity=".45"/><circle cx="34" cy="38" r="6" fill="currentColor" opacity=".45"/><circle cx="48" cy="34" r="6" fill="currentColor" opacity=".45"/><circle cx="62" cy="46" r="6" fill="currentColor" opacity=".45"/><circle cx="76" cy="54" r="7" fill="currentColor"/><rect x="18" y="68" width="60" height="6" rx="3" fill="currentColor" opacity=".3"/><rect x="18" y="68" width="40" height="6" rx="3" fill="currentColor"/></svg>
@@ -325,6 +425,7 @@ const local = {
 /* ---------- State ---------- */
 const state = {
   entries: {},            // 'YYYY-MM-DD' -> {w (kg), n}
+  meas: {},               // 'YYYY-MM-DD' -> {waist, chest, hips, arm, thigh} (cm)
   s: { unit: 'kg', height: null, goal: null, name: '', theme: 'auto' }, // goal: {target, start, date}
   range: 30, editing: null,
 };
@@ -353,6 +454,7 @@ async function load() {
     try {
       if (k === 's') Object.assign(state.s, JSON.parse(v));
       else if (k.startsWith('e')) Object.assign(state.entries, JSON.parse(v));
+      else if (k.startsWith('m')) Object.assign(state.meas, JSON.parse(v));
     } catch (e) {}
   }
 }
@@ -366,6 +468,12 @@ async function saveMonth(ym) {
   for (const d in state.entries) if (d.startsWith(ym)) chunk[d] = state.entries[d];
   if (Object.keys(chunk).length) await put('e' + ym, chunk);
   else { local.del(['e' + ym]); if (useCloud) try { await cloud.del(['e' + ym]); } catch (e) {} }
+}
+async function saveMeasMonth(ym) {
+  const chunk = {};
+  for (const d in state.meas) if (d.startsWith(ym)) chunk[d] = state.meas[d];
+  if (Object.keys(chunk).length) await put('m' + ym, chunk);
+  else { local.del(['m' + ym]); if (useCloud) try { await cloud.del(['m' + ym]); } catch (e) {} }
 }
 const saveSettings = () => put('s', state.s);
 
@@ -383,6 +491,7 @@ const PATHS = {
   down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
   check: '<circle cx="12" cy="12" r="8"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
   chart: '<path d="M4 18l5-6 4 3 7-9"/>',
+  ruler: '<path d="M4 16L16 4l4 4L8 20z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/>',
   tick: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   stats: '<path d="M5 20V11M12 20V4M19 20v-6"/>',
   list: '<path d="M4 7h16M4 12h16M4 17h16"/>',
@@ -397,7 +506,7 @@ function showHint(html, act) {
 }
 $('#hint').onclick = () => { $('#hint').classList.remove('show'); clearTimeout(hintT); if (hintAct) hintAct(); hintAct = null; };
 const seen = () => state.s.seen || (state.s.seen = {});
-const goGoal = () => setView('goal');
+const goGoal = () => { setView('goal'); if (!state.s.goal) openGoalModal(); };
 
 function longestStreak(list) {
   let best = 0, run = 0, prev = null;
@@ -405,12 +514,12 @@ function longestStreak(list) {
   return best;
 }
 const BADGES = [
-  { id: 'first', label: 'Prima cântărire', icon: 'scale', quiet: true, ok: l => l.length >= 1 },
-  { id: 'goal', label: 'Primul obiectiv', icon: 'target', ok: () => !!state.s.goal },
-  { id: 's7', label: '7 zile la rând', icon: 'flame', ok: l => longestStreak(l) >= 7 },
-  { id: 's30', label: '30 de zile la rând', icon: 'trophy', ok: l => longestStreak(l) >= 30 },
-  { id: 'kg1', label: '1 kg schimbat', icon: 'down', ok: l => l.length > 1 && Math.abs(l[l.length - 1].w - l[0].w) >= 1 },
-  { id: 'done', label: 'Obiectiv atins', icon: 'check', quiet: true, ok: l => { const gi = goalInfo(l); return !!gi && gi.reached; } },
+  { id: 'first', label: 'Prima cântărire', icon: 'scale', quiet: true, desc: 'Adaugă prima ta cântărire.', ok: l => l.length >= 1 },
+  { id: 'goal', label: 'Primul obiectiv', icon: 'target', desc: 'Setează un obiectiv de greutate.', ok: () => !!state.s.goal },
+  { id: 's7', label: '7 zile la rând', icon: 'flame', desc: 'Cântărește-te 7 zile consecutive.', prog: l => [Math.min(longestStreak(l), 7), 7, 'zile'], ok: l => longestStreak(l) >= 7 },
+  { id: 's30', label: '30 de zile la rând', icon: 'trophy', desc: 'Cântărește-te 30 de zile consecutive.', prog: l => [Math.min(longestStreak(l), 30), 30, 'zile'], ok: l => longestStreak(l) >= 30 },
+  { id: 'kg1', label: '1 kg schimbat', icon: 'down', desc: 'Schimbă-ți greutatea cu cel puțin 1 kg față de prima cântărire.', prog: l => [l.length > 1 ? Math.min(Math.abs(l[l.length - 1].w - l[0].w), 1) : 0, 1, 'kg'], ok: l => l.length > 1 && Math.abs(l[l.length - 1].w - l[0].w) >= 1 },
+  { id: 'done', label: 'Obiectiv atins', icon: 'check', quiet: true, desc: 'Ajunge la greutatea țintă a obiectivului tău.', ok: l => { const gi = goalInfo(l); return !!gi && gi.reached; } },
 ];
 function checkBadges() {
   const l = sorted(), b = state.s.badges || (state.s.badges = {}), fresh = [];
@@ -418,11 +527,39 @@ function checkBadges() {
   if (fresh.length) saveSettings();
   return fresh.filter(d => !d.quiet);
 }
+let selBadge = null;
+function badgeInfo(id) {
+  const d = BADGES.find(x => x.id === id), b = state.s.badges || {};
+  if (b[id]) return `<b>${d.label}</b> · câștigată pe ${fmtDate(b[id], true)}.<br>${d.desc}`;
+  let t = `<b>${d.label}</b><br>Cum o câștigi: ${d.desc}`;
+  if (d.prog) { const [c, m, u] = d.prog(sorted()); t += `<br>Progres: ${u === 'kg' ? c.toFixed(1) : c} din ${m} ${u}.`; }
+  return t;
+}
 function renderBadges() {
   const b = state.s.badges || {};
   $('#badgeCount').textContent = `${BADGES.filter(d => b[d.id]).length} din ${BADGES.length}`;
-  $('#badges').innerHTML = BADGES.map(d => `<div class="badge${b[d.id] ? ' on' : ''}"><div class="bi">${ico(d.icon)}</div>${d.label}</div>`).join('');
+  $('#badges').innerHTML = BADGES.map(d => `<button type="button" class="badge${b[d.id] ? ' on' : ''}${selBadge === d.id ? ' sel' : ''}" data-id="${d.id}"><div class="bi">${ico(d.icon)}</div>${d.label}</button>`).join('');
+  $('#badgeInfo').innerHTML = selBadge ? badgeInfo(selBadge) : 'Atinge o insignă ca să vezi cum o câștigi.';
 }
+$('#badges').addEventListener('click', e => { const t = e.target.closest('.badge'); if (!t) return; selBadge = selBadge === t.dataset.id ? null : t.dataset.id; haptic(); renderBadges(); });
+function celebrate() {
+  const g = state.s.goal, l = sorted(); if (!g || !l.length || g.celebrated) return;
+  g.celebrated = true; saveSettings();
+  const start = g.start != null ? g.start : l[0].w, diff = Math.abs(start - l[l.length - 1].w), days = dayDiff(l[0].d, l[l.length - 1].d) + 1;
+  const nm = (state.s.name || tgName()).trim();
+  $('#gdTitle').textContent = nm ? `Felicitări, ${nm}!` : 'Felicitări!';
+  $('#gdLine').innerHTML = `Ai atins obiectivul de <b>${fmt(g.target)} ${unit()}</b>`;
+  $('#gdStat').textContent = diff >= 0.1 ? `${deltaWord(start, g.target)} ${fmt(diff)} ${unit()}${days > 1 ? ` în ${days} ${days % 100 === 0 || days % 100 >= 20 ? 'de zile' : 'zile'}` : ''}.` : '';
+  const sheet = $('#goalDone .sheet'); $$('.conf', sheet).forEach(e => e.remove());
+  const cols = ['#1D9E75', '#F2B33D', '#E24B4A', '#378ADD', '#D4537E'];
+  for (let i = 0; i < 22; i++) { const c = document.createElement('span'); c.className = 'conf'; c.style.cssText = `left:${Math.random() * 96}%;background:${cols[i % cols.length]};animation-delay:${(Math.random() * 1.4).toFixed(2)}s;animation-duration:${(2.2 + Math.random()).toFixed(2)}s`; sheet.append(c); }
+  $('#goalDone').hidden = false; hapticOk();
+}
+const deltaWord = (start, t) => t < start ? 'Ai slăbit' : 'Ai crescut cu';
+const closeDone = () => { $('#goalDone').hidden = true; };
+$('#gdOk').onclick = closeDone;
+$('#gdNew').onclick = () => { closeDone(); setView('goal'); openGoalModal('new'); };
+$('#goalDone').addEventListener('click', e => { if (e.target.id === 'goalDone') closeDone(); });
 function maybeWelcome() {
   if (seen().welcome || sorted().length || state.s.goal) return;
   const nm = (state.s.name || tgName()).trim();
@@ -485,12 +622,99 @@ function renderAll() {
   renderHero(); renderStats(); renderGoal(); renderList(); renderChart(); renderBadges();
   $('#height').value = state.s.height || '';
   $('#uname').value = state.s.name || tgName();
-  $('#unitSel').value = unit();
+  $('#unitSel').value = unit(); $('#sexSel').value = state.s.sex || '';
   $('#themeSel').value = state.s.theme || 'auto'; applyTheme();
-  const g = state.s.goal;
-  $('#gTarget').value = g ? fmt(g.target) : '';
-  $('#gStart').value = g && g.start != null ? fmt(g.start) : '';
-  $('#gDate').value = g && g.date || '';
+  fillGoalInputs(); renderGoalView();
+}
+const MTYPES = [{ k: 'neck', l: 'Gât' }, { k: 'chest', l: 'Piept' }, { k: 'waist', l: 'Talie' }, { k: 'hips', l: 'Șolduri' }, { k: 'arm', l: 'Braț' }, { k: 'thigh', l: 'Coapsă' }];
+const measDates = () => Object.keys(state.meas).sort();
+const measSeries = k => measDates().filter(d => state.meas[d][k] > 0).map(d => ({ d, v: state.meas[d][k] }));
+const fmtDelta = d => `${d > 0 ? '+' : ''}${(Math.round(d * 10) / 10).toString().replace(/\.0$/, '')} cm`;
+const MSTD = {
+  f: { neck: .205, chest: .53, waist: .38, hips: .54, arm: .17, thigh: .31 },
+  m: { neck: .225, chest: .56, waist: .45, hips: .52, arm: .2, thigh: .32 },
+};
+function measTarget(k) {
+  const h = state.s.height, sx = state.s.sex;
+  return h && MSTD[sx] ? Math.round(MSTD[sx][k] * h * 10) / 10 : null;
+}
+function measPos(S, C, T) {
+  const tol = Math.max(1, T * 0.02);
+  if (Math.abs(C - T) <= tol) return 100;
+  const prog = Math.abs(S - T) > tol ? (S - C) / (S - T) : -(Math.abs(C - T) - tol) / (T * 0.1);
+  return 50 + 50 * Math.max(-1, Math.min(1, prog));
+}
+function measBarsHtml() {
+  const dates = measDates();
+  if (!dates.length) return { sub: 'Talie, piept, șolduri și altele', rows: '' };
+  const first = dates[0], last = dates[dates.length - 1];
+  const sub = first === last ? `Măsurat pe ${fmtDate(last, true)}` : `Din ${fmtDate(first)} până în ${fmtDate(last, true)}`;
+  const hasStd = MTYPES.some(t => measTarget(t.k) != null);
+  let rows = hasStd ? '<p class="mleg">Punctul gol e startul, la mijloc. Spre dreapta te apropii de standardul pentru înălțimea ta, iar cercul din capăt e ținta.</p>'
+    : '<p class="mleg">Adaugă înălțimea și sexul în Setări ca să vezi progresul față de standard.</p>';
+  rows += MTYPES.map(t => {
+    const s = measSeries(t.k); if (!s.length) return '';
+    const v0 = s[0].v, v1 = s[s.length - 1].v, T = measTarget(t.k);
+    const vals = s.length === 1 ? `<b>${v1} cm</b>` : `${v0} → <b>${v1} cm</b>`;
+    if (T == null) return `<div class="cmp"><span class="nm">${t.l}</span><div></div><span class="vl">${vals}</span></div>`;
+    const pos = measPos(v0, v1, T), cls = pos > 50.5 ? 'dn' : pos < 49.5 ? 'up' : 'eq';
+    const a = Math.min(50, pos), w = Math.abs(pos - 50);
+    return `<div class="cmp"><span class="nm">${t.l}</span>
+      <div class="tr"><i class="${cls}" style="left:${a}%;width:${w}%"></i><s style="left:50%"></s><b class="tg"></b><u class="${cls}" style="left:${pos}%"></u></div>
+      <span class="vl">${vals}<small>țintă ${T}</small></span></div>`;
+  }).join('');
+  return { sub, rows };
+}
+function measProgressHtml() {
+  const { sub, rows } = measBarsHtml();
+  return `<div class="msub"><div class="mh"><div><h4>Măsurători corporale</h4><p>${sub}</p></div><button type="button" class="plus" id="addMeas" aria-label="Adaugă măsurători">+</button></div>${rows}</div>`;
+}
+const mDate = $('#mDate');
+dateField(mDate);
+function fillMeas() {
+  const e = state.meas[mDate.value] || {};
+  MTYPES.forEach(t => { const s = measSeries(t.k); const inp = $('#m_' + t.k); inp.value = e[t.k] != null ? e[t.k] : ''; inp.placeholder = s.length ? String(s[s.length - 1].v) : 'cm'; });
+}
+function openMeasModal(date) {
+  mDate.value = typeof date === 'string' ? date : today(); fillMeas();
+  $('#mmTitle').textContent = state.meas[mDate.value] ? 'Modifică măsurătorile' : 'Adaugă măsurători';
+  $('#measModal').hidden = false; setTimeout(() => $('#m_neck').focus(), 50); }
+const closeMeasModal = () => { $('#measModal').hidden = true; };
+mDate.addEventListener('change', fillMeas);
+$('#cancelMeas').onclick = closeMeasModal;
+$('#measModal').addEventListener('click', e => { if (e.target.id === 'measModal') closeMeasModal(); });
+$('#saveMeas').onclick = async () => {
+  const d = mDate.value, vals = {};
+  if (!d) return toast('Data trebuie să fie în formatul zz.ll.aaaa');
+  if (d > today()) return toast('Data nu poate fi în viitor');
+  for (const t of MTYPES) {
+    const raw = $('#m_' + t.k).value.trim().replace(',', '.'); if (!raw) continue;
+    const v = parseFloat(raw);
+    if (!(v >= 10 && v <= 300)) return toast(`${t.l}: valoare invalidă`);
+    vals[t.k] = Math.round(v * 10) / 10;
+  }
+  if (!Object.keys(vals).length) return toast('Introdu cel puțin o măsurătoare');
+  state.meas[d] = vals; await saveMeasMonth(d.slice(0, 7));
+  closeMeasModal(); hapticOk(); toast('Măsurători salvate ✓'); renderGoal(); renderList();
+};
+function renderGoalView() {
+  const g = state.s.goal, past = state.s.pastGoals || [], card = $('#goalCard'), l = sorted();
+  card.hidden = !g && !past.length;
+  if (card.hidden) return;
+  const fd = d => d.split('-').reverse().join('.');
+  const line = (o, status, act) => {
+    const start = o.start != null ? o.start : l.length ? l[0].w : null;
+    const label = { ok: 'Atins', run: 'În proces', no: 'Neatins' }[status];
+    return `<div class="grow${act ? ' act' : ''}"><div class="gt"><b>${fmt(o.target)} ${unit()}</b><span>${start != null ? 'de la ' + fmt(start) : ''}${o.date ? ' · până ' + fd(o.date) : ''}</span></div><span class="gs ${status}">${label}</span></div>`;
+  };
+  let html = '';
+  if (g) {
+    const gi = goalInfo(l);
+    const status = gi && gi.reached ? 'ok' : g.date && g.date < today() ? 'no' : 'run';
+    html += line(g, status, true);
+  }
+  html += past.slice().reverse().map(p => line(p, p.reached ? 'ok' : 'no', false)).join('');
+  $('#goalView').innerHTML = html;
 }
 function applyTheme() {
   const t = state.s.theme || 'auto', root = document.documentElement;
@@ -556,11 +780,14 @@ function renderStats() {
 }
 function renderGoal() {
   const list = sorted(), el = $('#goalProgress'), gi = goalInfo(list);
-  if (!state.s.goal) { el.innerHTML = emptyBox('target', 'Încă nu ai un obiectiv', '<button class="ebtn" id="goToGoal">Setează obiectivul</button>'); return; }
-  if (!gi) { el.innerHTML = emptyBox('scale', 'Adaugă o măsurătoare pentru a vedea progresul'); return; }
+  el.innerHTML = goalProgressHtml(list, gi) + measProgressHtml();
+}
+function goalProgressHtml(list, gi) {
+  if (!state.s.goal) { return emptyBox('target', 'Încă nu ai un obiectiv', '<button class="ebtn" id="goToGoal">Setează obiectivul</button>'); }
+  if (!gi) { return emptyBox('scale', 'Adaugă o măsurătoare pentru a vedea progresul'); }
   const g = state.s.goal, pct = Math.round(gi.progress * 100);
   let html = `<div class="between"><span>Start: ${fmt(gi.start)} ${unit()}</span><span>Țintă: ${fmt(gi.target)} ${unit()}</span></div>
-    <div class="bar"><div style="width:${pct}%"></div></div>
+    <div class="bar"><div style="width:${pct}%;background-size:${pct ? Math.round(10000 / pct) : 100}% 100%"></div></div>
     <div style="text-align:center;font-size:28px;font-weight:700">${pct}%</div>`;
   if (gi.reached) html += `<div style="text-align:center;margin-top:8px">🎉 Obiectiv atins! Felicitări!</div>`;
   else {
@@ -580,19 +807,34 @@ function renderGoal() {
     }
     if (lines.length) html += `<div style="margin-top:12px;font-size:14px;line-height:1.7">${lines.join('<br>')}</div>`;
   }
-  el.innerHTML = html;
+  return html;
 }
 function renderList() {
-  const list = sorted(), el = $('#list');
-  if (!list.length) { el.innerHTML = emptyBox('list', 'Nicio măsurătoare încă', '<button class="ebtn" id="goToAdd">Adaugă prima cântărire</button>'); return; }
-  el.innerHTML = list.map((e, i) => {
-    const prev = list[i - 1], diff = prev ? e.w - prev.w : null;
-    return `<div class="item" data-d="${e.d}">
+  const w = sorted(), md = measDates(), el = $('#list'), f = state.histFilter || 'all';
+  $$('#hChips .chip').forEach(c => c.classList.toggle('on', c.dataset.f === f));
+  const items = [];
+  if (f !== 'm') w.forEach((e, i) => {
+    const prev = w[i - 1], diff = prev ? e.w - prev.w : null;
+    items.push({ d: e.d, o: 0, html: `<div class="item" data-d="${e.d}">
       <div class="d">${fmtDate(e.d, true)}<small>${esc(e.n)}</small></div>
       <div class="w">${fmt(e.w)} ${unit()}</div>
       <div class="delta">${diff == null ? '' : (diff > 0 ? '+' : '') + fmt(diff)}</div>
-      <button class="x" data-del="${e.d}" aria-label="Șterge">✕</button></div>`;
-  }).reverse().join('');
+      <button class="x" data-del="${e.d}" aria-label="Șterge">✕</button></div>` });
+  });
+  if (f !== 'w') md.forEach(d => {
+    const sum = MTYPES.filter(t => state.meas[d][t.k] > 0).map(t => `${t.l} ${state.meas[d][t.k]}`).join(' · ');
+    items.push({ d, o: 1, html: `<div class="item" data-m="${d}">
+      <div class="d">${fmtDate(d, true)}<small>${sum}</small></div>
+      <span class="tag" title="Măsurători">${ico('ruler')}</span>
+      <button class="x" data-mdel="${d}" aria-label="Șterge">✕</button></div>` });
+  });
+  if (!items.length) {
+    el.innerHTML = f === 'm' ? emptyBox('ruler', 'Nicio măsurătoare corporală încă', '<button class="ebtn" id="goToMeas">Adaugă măsurători</button>')
+      : emptyBox('list', f === 'w' ? 'Nicio cântărire încă' : 'Nicio înregistrare încă', '<button class="ebtn" id="goToAdd">Adaugă prima cântărire</button>');
+    return;
+  }
+  items.sort((a, b) => a.d === b.d ? a.o - b.o : a.d < b.d ? 1 : -1);
+  el.innerHTML = items.map(x => x.html).join('');
 }
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -707,8 +949,11 @@ $('#minus').onclick = () => step(-1); $('#plus').onclick = () => step(1);
 dIn.onchange = () => { const e = state.entries[dIn.value]; if (e) { wIn.value = fmt(e.w); nIn.value = e.n || ''; showNoteQuiet(!!e.n); } updateSaveBtn(); };
 ['input', 'change'].forEach(ev => { wIn.addEventListener(ev, updateSaveBtn); nIn.addEventListener(ev, updateSaveBtn); });
 $('#cancelEdit').onclick = resetForm;
-$('#goalProgress').addEventListener('click', e => { if (e.target.closest('#goToGoal')) { const t = $('#gTarget'); t.scrollIntoView({ block: 'center', behavior: 'smooth' }); t.focus({ preventScroll: true }); } });
-$('#list').addEventListener('click', e => { if (e.target.closest('#goToAdd')) { setView('home'); wIn.focus(); } });
+$('#goalProgress').addEventListener('click', e => { if (e.target.closest('#goToGoal')) openGoalModal('new'); if (e.target.closest('#addMeas')) openMeasModal(); });
+$('#addGoal').onclick = () => openGoalModal('new');
+$('#goalView').addEventListener('click', e => { if (e.target.closest('.grow.act')) openGoalModal('edit'); });
+$('#list').addEventListener('click', e => { if (e.target.closest('#goToAdd')) { setView('home'); wIn.focus(); } if (e.target.closest('#goToMeas')) openMeasModal(); });
+$('#hChips').onclick = e => { const c = e.target.closest('.chip'); if (c) { state.histFilter = c.dataset.f; haptic(); renderList(); } };
 
 $('#save').onclick = async () => {
   const v = parseFloat(wIn.value.replace(',', '.')), d = dIn.value;
@@ -727,7 +972,7 @@ $('#save').onclick = async () => {
   resetForm(); renderAll();
   announce(fresh, true);
   const gi = goalInfo(sorted());
-  if (gi && gi.reached && !(hadGoal && hadGoal.reached)) setTimeout(() => { toast('🎉 Obiectiv atins!'); hapticOk(); }, 1200);
+  if (gi && gi.reached && !(hadGoal && hadGoal.reached)) setTimeout(celebrate, 700);
 };
 
 /* ---------- History ---------- */
@@ -740,6 +985,16 @@ $('#list').onclick = async e => {
     }
     return;
   }
+  const mdel = e.target.closest('[data-mdel]');
+  if (mdel) {
+    e.stopPropagation(); const d = mdel.dataset.mdel;
+    if (await confirmBox(`Ștergi măsurătorile din ${fmtDate(d, true)}?`)) {
+      delete state.meas[d]; await saveMeasMonth(d.slice(0, 7)); haptic('medium'); renderAll();
+    }
+    return;
+  }
+  const mit = e.target.closest('.item[data-m]');
+  if (mit) { openMeasModal(mit.dataset.m); return; }
   const it = e.target.closest('.item'); if (!it) return;
   const d = it.dataset.d, en = state.entries[d];
   state.editing = d; dIn.value = d; wIn.value = fmt(en.w); nIn.value = en.n || ''; showNoteQuiet(!!en.n);
@@ -748,12 +1003,35 @@ $('#list').onclick = async e => {
 };
 
 /* ---------- Goal / profile / data ---------- */
+let goalMode = 'edit';
+function fillGoalInputs() {
+  const g = goalMode === 'edit' ? state.s.goal : null;
+  $('#gTarget').value = g ? fmt(g.target) : '';
+  $('#gStart').value = g && g.start != null ? fmt(g.start) : '';
+  $('#gDate').value = g && g.date || '';
+}
+function openGoalModal(mode) {
+  goalMode = mode === 'new' || !state.s.goal ? 'new' : 'edit';
+  fillGoalInputs();
+  $('#gmTitle').textContent = goalMode === 'edit' ? 'Modifică obiectivul' : state.s.goal ? 'Obiectiv nou' : 'Setează obiectivul';
+  $('#goalModal').hidden = false;
+  setTimeout(() => $('#gTarget').focus(), 50);
+}
+const closeGoalModal = () => { $('#goalModal').hidden = true; };
+$('#cancelGoal').onclick = closeGoalModal;
+$('#goalModal').addEventListener('click', e => { if (e.target.id === 'goalModal') closeGoalModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeGoalModal(); closeMeasModal(); closeDone(); if (!$('#welcome').hidden) closeWelcome(); } });
 $('#saveGoal').onclick = async () => {
   const t = parseFloat($('#gTarget').value.replace(',', '.')), s = parseFloat($('#gStart').value.replace(',', '.'));
-  if (!$('#gTarget').value.trim()) { state.s.goal = null; }
-  else if (!(t > 0)) return toast('Țintă invalidă');
-  else state.s.goal = { target: fromDisp(t), start: s > 0 ? fromDisp(s) : null, date: $('#gDate').value || null };
-  await saveSettings(); hapticOk(); toast('Obiectiv salvat ✓');
+  if (!(t > 0)) return toast('Introdu greutatea țintă');
+  const l = sorted(), old = state.s.goal;
+  let start = s > 0 ? fromDisp(s) : null;
+  if (goalMode === 'new') {
+    if (old) { const gi = goalInfo(l); (state.s.pastGoals || (state.s.pastGoals = [])).push({ target: old.target, start: old.start != null ? old.start : l.length ? l[0].w : null, date: old.date, ended: today(), reached: !!(gi && gi.reached) }); }
+    if (start == null && l.length) start = l[l.length - 1].w;
+  }
+  state.s.goal = { target: fromDisp(t), start, date: $('#gDate').value || null };
+  await saveSettings(); closeGoalModal(); hapticOk(); toast('Obiectiv salvat ✓');
   const fresh = checkBadges(); renderAll(); announce(fresh, false);
 };
 $('#themeSel').onchange = e => { state.s.theme = e.target.value; applyTheme(); renderChart(); saveSettings(); haptic(); };
@@ -761,6 +1039,7 @@ $('#saveProfile').onclick = async () => {
   const h = parseInt($('#height').value, 10);
   state.s.height = h >= 100 && h <= 250 ? h : null;
   state.s.unit = $('#unitSel').value;
+  state.s.sex = $('#sexSel').value;
   state.s.theme = $('#themeSel').value;
   const un = $('#uname').value.trim().slice(0, 30);
   state.s.name = un === tgName() ? '' : un;
@@ -821,9 +1100,9 @@ $('#exportCsv').onclick = async () => {
 };
 $('#wipe').onclick = async () => {
   if (!(await confirmBox('Sigur ștergi TOATE datele? Acțiunea nu poate fi anulată.'))) return;
-  const months = [...new Set(Object.keys(state.entries).map(d => 'e' + d.slice(0, 7)))].concat('s');
+  const months = [...new Set(Object.keys(state.entries).map(d => 'e' + d.slice(0, 7)))].concat([...new Set(Object.keys(state.meas).map(d => 'm' + d.slice(0, 7)))], 's');
   local.del(months); if (useCloud) try { await cloud.del(months); } catch (e) {}
-  state.entries = {}; state.s = { unit: 'kg', height: null, goal: null, name: '', theme: 'auto' };
+  state.entries = {}; state.meas = {}; state.s = { unit: 'kg', height: null, goal: null, name: '', theme: 'auto' };
   haptic('heavy'); toast('Datele au fost șterse'); resetForm(); renderAll();
 };
 
