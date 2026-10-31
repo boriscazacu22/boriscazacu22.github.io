@@ -1,1114 +1,1024 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ro">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Greutatea mea</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<style>
-:root {
-  --bg: var(--tg-theme-bg-color, #ffffff);
-  --bg2: var(--tg-theme-secondary-bg-color, #f2f3f5);
-  --text: var(--tg-theme-text-color, #111111);
-  --hint: var(--tg-theme-hint-color, #8a8f98);
-  --link: var(--tg-theme-link-color, #2481cc);
-  --btn: var(--tg-theme-button-color, #2481cc);
-  --btn-text: var(--tg-theme-button-text-color, #ffffff);
-  --good: #2eb872;
-  --bad: #e5534b;
-  --line: color-mix(in srgb, var(--text) 10%, transparent);
-  --radius: 16px;
-}
-html[data-theme="light"] { --bg: #ffffff; --bg2: #f2f3f5; --text: #111111; --hint: #8a8f98; --btn: #1D9E75; --btn-text: #ffffff; color-scheme: light; }
-html[data-theme="dark"] { --bg: #1c1c1e; --bg2: #000000; --text: #f2f2f7; --hint: #8e8e93; --btn: #1D9E75; --btn-text: #ffffff; color-scheme: dark; }
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; background: var(--bg2); color: var(--text);
-  font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
-main { max-width: 560px; margin: 0 auto; padding: 12px 12px 0; }
-.view { display: none; } .view.active { display: block; }
-.card { background: var(--bg); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
-h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--hint); margin: 0 0 12px; font-weight: 600; }
-.hero { padding: 16px; }
-.hero .hello { font-size: 14px; color: var(--hint); margin-bottom: 2px; }
-.hero .top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
-.hero .big { font-size: 48px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; }
-.hero .big small { font-size: 18px; font-weight: 500; color: var(--hint); margin-left: 4px; }
-.pill[hidden] { display: none; }
-.hero .pill { margin: 0 0 0 8px; vertical-align: middle; }
-.hero .sub { color: var(--hint); margin-top: 6px; font-size: 13px; }
-#spark { width: 120px; height: 52px; flex: none; }
-.minis { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; margin-top: 14px; }
-.mini { background: var(--bg2); border-radius: 12px; padding: 8px 10px; }
-.mini span { display: block; font-size: 12px; color: var(--hint); }
-.mini b { display: block; font-size: 16px; }
-.pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; margin-top: 8px; background: var(--bg2); }
-.pill.good { color: var(--good); } .pill.bad { color: var(--bad); }
-
-.entry { display: flex; align-items: center; justify-content: center; gap: 12px; }
-.entry button.step { width: 48px; height: 48px; border-radius: 50%; border: 0; background: var(--bg2); color: var(--text); font-size: 26px; cursor: pointer; }
-.entry input[type=number] { width: 130px; text-align: center; font-size: 36px; font-weight: 700; border: 0; background: transparent; color: var(--text); outline: none; -moz-appearance: textfield; }
-.entry input::-webkit-outer-spin-button, .entry input::-webkit-inner-spin-button { -webkit-appearance: none; }
-.row { display: flex; gap: 10px; margin-top: 16px; }
-input[type=date], input[type=text], input[type=number].field, select {
-  flex: 1; min-width: 0; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line);
-  background: var(--bg2); color: var(--text); font: inherit; outline: none; }
-.btn { width: 100%; margin-top: 20px; padding: 14px; border: 0; border-radius: 14px; background: var(--btn); color: var(--btn-text);
-  font: inherit; font-weight: 600; cursor: pointer; }
-.btn.ghost { background: var(--bg2); color: var(--text); }
-.btn.danger { background: transparent; color: var(--bad); }
-.btn:active, .step:active { opacity: .7; }
-.btn:disabled { opacity: .5; cursor: default; }
-.btn:disabled:active { opacity: .5; }
-#wipe { transition: background .15s, color .15s; }
-#wipe:active { background: var(--bad); color: #fff; opacity: 1; }
-@media (hover: hover) { #wipe:hover { background: var(--bad); color: #fff; } }
-
-select { -webkit-appearance: none; appearance: none; height: 44px; padding-right: 36px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%238a8f98' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
-.dfoot { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
-.dbtn { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px 6px 4px; color: var(--hint); font-size: 14px; cursor: pointer; }
-.dbtn svg, .iconbtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.dbtn .dnat { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; padding: 0; border: 0; cursor: pointer; }
-.iconbtn { width: 38px; height: 38px; border-radius: 50%; border: 0; background: var(--bg2); color: var(--hint); display: flex; align-items: center; justify-content: center; cursor: pointer; }
-.iconbtn.on { color: var(--btn); }
-.nfield { width: 100%; margin-top: 14px; }
-.dwrap { position: relative; flex: 1; min-width: 0; }
-.dwrap input[type=text] { width: 100%; padding-right: 40px; }
-.dwrap svg { position: absolute; right: 12px; top: 50%; width: 20px; height: 20px; margin-top: -10px; fill: none; stroke: var(--hint); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
-.dwrap .dnat { position: absolute; right: 0; top: 0; width: 44px; height: 100%; opacity: 0; padding: 0; border: 0; cursor: pointer; }
-.chips { display: flex; gap: 6px; margin-bottom: 8px; }
-.chip { flex: 1; padding: 6px 0; text-align: center; border-radius: 10px; background: var(--bg2); font-size: 13px; font-weight: 600; cursor: pointer; border: 0; color: var(--text); }
-.chip.on { background: var(--btn); color: var(--btn-text); }
-#chartWrap { position: relative; height: 230px; touch-action: pan-y; }
-#chartWrap svg { width: 100%; height: 100%; display: block; }
-#tip { position: absolute; pointer-events: none; background: var(--text); color: var(--bg); padding: 4px 8px; border-radius: 8px; font-size: 12px; white-space: nowrap; transform: translate(-50%, -100%); opacity: 0; transition: opacity .1s; }
-.legend { display: flex; gap: 14px; font-size: 12px; color: var(--hint); margin-top: 6px; flex-wrap: wrap; }
-.legend i { display: inline-block; width: 14px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 4px; }
-.empty { color: var(--hint); text-align: center; padding: 28px 8px; font-size: 14px; }
-.empty svg, #chartWrap .empty svg { display: block; width: 32px; height: 32px; margin: 0 auto 8px; fill: none; stroke: var(--hint); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.empty p { margin: 0; }
-.ebtn { margin-top: 18px; padding: 8px 16px; border-radius: 10px; border: 1.5px solid var(--btn); background: transparent; color: var(--btn); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
-.badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 8px; }
-.binfo { margin-top: 16px; padding: 12px 14px; border-radius: 12px; background: var(--bg2); font-size: 13px; color: var(--hint); line-height: 1.5; }
-.binfo b { color: var(--text); font-weight: 600; }
-button.badge { border: 0; background: none; font: inherit; font-size: 12px; cursor: pointer; padding: 0; }
-.badge.sel .bi { box-shadow: 0 0 0 2px var(--btn); }
-.badge { text-align: center; font-size: 12px; color: var(--hint); }
-.badge .bi { width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 6px; background: var(--bg2); display: flex; align-items: center; justify-content: center; }
-.badge .bi svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.badge.on { color: var(--text); }
-.badge.on .bi { background: color-mix(in srgb, var(--btn) 18%, transparent); color: var(--btn); }
-.modal { position: fixed; inset: 0; background: rgba(0, 0, 0, .5); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 20; }
-.modal[hidden] { display: none; }
-.sheet { background: var(--bg); border-radius: 20px; padding: 26px 22px 22px; width: 100%; max-width: 400px; max-height: 90vh; overflow: auto; }
-.sheet h3 { margin: 0 0 8px; font-size: 22px; }
-.wlogo { display: block; width: 64px; height: 64px; margin: 0 0 14px; color: var(--btn); }
-.sheet .wlead { margin: 0 0 18px; font-size: 14px; line-height: 1.55; }
-.sheet .wsub { margin: 0 0 20px; color: var(--hint); font-size: 14px; }
-.wsteps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
-.wsteps li { display: flex; gap: 14px; align-items: flex-start; }
-.wsteps .n { width: 30px; height: 30px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; background: color-mix(in srgb, var(--btn) 18%, transparent); color: var(--btn); }
-.wsteps b { display: block; font-size: 15px; margin-bottom: 2px; }
-.wsteps p { margin: 0; font-size: 13px; color: var(--hint); line-height: 1.5; }
-.cmp { display: grid; grid-template-columns: 62px 1fr 92px; align-items: center; gap: 10px; padding: 12px 0; border-top: 1px solid var(--line); font-size: 14px; }
-.cmp:first-of-type { border-top: 0; }
-.cmp .nm { font-weight: 600; }
-.cmp .vl { text-align: right; white-space: nowrap; font-size: 13px; }
-.cmp .vl b { font-weight: 600; }
-.tr { position: relative; height: 6px; border-radius: 3px; background: var(--bg2); margin: 0 6px; }
-.tr i { position: absolute; top: 0; height: 100%; border-radius: 3px; background: var(--hint); }
-.tr i.dn, .tr u.dn { background: var(--btn); }
-.tr i.up, .tr u.up { background: #BA7517; }
-.tr s, .tr u, .tr .tg { position: absolute; top: 50%; border-radius: 50%; transform: translate(-50%, -50%); text-decoration: none; }
-.tr s { width: 10px; height: 10px; background: var(--bg); box-shadow: inset 0 0 0 2px var(--hint); }
-.tr .tg { left: 100%; width: 10px; height: 10px; background: var(--bg); box-shadow: inset 0 0 0 2px var(--btn); }
-.tr u { width: 14px; height: 14px; background: var(--hint); box-shadow: 0 0 0 3px var(--bg); }
-.cmp .vl small { display: block; font-size: 11px; color: var(--hint); }
-.mleg { margin: 0 0 4px; font-size: 12px; color: var(--hint); line-height: 1.45; }
-.mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
-.mrow { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
-.mrow b { font-weight: 600; }
-.mrow small { color: var(--hint); font-weight: 400; margin-left: 6px; font-size: 12px; }
-.msub { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
-.msub h4 { margin: 0 0 2px; font-size: 13px; font-weight: 500; color: var(--hint); }
-.msub .mh { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 4px; }
-.msub .mh p { margin: 0; font-size: 14px; }
-.hrow { display: flex; justify-content: space-between; align-items: center; }
-.grow { display: flex; align-items: center; gap: 10px; padding: 13px 0; border-top: 1px solid var(--line); }
-.grow:first-child { border-top: 0; padding-top: 4px; }
-.grow.act { cursor: pointer; }
-.grow .gt { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
-.grow .gt b { font-weight: 600; margin-right: 8px; }
-.grow .gt span { color: var(--hint); font-size: 13px; }
-.gs { flex: none; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
-.gs.ok { background: var(--btn); color: var(--btn-text); }
-.gs.run { background: color-mix(in srgb, var(--btn) 18%, transparent); color: var(--btn); }
-.gs.no { background: color-mix(in srgb, #BA7517 20%, transparent); color: #BA7517; }
-.plus { width: 36px; height: 36px; flex: none; border-radius: 50%; border: 0; background: var(--bg2); color: var(--btn); font-size: 22px; line-height: 1; cursor: pointer; }
-.plus:active { opacity: .7; }
-.sheet.cele { position: relative; text-align: center; overflow: hidden; }
-.cele .trophy { width: 120px; height: 120px; display: block; margin: 4px auto 10px; }
-.cele h3 { font-size: 24px; }
-.cele p { margin: 0 0 6px; font-size: 15px; }
-.cele .cs { color: var(--hint); font-size: 14px; }
-.conf { position: absolute; top: -16px; width: 8px; height: 12px; border-radius: 2px; pointer-events: none; animation: conf-fall 2.8s ease-in 2; opacity: 0; }
-@keyframes conf-fall { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(520px) rotate(540deg); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .conf { display: none; } }
-#hint { position: fixed; left: 12px; right: 12px; max-width: 536px; margin: 0 auto; bottom: calc(84px + env(safe-area-inset-bottom));
-  background: var(--text); color: var(--bg); border-radius: 14px; padding: 12px 14px; font-size: 14px; display: flex; align-items: center; gap: 10px;
-  opacity: 0; transform: translateY(16px); transition: .25s; pointer-events: none; z-index: 11; cursor: pointer; }
-#hint.show { opacity: 1; transform: none; pointer-events: auto; }
-#hint svg { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.stat { background: var(--bg2); border-radius: 12px; padding: 12px; }
-.stat b { display: block; font-size: 20px; }
-.stat span { font-size: 12px; color: var(--hint); }
-
-.bar { height: 14px; border-radius: 7px; background: var(--bg2); overflow: hidden; margin: 8px 0; }
-.bar > div { height: 100%; width: 0; background: linear-gradient(90deg, #E24B4A, #F2B33D 50%, #1D9E75); background-size: 100% 100%; border-radius: 7px; transition: width .5s; }
-.between { display: flex; justify-content: space-between; font-size: 13px; color: var(--hint); }
-.label { font-size: 13px; color: var(--hint); margin: 18px 0 6px; display: block; }
-.label:first-of-type { margin-top: 4px; }
-
-.item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
-.item:last-child { border: 0; }
-.item .d { flex: 1; } .item .d small { display: block; color: var(--hint); font-size: 12px; }
-.item .w { font-weight: 700; margin-right: 12px; }
-.item .delta { font-size: 13px; width: 56px; text-align: right; color: var(--hint); }
-.item .tag { color: var(--hint); margin-right: 4px; display: flex; }
-.item .tag svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.item .x { border: 0; background: none; color: var(--hint); font-size: 18px; padding: 4px 8px; cursor: pointer; }
-
-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--bg); border-top: 1px solid var(--line);
-  padding-bottom: env(safe-area-inset-bottom); }
-nav button { flex: 1; border: 0; background: none; padding: 10px 0 8px; color: var(--hint); font: inherit; font-size: 11px; cursor: pointer; }
-nav button svg { display: block; margin: 0 auto 2px; width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-nav button.on { color: var(--btn); }
-#toast { position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px);
-  background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 14px; opacity: 0; transition: .25s; pointer-events: none; z-index: 10; }
-#toast.show { opacity: 1; transform: translateX(-50%); }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Greutatea mea</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
+
 <body>
-<main>
-  <!-- ACASĂ -->
-  <section class="view active" id="v-home">
-    <div class="card hero">
-      <div class="hello" id="hello" hidden></div>
-      <div class="top">
-        <div class="big"><span id="curW">—</span><small class="unit">kg</small><span class="pill" id="curDelta" hidden></span></div>
-        <svg id="spark" viewBox="0 0 120 52" hidden></svg>
+  <main>
+    <!-- ACASĂ -->
+    <section class="view active" id="v-home">
+      <div class="card hero">
+        <div class="hello" id="hello" hidden></div>
+        <div class="top">
+          <div class="big"><span id="curW">—</span><small class="unit">kg</small><span class="pill" id="curDelta"
+              hidden></span></div>
+          <svg id="spark" viewBox="0 0 120 52" hidden></svg>
+        </div>
+        <div class="sub" id="curSub">Adaugă prima ta măsurătoare</div>
+        <div class="minis" id="minis" hidden>
+          <div class="mini"><span>Țintă</span><b id="mGoal">—</b></div>
+          <div class="mini"><span>Rămas</span><b id="mLeft">—</b></div>
+          <div class="mini"><span>Serie</span><b id="mStreak">—</b></div>
+        </div>
       </div>
-      <div class="sub" id="curSub">Adaugă prima ta măsurătoare</div>
-      <div class="minis" id="minis" hidden>
-        <div class="mini"><span>Țintă</span><b id="mGoal">—</b></div>
-        <div class="mini"><span>Rămas</span><b id="mLeft">—</b></div>
-        <div class="mini"><span>Serie</span><b id="mStreak">—</b></div>
-      </div>
-    </div>
 
-    <div class="card">
-      <h2 id="formTitle">Cântărire de azi</h2>
-      <div class="entry">
-        <button class="step" id="minus" aria-label="Scade">−</button>
-        <input type="number" id="wIn" inputmode="decimal" step="0.1" placeholder="0.0">
-        <button class="step" id="plus" aria-label="Crește">+</button>
+      <div class="card">
+        <h2 id="formTitle">Cântărire de azi</h2>
+        <div class="entry">
+          <button class="step" id="minus" aria-label="Scade">−</button>
+          <input type="number" id="wIn" inputmode="decimal" step="0.1" placeholder="0.0">
+          <button class="step" id="plus" aria-label="Crește">+</button>
+        </div>
+        <div class="dfoot">
+          <label class="dbtn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="4" y="5" width="16" height="15" rx="2" />
+              <path d="M4 10h16M9 3v4M15 3v4" />
+            </svg>
+            <span id="dLabel">Astăzi</span>
+            <input type="text" id="dIn" hidden>
+            <input type="date" class="dnat" aria-label="Alege data">
+          </label>
+          <button type="button" class="iconbtn" id="noteBtn" aria-label="Adaugă notiță">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6l-4 3v-3H6a2 2 0 0 1-2-2z" />
+              <path d="M12 7.5v6M9 10.5h6" />
+            </svg>
+          </button>
+        </div>
+        <input type="text" id="nIn" class="nfield" placeholder="Notiță (ex. după antrenament)" maxlength="60" hidden>
+        <button class="btn" id="save">Salvează</button>
+        <button class="btn ghost" id="cancelEdit" hidden>Anulează editarea</button>
       </div>
-      <div class="dfoot">
-        <label class="dbtn">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>
-          <span id="dLabel">Astăzi</span>
-          <input type="text" id="dIn" hidden>
-          <input type="date" class="dnat" aria-label="Alege data">
-        </label>
-        <button type="button" class="iconbtn" id="noteBtn" aria-label="Adaugă notiță">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6l-4 3v-3H6a2 2 0 0 1-2-2z"/><path d="M12 7.5v6M9 10.5h6"/></svg>
-        </button>
+
+      <div class="card">
+        <h2>Evoluție</h2>
+        <div class="chips" id="chips">
+          <button class="chip" data-r="7">7z</button>
+          <button class="chip" data-r="30">30z</button>
+          <button class="chip" data-r="90">3 luni</button>
+          <button class="chip" data-r="365">1 an</button>
+          <button class="chip" data-r="0">Tot</button>
+        </div>
+        <div id="chartWrap">
+          <div id="tip"></div>
+        </div>
+        <div class="legend">
+          <span><i style="color:var(--btn)"></i>Greutate</span>
+          <span><i style="color:var(--hint);border-top-style:dotted"></i>Medie 7 zile</span>
+          <span><i style="color:var(--good);border-top-style:dashed"></i>Obiectiv</span>
+        </div>
       </div>
-      <input type="text" id="nIn" class="nfield" placeholder="Notiță (ex. după antrenament)" maxlength="60" hidden>
-      <button class="btn" id="save">Salvează</button>
-      <button class="btn ghost" id="cancelEdit" hidden>Anulează editarea</button>
-    </div>
 
-    <div class="card">
-      <h2>Evoluție</h2>
-      <div class="chips" id="chips">
-        <button class="chip" data-r="7">7z</button>
-        <button class="chip" data-r="30">30z</button>
-        <button class="chip" data-r="90">3 luni</button>
-        <button class="chip" data-r="365">1 an</button>
-        <button class="chip" data-r="0">Tot</button>
+
+      <div class="card">
+        <h2>Statistici</h2>
+        <div class="grid" id="stats"></div>
       </div>
-      <div id="chartWrap"><div id="tip"></div></div>
-      <div class="legend">
-        <span><i style="color:var(--btn)"></i>Greutate</span>
-        <span><i style="color:var(--hint);border-top-style:dotted"></i>Medie 7 zile</span>
-        <span><i style="color:var(--good);border-top-style:dashed"></i>Obiectiv</span>
+    </section>
+
+    <!-- OBIECTIV -->
+    <section class="view" id="v-goal">
+      <div class="card">
+        <h2>Progres spre obiectiv</h2>
+        <div id="goalProgress"></div>
       </div>
-    </div>
-
-
-    <div class="card">
-      <h2>Statistici</h2>
-      <div class="grid" id="stats"></div>
-    </div>
-  </section>
-
-  <!-- OBIECTIV -->
-  <section class="view" id="v-goal">
-    <div class="card">
-      <h2>Progres spre obiectiv</h2>
-      <div id="goalProgress"></div>
-    </div>
-    <div class="card" id="goalCard" hidden>
-      <h2 class="hrow">Obiective<button type="button" class="plus" id="addGoal" aria-label="Obiectiv nou">+</button></h2>
-      <div id="goalView"></div>
-    </div>
-    <div class="card">
-      <h2>Realizări · <span id="badgeCount"></span></h2>
-      <div class="badges" id="badges"></div>
-      <div class="binfo" id="badgeInfo">Atinge o insignă ca să vezi cum o câștigi.</div>
-    </div>
-  </section>
-
-  <!-- SETĂRI -->
-  <section class="view" id="v-set">
-    <div class="card">
-      <h2>Profil</h2>
-      <label class="label" for="uname">Nume afișat</label>
-      <input type="text" class="field" id="uname" maxlength="30" placeholder="Numele tău" style="width:100%">
-      <label class="label" for="height">Înălțime (cm) — pentru IMC</label>
-      <input type="number" class="field" id="height" inputmode="numeric" placeholder="ex. 175" style="width:100%">
-      <label class="label" for="sexSel">Sex (pentru standardele de măsurători)</label>
-      <select id="sexSel" style="width:100%"><option value="">Nespecificat</option><option value="f">Femeie</option><option value="m">Bărbat</option></select>
-      <label class="label" for="unitSel">Unitate</label>
-      <select id="unitSel" style="width:100%"><option value="kg">Kilograme (kg)</option><option value="lb">Livre (lb)</option></select>
-      <label class="label" for="themeSel">Temă</label>
-      <select id="themeSel" style="width:100%"><option value="auto">Telegram (automat)</option><option value="light">Albă</option><option value="dark">Neagră</option></select>
-      <button class="btn" id="saveProfile">Salvează profilul</button>
-    </div>
-    <div class="card">
-      <h2>Date</h2>
-      <div class="row" style="margin-top:0">
-        <button class="btn ghost" id="exportCsv" style="margin-top:0">Copiază CSV</button>
-        <button class="btn ghost" id="downloadCsv" style="margin-top:0">Descarcă CSV</button>
+      <div class="card" id="goalCard" hidden>
+        <h2 class="hrow">Obiective<button type="button" class="plus" id="addGoal" aria-label="Obiectiv nou">+</button>
+        </h2>
+        <div id="goalView"></div>
       </div>
-      <label class="label" for="csvText">Import CSV (data,greutate_kg,notita) — lipește textul sau alege un fișier</label>
-      <textarea id="csvText" rows="4" placeholder="2026-10-19,87.6,dimineața" style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font:13px monospace;outline:none;resize:vertical"></textarea>
-      <div class="row" style="margin-top:14px">
-        <button class="btn" id="importCsv" style="margin-top:0">Importă</button>
-        <button class="btn ghost" id="pickCsv" style="margin-top:0">Alege fișier</button>
+      <div class="card">
+        <h2>Realizări · <span id="badgeCount"></span></h2>
+        <div class="badges" id="badges"></div>
+        <div class="binfo" id="badgeInfo">Atinge o insignă ca să vezi cum o câștigi.</div>
       </div>
-      <input type="file" id="csvFile" accept=".csv,text/csv,text/plain" hidden>
-      <div style="font-size:12px;color:var(--hint);margin-top:14px;line-height:1.5">Greutățile din CSV sunt în kg. Acceptă date YYYY-MM-DD sau ZZ.LL.AAAA și separator , sau ;. Zilele existente sunt suprascrise.</div>
-    </div>
-    <div class="card">
-      <h2>Ștergere date</h2>
-      <p style="text-align:center;font-size:14px;color:var(--hint);margin:0">Șterge toate măsurătorile și setările. Nu se poate anula.</p>
-      <button class="btn danger" id="wipe" style="border:1px solid var(--bad)">Șterge toate datele</button>
-    </div>
-  </section>
+    </section>
 
-  <!-- ISTORIC -->
-  <section class="view" id="v-hist">
-    <div class="card">
-      <h2>Istoric</h2>
-      <div class="chips" id="hChips" style="margin-bottom:6px">
-        <button class="chip" data-f="all">Toate</button>
-        <button class="chip" data-f="w">Cântăriri</button>
-        <button class="chip" data-f="m">Măsurători</button>
+    <!-- SETĂRI -->
+    <section class="view" id="v-set">
+      <div class="card">
+        <h2>Profil</h2>
+        <label class="label" for="uname">Nume afișat</label>
+        <input type="text" class="field" id="uname" maxlength="30" placeholder="Numele tău" style="width:100%">
+        <label class="label" for="height">Înălțime (cm) — pentru IMC</label>
+        <input type="number" class="field" id="height" inputmode="numeric" placeholder="ex. 175" style="width:100%">
+        <label class="label" for="sexSel">Sex (pentru standardele de măsurători)</label>
+        <select id="sexSel" style="width:100%">
+          <option value="">Nespecificat</option>
+          <option value="f">Femeie</option>
+          <option value="m">Bărbat</option>
+        </select>
+        <label class="label" for="unitSel">Unitate</label>
+        <select id="unitSel" style="width:100%">
+          <option value="kg">Kilograme (kg)</option>
+          <option value="lb">Livre (lb)</option>
+        </select>
+        <label class="label" for="themeSel">Temă</label>
+        <select id="themeSel" style="width:100%">
+          <option value="auto">Telegram (automat)</option>
+          <option value="light">Albă</option>
+          <option value="dark">Neagră</option>
+        </select>
+        <button class="btn" id="saveProfile">Salvează profilul</button>
       </div>
-      <div id="list"></div>
-    </div>
-  </section>
-</main>
+      <div class="card">
+        <h2>Date</h2>
+        <div class="row" style="margin-top:0">
+          <button class="btn ghost" id="exportCsv" style="margin-top:0">Copiază CSV</button>
+          <button class="btn ghost" id="downloadCsv" style="margin-top:0">Descarcă CSV</button>
+        </div>
+        <label class="label" for="csvText">Import CSV (data,greutate_kg,notita) — lipește textul sau alege un
+          fișier</label>
+        <textarea id="csvText" rows="4" placeholder="2026-10-19,87.6,dimineața"
+          style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font:13px monospace;outline:none;resize:vertical"></textarea>
+        <div class="row" style="margin-top:14px">
+          <button class="btn" id="importCsv" style="margin-top:0">Importă</button>
+          <button class="btn ghost" id="pickCsv" style="margin-top:0">Alege fișier</button>
+        </div>
+        <input type="file" id="csvFile" accept=".csv,text/csv,text/plain" hidden>
+        <div style="font-size:12px;color:var(--hint);margin-top:14px;line-height:1.5">Greutățile din CSV sunt în kg.
+          Acceptă date YYYY-MM-DD sau ZZ.LL.AAAA și separator , sau ;. Zilele existente sunt suprascrise.</div>
+      </div>
+      <div class="card">
+        <h2>Ștergere date</h2>
+        <p style="text-align:center;font-size:14px;color:var(--hint);margin:0">Șterge toate măsurătorile și setările. Nu
+          se poate anula.</p>
+        <button class="btn danger" id="wipe" style="border:1px solid var(--bad)">Șterge toate datele</button>
+      </div>
+    </section>
 
-<nav>
-  <button data-v="home" class="on"><svg viewBox="0 0 24 24"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 10a4 4 0 0 1 8 0"/><path d="M12 10l2-2"/></svg>Acasă</button>
-  <button data-v="goal"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>Obiectiv</button>
-  <button data-v="hist"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Istoric</button>
-  <button data-v="set"><svg viewBox="0 0 24 24"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2"/><circle cx="8" cy="16" r="2"/></svg>Setări</button>
-</nav>
-<div id="toast"></div>
-<div id="hint" role="status"></div>
-<div class="modal" id="goalDone" role="dialog" aria-modal="true" aria-labelledby="gdTitle" hidden>
-  <div class="sheet cele">
-    <svg class="trophy" viewBox="0 0 120 120" role="img" aria-label="Trofeu">
-      <circle cx="60" cy="60" r="54" fill="var(--btn)" opacity=".12"/>
-      <path d="M38 26h44v22a22 22 0 0 1-44 0z" fill="#F2B33D"/>
-      <path d="M38 32H24v8a16 16 0 0 0 16 16M82 32h14v8a16 16 0 0 1-16 16" fill="none" stroke="#F2B33D" stroke-width="6" stroke-linecap="round"/>
-      <rect x="54" y="70" width="12" height="16" fill="#E0A02B"/>
-      <rect x="40" y="86" width="40" height="10" rx="4" fill="#BA7517"/>
-      <path d="M60 34l4.4 9 9.9 1.4-7.2 7 1.7 9.8L60 56.5l-8.8 4.7 1.7-9.8-7.2-7 9.9-1.4z" fill="#fff" opacity=".9"/>
-    </svg>
-    <h3 id="gdTitle">Felicitări!</h3>
-    <p id="gdLine"></p>
-    <p class="cs" id="gdStat"></p>
-    <p class="cs">Ține-o tot așa. Poți seta oricând un obiectiv nou.</p>
-    <div class="row" style="margin-top:22px">
-      <button class="btn" id="gdOk" style="margin-top:0">Mulțumesc</button>
-      <button class="btn ghost" id="gdNew" style="margin-top:0">Obiectiv nou</button>
+    <!-- ISTORIC -->
+    <section class="view" id="v-hist">
+      <div class="card">
+        <h2>Istoric</h2>
+        <div class="chips" id="hChips" style="margin-bottom:6px">
+          <button class="chip" data-f="all">Toate</button>
+          <button class="chip" data-f="w">Cântăriri</button>
+          <button class="chip" data-f="m">Măsurători</button>
+        </div>
+        <div id="list"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav>
+    <button data-v="home" class="on"><svg viewBox="0 0 24 24">
+        <path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" />
+        <path d="M8 10a4 4 0 0 1 8 0" />
+        <path d="M12 10l2-2" />
+      </svg>Acasă</button>
+    <button data-v="goal"><svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="5" />
+        <circle cx="12" cy="12" r="1" />
+      </svg>Obiectiv</button>
+    <button data-v="hist"><svg viewBox="0 0 24 24">
+        <path d="M4 7h16M4 12h16M4 17h16" />
+      </svg>Istoric</button>
+    <button data-v="set"><svg viewBox="0 0 24 24">
+        <path d="M4 8h10M18 8h2M4 16h2M10 16h10" />
+        <circle cx="16" cy="8" r="2" />
+        <circle cx="8" cy="16" r="2" />
+      </svg>Setări</button>
+  </nav>
+  <div id="toast"></div>
+  <div id="hint" role="status"></div>
+  <div class="modal" id="goalDone" role="dialog" aria-modal="true" aria-labelledby="gdTitle" hidden>
+    <div class="sheet cele">
+      <svg class="trophy" viewBox="0 0 120 120" role="img" aria-label="Trofeu">
+        <circle cx="60" cy="60" r="54" fill="var(--btn)" opacity=".12" />
+        <path d="M38 26h44v22a22 22 0 0 1-44 0z" fill="#F2B33D" />
+        <path d="M38 32H24v8a16 16 0 0 0 16 16M82 32h14v8a16 16 0 0 1-16 16" fill="none" stroke="#F2B33D"
+          stroke-width="6" stroke-linecap="round" />
+        <rect x="54" y="70" width="12" height="16" fill="#E0A02B" />
+        <rect x="40" y="86" width="40" height="10" rx="4" fill="#BA7517" />
+        <path d="M60 34l4.4 9 9.9 1.4-7.2 7 1.7 9.8L60 56.5l-8.8 4.7 1.7-9.8-7.2-7 9.9-1.4z" fill="#fff" opacity=".9" />
+      </svg>
+      <h3 id="gdTitle">Felicitări!</h3>
+      <p id="gdLine"></p>
+      <p class="cs" id="gdStat"></p>
+      <p class="cs">Ține-o tot așa. Poți seta oricând un obiectiv nou.</p>
+      <div class="row" style="margin-top:22px">
+        <button class="btn" id="gdOk" style="margin-top:0">Mulțumesc</button>
+        <button class="btn ghost" id="gdNew" style="margin-top:0">Obiectiv nou</button>
+      </div>
     </div>
   </div>
-</div>
-<div class="modal" id="measModal" role="dialog" aria-modal="true" aria-labelledby="mmTitle" hidden>
-  <div class="sheet">
-    <h3 id="mmTitle">Adaugă măsurători</h3>
-    <label class="label" for="mDate">Data</label>
-    <div class="dwrap" style="flex:none;width:100%"><input type="text" id="mDate" inputmode="numeric" placeholder="zz.ll.aaaa" maxlength="10" autocomplete="off"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><input type="date" class="dnat" tabindex="-1" aria-label="Alege din calendar"></div>
-    <div class="mgrid"><div><label class="label" for="m_neck">Gât (cm)</label><input type="number" class="field" id="m_neck" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div><div><label class="label" for="m_chest">Piept (cm)</label><input type="number" class="field" id="m_chest" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div><div><label class="label" for="m_waist">Talie (cm)</label><input type="number" class="field" id="m_waist" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div><div><label class="label" for="m_hips">Șolduri (cm)</label><input type="number" class="field" id="m_hips" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div><div><label class="label" for="m_arm">Braț (cm)</label><input type="number" class="field" id="m_arm" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div><div><label class="label" for="m_thigh">Coapsă (cm)</label><input type="number" class="field" id="m_thigh" inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div></div>
-    <div style="font-size:12px;color:var(--hint);margin-top:14px">Completează doar ce ai măsurat. Valorile sunt în centimetri.</div>
-    <div class="row" style="margin-top:24px">
-      <button class="btn" id="saveMeas" style="margin-top:0">Salvează</button>
-      <button class="btn ghost" id="cancelMeas" style="margin-top:0">Anulează</button>
+  <div class="modal" id="measModal" role="dialog" aria-modal="true" aria-labelledby="mmTitle" hidden>
+    <div class="sheet">
+      <h3 id="mmTitle">Adaugă măsurători</h3>
+      <label class="label" for="mDate">Data</label>
+      <div class="dwrap" style="flex:none;width:100%"><input type="text" id="mDate" inputmode="numeric"
+          placeholder="zz.ll.aaaa" maxlength="10" autocomplete="off"><svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="5" width="16" height="15" rx="2" />
+          <path d="M4 10h16M9 3v4M15 3v4" />
+        </svg><input type="date" class="dnat" tabindex="-1" aria-label="Alege din calendar"></div>
+      <div class="mgrid">
+        <div><label class="label" for="m_neck">Gât (cm)</label><input type="number" class="field" id="m_neck"
+            inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div>
+        <div><label class="label" for="m_chest">Bust (cm)</label><input type="number" class="field" id="m_chest"
+            inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div>
+        <div><label class="label" for="m_arm">Mână (cm)</label><input type="number" class="field" id="m_arm"
+            inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div>
+        <div><label class="label" for="m_waist">Talie (cm)</label><input type="number" class="field" id="m_waist"
+            inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div>
+        <div><label class="label" for="m_belly">Burtă (cm)</label><input type="number" class="field" id="m_belly"
+            inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div>
+        <div><label class="label" for="m_buttocks">Fese (cm)</label><input type="number" class="field" id="m_buttocks"
+            inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div>
+        <div><label class="label" for="m_foot">Picior (cm)</label><input type="number" class="field" id="m_foot"
+            inputmode="decimal" step="0.1" placeholder="cm" style="width:100%"></div>
+      </div>
+      <div style="font-size:12px;color:var(--hint);margin-top:14px">Completează doar ce ai măsurat. Valorile sunt în
+        centimetri.</div>
+      <div class="row" style="margin-top:24px">
+        <button class="btn" id="saveMeas" style="margin-top:0">Salvează</button>
+        <button class="btn ghost" id="cancelMeas" style="margin-top:0">Anulează</button>
+      </div>
     </div>
   </div>
-</div>
-<div class="modal" id="goalModal" role="dialog" aria-modal="true" aria-labelledby="gmTitle" hidden>
-  <div class="sheet">
-    <h3 id="gmTitle">Setează obiectivul</h3>
+  <div class="modal" id="goalModal" role="dialog" aria-modal="true" aria-labelledby="gmTitle" hidden>
+    <div class="sheet">
+      <h3 id="gmTitle">Setează obiectivul</h3>
       <label class="label" for="gTarget">Greutate țintă (<span class="unit">kg</span>)</label>
       <input type="number" class="field" id="gTarget" inputmode="decimal" step="0.1" style="width:100%">
-      <label class="label" for="gStart">Greutate de start (<span class="unit">kg</span>) — gol = prima măsurătoare</label>
+      <label class="label" for="gStart">Greutate de start (<span class="unit">kg</span>) — gol = prima
+        măsurătoare</label>
       <input type="number" class="field" id="gStart" inputmode="decimal" step="0.1" style="width:100%">
       <label class="label" for="gDate">Data țintă (opțional)</label>
-      <div class="dwrap" style="flex:none;width:100%"><input type="text" id="gDate" inputmode="numeric" placeholder="zz.ll.aaaa" maxlength="10" autocomplete="off"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><input type="date" class="dnat" tabindex="-1" aria-label="Alege din calendar"></div>
-    <div class="row" style="margin-top:24px">
-      <button class="btn" id="saveGoal" style="margin-top:0">Salvează</button>
-      <button class="btn ghost" id="cancelGoal" style="margin-top:0">Anulează</button>
+      <div class="dwrap" style="flex:none;width:100%"><input type="text" id="gDate" inputmode="numeric"
+          placeholder="zz.ll.aaaa" maxlength="10" autocomplete="off"><svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="5" width="16" height="15" rx="2" />
+          <path d="M4 10h16M9 3v4M15 3v4" />
+        </svg><input type="date" class="dnat" tabindex="-1" aria-label="Alege din calendar"></div>
+      <div class="row" style="margin-top:24px">
+        <button class="btn" id="saveGoal" style="margin-top:0">Salvează</button>
+        <button class="btn ghost" id="cancelGoal" style="margin-top:0">Anulează</button>
+      </div>
     </div>
   </div>
-</div>
-<div class="modal" id="welcome" role="dialog" aria-modal="true" aria-labelledby="wTitle" hidden>
-  <div class="sheet">
-    <svg class="wlogo" viewBox="0 0 96 96" aria-hidden="true"><circle cx="20" cy="30" r="6" fill="currentColor" opacity=".45"/><circle cx="34" cy="38" r="6" fill="currentColor" opacity=".45"/><circle cx="48" cy="34" r="6" fill="currentColor" opacity=".45"/><circle cx="62" cy="46" r="6" fill="currentColor" opacity=".45"/><circle cx="76" cy="54" r="7" fill="currentColor"/><rect x="18" y="68" width="60" height="6" rx="3" fill="currentColor" opacity=".3"/><rect x="18" y="68" width="40" height="6" rx="3" fill="currentColor"/></svg>
-    <h3 id="wTitle">Bine ai venit!</h3>
-    <p class="wlead">Aici îți urmărești greutatea zi de zi, simplu și în câteva secunde. Te ajutăm să vezi cum evoluezi și să ajungi la obiectivul tău.</p>
-    <p class="wsub">Trei pași rapizi ca să începi:</p>
-    <ol class="wsteps">
-      <li><span class="n">1</span><div><b>Adaugă prima cântărire</b><p>În Acasă, scrie greutatea de azi și apasă Salvează. Revino în fiecare zi ca să-ți vezi evoluția pe grafic.</p></div></li>
-      <li><span class="n">2</span><div><b>Setează-ți obiectivul</b><p>În tab-ul Obiectiv, alege greutatea țintă. Vei vedea progresul și data estimată de atingere.</p></div></li>
-      <li><span class="n">3</span><div><b>Adaugă înălțimea</b><p>În Setări, pentru ca aplicația să-ți calculeze indicele de masă corporală (IMC).</p></div></li>
-    </ol>
-    <button class="btn" id="wOk">Am înțeles</button>
+  <div class="modal" id="welcome" role="dialog" aria-modal="true" aria-labelledby="wTitle" hidden>
+    <div class="sheet">
+      <svg class="wlogo" viewBox="0 0 96 96" aria-hidden="true">
+        <circle cx="20" cy="30" r="6" fill="currentColor" opacity=".45" />
+        <circle cx="34" cy="38" r="6" fill="currentColor" opacity=".45" />
+        <circle cx="48" cy="34" r="6" fill="currentColor" opacity=".45" />
+        <circle cx="62" cy="46" r="6" fill="currentColor" opacity=".45" />
+        <circle cx="76" cy="54" r="7" fill="currentColor" />
+        <rect x="18" y="68" width="60" height="6" rx="3" fill="currentColor" opacity=".3" />
+        <rect x="18" y="68" width="40" height="6" rx="3" fill="currentColor" />
+      </svg>
+      <h3 id="wTitle">Bine ai venit!</h3>
+      <p class="wlead">Aici îți urmărești greutatea zi de zi, simplu și în câteva secunde. Te ajutăm să vezi cum
+        evoluezi și să ajungi la obiectivul tău.</p>
+      <p class="wsub">Trei pași rapizi ca să începi:</p>
+      <ol class="wsteps">
+        <li><span class="n">1</span>
+          <div><b>Adaugă prima cântărire</b>
+            <p>În Acasă, scrie greutatea de azi și apasă Salvează. Revino în fiecare zi ca să-ți vezi evoluția pe
+              grafic.</p>
+          </div>
+        </li>
+        <li><span class="n">2</span>
+          <div><b>Setează-ți obiectivul</b>
+            <p>În tab-ul Obiectiv, alege greutatea țintă. Vei vedea progresul și data estimată de atingere.</p>
+          </div>
+        </li>
+        <li><span class="n">3</span>
+          <div><b>Adaugă înălțimea</b>
+            <p>În Setări, pentru ca aplicația să-ți calculeze indicele de masă corporală (IMC).</p>
+          </div>
+        </li>
+      </ol>
+      <button class="btn" id="wOk">Am înțeles</button>
+    </div>
   </div>
-</div>
 
-<script>
-(() => {
-'use strict';
-const tg = window.Telegram && Telegram.WebApp;
-if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('secondary_bg_color'); } catch (e) {} }
-const $ = (s, r = document) => r.querySelector(s);
-const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const haptic = (t = 'light') => { try { tg.HapticFeedback.impactOccurred(t); } catch (e) {} };
-const hapticOk = () => { try { tg.HapticFeedback.notificationOccurred('success'); } catch (e) {} };
+  <script>
+    (() => {
+      'use strict';
+      const tg = window.Telegram && Telegram.WebApp;
+      if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('secondary_bg_color'); } catch (e) { } }
+      const $ = (s, r = document) => r.querySelector(s);
+      const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+      const haptic = (t = 'light') => { try { tg.HapticFeedback.impactOccurred(t); } catch (e) { } };
+      const hapticOk = () => { try { tg.HapticFeedback.notificationOccurred('success'); } catch (e) { } };
 
-/* ---------- Storage: Telegram CloudStorage (chunked per month) + localStorage fallback ---------- */
-const useCloud = !!(tg && tg.initData && tg.CloudStorage && tg.isVersionAtLeast && tg.isVersionAtLeast('6.9'));
-const LS = 'viowh:';
-const cloud = {
-  keys: () => new Promise((res, rej) => tg.CloudStorage.getKeys((e, k) => e ? rej(e) : res(k || []))),
-  get: ks => new Promise((res, rej) => ks.length ? tg.CloudStorage.getItems(ks, (e, v) => e ? rej(e) : res(v || {})) : res({})),
-  set: (k, v) => new Promise((res, rej) => tg.CloudStorage.setItem(k, v, (e, ok) => e ? rej(e) : res(ok))),
-  del: ks => new Promise((res, rej) => ks.length ? tg.CloudStorage.removeItems(ks, (e) => e ? rej(e) : res()) : res()),
-};
-const local = {
-  all() { const o = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith(LS)) o[k.slice(LS.length)] = localStorage.getItem(k); } return o; },
-  set(k, v) { localStorage.setItem(LS + k, v); },
-  del(ks) { ks.forEach(k => localStorage.removeItem(LS + k)); },
-};
+      /* ---------- Storage: Telegram CloudStorage (chunked per month) + localStorage fallback ---------- */
+      const useCloud = !!(tg && tg.initData && tg.CloudStorage && tg.isVersionAtLeast && tg.isVersionAtLeast('6.9'));
+      const LS = 'viowh:';
+      const cloud = {
+        keys: () => new Promise((res, rej) => tg.CloudStorage.getKeys((e, k) => e ? rej(e) : res(k || []))),
+        get: ks => new Promise((res, rej) => ks.length ? tg.CloudStorage.getItems(ks, (e, v) => e ? rej(e) : res(v || {})) : res({})),
+        set: (k, v) => new Promise((res, rej) => tg.CloudStorage.setItem(k, v, (e, ok) => e ? rej(e) : res(ok))),
+        del: ks => new Promise((res, rej) => ks.length ? tg.CloudStorage.removeItems(ks, (e) => e ? rej(e) : res()) : res()),
+      };
+      const local = {
+        all() { const o = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith(LS)) o[k.slice(LS.length)] = localStorage.getItem(k); } return o; },
+        set(k, v) { localStorage.setItem(LS + k, v); },
+        del(ks) { ks.forEach(k => localStorage.removeItem(LS + k)); },
+      };
 
-/* ---------- State ---------- */
-const state = {
-  entries: {},            // 'YYYY-MM-DD' -> {w (kg), n}
-  meas: {},               // 'YYYY-MM-DD' -> {waist, chest, hips, arm, thigh} (cm)
-  s: { unit: 'kg', height: null, goal: null, name: '', theme: 'auto' }, // goal: {target, start, date}
-  range: 30, editing: null,
-};
-const KG2LB = 2.2046226218;
-const unit = () => state.s.unit;
-const toDisp = kg => unit() === 'kg' ? kg : kg * KG2LB;
-const fromDisp = v => unit() === 'kg' ? v : v / KG2LB;
-const fmt = (kg, d = 1) => toDisp(kg).toFixed(d);
+      /* ---------- State ---------- */
+      const state = {
+        entries: {},            // 'YYYY-MM-DD' -> {w (kg), n}
+        meas: {},               // 'YYYY-MM-DD' -> {waist, chest, hips, arm, thigh} (cm)
+        s: { unit: 'kg', height: null, goal: null, name: '', theme: 'auto' }, // goal: {target, start, date}
+        range: 30, editing: null,
+      };
+      const KG2LB = 2.2046226218;
+      const unit = () => state.s.unit;
+      const toDisp = kg => unit() === 'kg' ? kg : kg * KG2LB;
+      const fromDisp = v => unit() === 'kg' ? v : v / KG2LB;
+      const fmt = (kg, d = 1) => toDisp(kg).toFixed(d);
 
-const pad = n => String(n).padStart(2, '0');
-const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
-const today = () => ymd(new Date());
-const dayDiff = (a, b) => Math.round((parse(b) - parse(a)) / 864e5);
-const MONTHS = ['ian', 'feb', 'mar', 'apr', 'mai', 'iun', 'iul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-const fmtDate = (s, withYear) => { const d = parse(s); return `${d.getDate()} ${MONTHS[d.getMonth()]}` + (withYear ? ` ${d.getFullYear()}` : ''); };
-const sorted = () => Object.keys(state.entries).sort().map(d => ({ d, w: state.entries[d].w, n: state.entries[d].n || '' }));
+      const pad = n => String(n).padStart(2, '0');
+      const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+      const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+      const today = () => ymd(new Date());
+      const dayDiff = (a, b) => Math.round((parse(b) - parse(a)) / 864e5);
+      const MONTHS = ['ian', 'feb', 'mar', 'apr', 'mai', 'iun', 'iul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+      const fmtDate = (s, withYear) => { const d = parse(s); return `${d.getDate()} ${MONTHS[d.getMonth()]}` + (withYear ? ` ${d.getFullYear()}` : ''); };
+      const sorted = () => Object.keys(state.entries).sort().map(d => ({ d, w: state.entries[d].w, n: state.entries[d].n || '' }));
 
-async function load() {
-  let raw = {};
-  try {
-    if (useCloud) { const keys = await cloud.keys(); raw = await cloud.get(keys); }
-    else raw = local.all();
-  } catch (e) { raw = local.all(); }
-  for (const [k, v] of Object.entries(raw)) {
-    try {
-      if (k === 's') Object.assign(state.s, JSON.parse(v));
-      else if (k.startsWith('e')) Object.assign(state.entries, JSON.parse(v));
-      else if (k.startsWith('m')) Object.assign(state.meas, JSON.parse(v));
-    } catch (e) {}
-  }
-}
-async function put(k, val) {
-  const str = JSON.stringify(val);
-  local.set(k, str);                       // always keep a local mirror
-  if (useCloud) { try { await cloud.set(k, str); } catch (e) { toast('Sincronizare eșuată'); } }
-}
-async function saveMonth(ym) {
-  const chunk = {};
-  for (const d in state.entries) if (d.startsWith(ym)) chunk[d] = state.entries[d];
-  if (Object.keys(chunk).length) await put('e' + ym, chunk);
-  else { local.del(['e' + ym]); if (useCloud) try { await cloud.del(['e' + ym]); } catch (e) {} }
-}
-async function saveMeasMonth(ym) {
-  const chunk = {};
-  for (const d in state.meas) if (d.startsWith(ym)) chunk[d] = state.meas[d];
-  if (Object.keys(chunk).length) await put('m' + ym, chunk);
-  else { local.del(['m' + ym]); if (useCloud) try { await cloud.del(['m' + ym]); } catch (e) {} }
-}
-const saveSettings = () => put('s', state.s);
+      async function load() {
+        let raw = {};
+        try {
+          if (useCloud) { const keys = await cloud.keys(); raw = await cloud.get(keys); }
+          else raw = local.all();
+        } catch (e) { raw = local.all(); }
+        for (const [k, v] of Object.entries(raw)) {
+          try {
+            if (k === 's') Object.assign(state.s, JSON.parse(v));
+            else if (k.startsWith('e')) Object.assign(state.entries, JSON.parse(v));
+            else if (k.startsWith('m')) Object.assign(state.meas, JSON.parse(v));
+          } catch (e) { }
+        }
+      }
+      async function put(k, val) {
+        const str = JSON.stringify(val);
+        local.set(k, str);                       // always keep a local mirror
+        if (useCloud) { try { await cloud.set(k, str); } catch (e) { toast('Sincronizare eșuată'); } }
+      }
+      async function saveMonth(ym) {
+        const chunk = {};
+        for (const d in state.entries) if (d.startsWith(ym)) chunk[d] = state.entries[d];
+        if (Object.keys(chunk).length) await put('e' + ym, chunk);
+        else { local.del(['e' + ym]); if (useCloud) try { await cloud.del(['e' + ym]); } catch (e) { } }
+      }
+      async function saveMeasMonth(ym) {
+        const chunk = {};
+        for (const d in state.meas) if (d.startsWith(ym)) chunk[d] = state.meas[d];
+        if (Object.keys(chunk).length) await put('m' + ym, chunk);
+        else { local.del(['m' + ym]); if (useCloud) try { await cloud.del(['m' + ym]); } catch (e) { } }
+      }
+      const saveSettings = () => put('s', state.s);
 
-/* ---------- UI helpers ---------- */
-let toastT;
-function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2000); }
-function confirmBox(msg) {
-  return new Promise(res => tg && tg.showConfirm ? tg.showConfirm(msg, res) : res(confirm(msg)));
-}
-const PATHS = {
-  scale: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 10a4 4 0 0 1 8 0"/><path d="M12 10l2-2"/>',
-  target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6"/>',
-  flame: '<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5.3 1.5 1 2.2 2 2.2C11.5 8 11 5.5 12 3z"/>',
-  trophy: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5v2a3 3 0 0 0 3 3M16 6h3v2a3 3 0 0 1-3 3M12 13v4M9 20h6"/>',
-  down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
-  check: '<circle cx="12" cy="12" r="8"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
-  chart: '<path d="M4 18l5-6 4 3 7-9"/>',
-  ruler: '<path d="M4 16L16 4l4 4L8 20z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/>',
-  tick: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
-  stats: '<path d="M5 20V11M12 20V4M19 20v-6"/>',
-  list: '<path d="M4 7h16M4 12h16M4 17h16"/>',
-};
-const ico = n => `<svg viewBox="0 0 24 24" aria-hidden="true">${PATHS[n]}</svg>`;
-const emptyBox = (icon, text, btn = '') => `<div class="empty">${ico(icon)}<p>${text}</p>${btn}</div>`;
+      /* ---------- UI helpers ---------- */
+      let toastT;
+      function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2000); }
+      function confirmBox(msg) {
+        return new Promise(res => tg && tg.showConfirm ? tg.showConfirm(msg, res) : res(confirm(msg)));
+      }
+      const PATHS = {
+        scale: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 10a4 4 0 0 1 8 0"/><path d="M12 10l2-2"/>',
+        target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6"/>',
+        flame: '<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5.3 1.5 1 2.2 2 2.2C11.5 8 11 5.5 12 3z"/>',
+        trophy: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5v2a3 3 0 0 0 3 3M16 6h3v2a3 3 0 0 1-3 3M12 13v4M9 20h6"/>',
+        down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+        check: '<circle cx="12" cy="12" r="8"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
+        chart: '<path d="M4 18l5-6 4 3 7-9"/>',
+        ruler: '<path d="M4 16L16 4l4 4L8 20z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/>',
+        tick: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+        stats: '<path d="M5 20V11M12 20V4M19 20v-6"/>',
+        list: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+      };
+      const ico = n => `<svg viewBox="0 0 24 24" aria-hidden="true">${PATHS[n]}</svg>`;
+      const emptyBox = (icon, text, btn = '') => `<div class="empty">${ico(icon)}<p>${text}</p>${btn}</div>`;
 
-let hintT, hintAct = null;
-function showHint(html, act) {
-  const h = $('#hint'); h.innerHTML = html; hintAct = act || null;
-  h.classList.add('show'); clearTimeout(hintT); hintT = setTimeout(() => h.classList.remove('show'), 6000);
-}
-$('#hint').onclick = () => { $('#hint').classList.remove('show'); clearTimeout(hintT); if (hintAct) hintAct(); hintAct = null; };
-const seen = () => state.s.seen || (state.s.seen = {});
-const goGoal = () => { setView('goal'); if (!state.s.goal) openGoalModal(); };
+      let hintT, hintAct = null;
+      function showHint(html, act) {
+        const h = $('#hint'); h.innerHTML = html; hintAct = act || null;
+        h.classList.add('show'); clearTimeout(hintT); hintT = setTimeout(() => h.classList.remove('show'), 6000);
+      }
+      $('#hint').onclick = () => { $('#hint').classList.remove('show'); clearTimeout(hintT); if (hintAct) hintAct(); hintAct = null; };
+      const seen = () => state.s.seen || (state.s.seen = {});
+      const goGoal = () => { setView('goal'); if (!state.s.goal) openGoalModal(); };
 
-function longestStreak(list) {
-  let best = 0, run = 0, prev = null;
-  for (const e of list) { run = prev && dayDiff(prev, e.d) === 1 ? run + 1 : 1; best = Math.max(best, run); prev = e.d; }
-  return best;
-}
-const BADGES = [
-  { id: 'first', label: 'Prima cântărire', icon: 'scale', quiet: true, desc: 'Adaugă prima ta cântărire.', ok: l => l.length >= 1 },
-  { id: 'goal', label: 'Primul obiectiv', icon: 'target', desc: 'Setează un obiectiv de greutate.', ok: () => !!state.s.goal },
-  { id: 's7', label: '7 zile la rând', icon: 'flame', desc: 'Cântărește-te 7 zile consecutive.', prog: l => [Math.min(longestStreak(l), 7), 7, 'zile'], ok: l => longestStreak(l) >= 7 },
-  { id: 's30', label: '30 de zile la rând', icon: 'trophy', desc: 'Cântărește-te 30 de zile consecutive.', prog: l => [Math.min(longestStreak(l), 30), 30, 'zile'], ok: l => longestStreak(l) >= 30 },
-  { id: 'kg1', label: '1 kg schimbat', icon: 'down', desc: 'Schimbă-ți greutatea cu cel puțin 1 kg față de prima cântărire.', prog: l => [l.length > 1 ? Math.min(Math.abs(l[l.length - 1].w - l[0].w), 1) : 0, 1, 'kg'], ok: l => l.length > 1 && Math.abs(l[l.length - 1].w - l[0].w) >= 1 },
-  { id: 'done', label: 'Obiectiv atins', icon: 'check', quiet: true, desc: 'Ajunge la greutatea țintă a obiectivului tău.', ok: l => { const gi = goalInfo(l); return !!gi && gi.reached; } },
-];
-function checkBadges() {
-  const l = sorted(), b = state.s.badges || (state.s.badges = {}), fresh = [];
-  for (const d of BADGES) if (!b[d.id] && d.ok(l)) { b[d.id] = today(); fresh.push(d); }
-  if (fresh.length) saveSettings();
-  return fresh.filter(d => !d.quiet);
-}
-let selBadge = null;
-function badgeInfo(id) {
-  const d = BADGES.find(x => x.id === id), b = state.s.badges || {};
-  if (b[id]) return `<b>${d.label}</b> · câștigată pe ${fmtDate(b[id], true)}.<br>${d.desc}`;
-  let t = `<b>${d.label}</b><br>Cum o câștigi: ${d.desc}`;
-  if (d.prog) { const [c, m, u] = d.prog(sorted()); t += `<br>Progres: ${u === 'kg' ? c.toFixed(1) : c} din ${m} ${u}.`; }
-  return t;
-}
-function renderBadges() {
-  const b = state.s.badges || {};
-  $('#badgeCount').textContent = `${BADGES.filter(d => b[d.id]).length} din ${BADGES.length}`;
-  $('#badges').innerHTML = BADGES.map(d => `<button type="button" class="badge${b[d.id] ? ' on' : ''}${selBadge === d.id ? ' sel' : ''}" data-id="${d.id}"><div class="bi">${ico(d.icon)}</div>${d.label}</button>`).join('');
-  $('#badgeInfo').innerHTML = selBadge ? badgeInfo(selBadge) : 'Atinge o insignă ca să vezi cum o câștigi.';
-}
-$('#badges').addEventListener('click', e => { const t = e.target.closest('.badge'); if (!t) return; selBadge = selBadge === t.dataset.id ? null : t.dataset.id; haptic(); renderBadges(); });
-function celebrate() {
-  const g = state.s.goal, l = sorted(); if (!g || !l.length || g.celebrated) return;
-  g.celebrated = true; saveSettings();
-  const start = g.start != null ? g.start : l[0].w, diff = Math.abs(start - l[l.length - 1].w), days = dayDiff(l[0].d, l[l.length - 1].d) + 1;
-  const nm = (state.s.name || tgName()).trim();
-  $('#gdTitle').textContent = nm ? `Felicitări, ${nm}!` : 'Felicitări!';
-  $('#gdLine').innerHTML = `Ai atins obiectivul de <b>${fmt(g.target)} ${unit()}</b>`;
-  $('#gdStat').textContent = diff >= 0.1 ? `${deltaWord(start, g.target)} ${fmt(diff)} ${unit()}${days > 1 ? ` în ${days} ${days % 100 === 0 || days % 100 >= 20 ? 'de zile' : 'zile'}` : ''}.` : '';
-  const sheet = $('#goalDone .sheet'); $$('.conf', sheet).forEach(e => e.remove());
-  const cols = ['#1D9E75', '#F2B33D', '#E24B4A', '#378ADD', '#D4537E'];
-  for (let i = 0; i < 22; i++) { const c = document.createElement('span'); c.className = 'conf'; c.style.cssText = `left:${Math.random() * 96}%;background:${cols[i % cols.length]};animation-delay:${(Math.random() * 1.4).toFixed(2)}s;animation-duration:${(2.2 + Math.random()).toFixed(2)}s`; sheet.append(c); }
-  $('#goalDone').hidden = false; hapticOk();
-}
-const deltaWord = (start, t) => t < start ? 'Ai slăbit' : 'Ai crescut cu';
-const closeDone = () => { $('#goalDone').hidden = true; };
-$('#gdOk').onclick = closeDone;
-$('#gdNew').onclick = () => { closeDone(); setView('goal'); openGoalModal('new'); };
-$('#goalDone').addEventListener('click', e => { if (e.target.id === 'goalDone') closeDone(); });
-function maybeWelcome() {
-  if (seen().welcome || sorted().length || state.s.goal) return;
-  const nm = (state.s.name || tgName()).trim();
-  $('#wTitle').textContent = nm ? `Bine ai venit, ${nm}!` : 'Bine ai venit!';
-  $('#welcome').hidden = false;
-}
-function closeWelcome() { $('#welcome').hidden = true; seen().welcome = 1; saveSettings(); }
-$('#wOk').onclick = closeWelcome;
-$('#welcome').addEventListener('click', e => { if (e.target.id === 'welcome') closeWelcome(); });
-function announce(fresh, afterSave) {
-  const seenH = seen();
-  let h = null;
-  if (fresh.length) h = [`${ico('trophy')}<span>Realizare nouă: ${fresh[0].label}</span>`, goGoal];
-  else if (afterSave) {
-    const l = sorted();
-    if (!seenH.streak3 && streak(l) >= 3) { seenH.streak3 = 1; h = [`${ico('flame')}<span>Ai o serie de 3 zile. Continuă!</span>`, null]; }
-    else if (!state.s.goal && !seenH.goal) { seenH.goal = 1; h = [`${ico('target')}<span>Setează un obiectiv ca să vezi progresul</span>`, goGoal]; }
-    else if (!seenH.avg && l.length >= 3) { seenH.avg = 1; h = [`<span>Linia punctată din grafic e media pe 7 zile</span>`, null]; }
-    if (h) saveSettings();
-  }
-  if (h) setTimeout(() => showHint(h[0], h[1]), 2400);
-}
-function setView(v) {
-  $$('.view').forEach(e => e.classList.toggle('active', e.id === 'v-' + v));
-  $$('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
-  window.scrollTo(0, 0); haptic();
-  if (v === 'home') renderChart();
-}
-$$('nav button').forEach(b => b.onclick = () => setView(b.dataset.v));
+      function longestStreak(list) {
+        let best = 0, run = 0, prev = null;
+        for (const e of list) { run = prev && dayDiff(prev, e.d) === 1 ? run + 1 : 1; best = Math.max(best, run); prev = e.d; }
+        return best;
+      }
+      const BADGES = [
+        { id: 'first', label: 'Prima cântărire', icon: 'scale', quiet: true, desc: 'Adaugă prima ta cântărire.', ok: l => l.length >= 1 },
+        { id: 'goal', label: 'Primul obiectiv', icon: 'target', desc: 'Setează un obiectiv de greutate.', ok: () => !!state.s.goal },
+        { id: 's7', label: '7 zile la rând', icon: 'flame', desc: 'Cântărește-te 7 zile consecutive.', prog: l => [Math.min(longestStreak(l), 7), 7, 'zile'], ok: l => longestStreak(l) >= 7 },
+        { id: 's30', label: '30 de zile la rând', icon: 'trophy', desc: 'Cântărește-te 30 de zile consecutive.', prog: l => [Math.min(longestStreak(l), 30), 30, 'zile'], ok: l => longestStreak(l) >= 30 },
+        { id: 'kg1', label: '1 kg schimbat', icon: 'down', desc: 'Schimbă-ți greutatea cu cel puțin 1 kg față de prima cântărire.', prog: l => [l.length > 1 ? Math.min(Math.abs(l[l.length - 1].w - l[0].w), 1) : 0, 1, 'kg'], ok: l => l.length > 1 && Math.abs(l[l.length - 1].w - l[0].w) >= 1 },
+        { id: 'done', label: 'Obiectiv atins', icon: 'check', quiet: true, desc: 'Ajunge la greutatea țintă a obiectivului tău.', ok: l => { const gi = goalInfo(l); return !!gi && gi.reached; } },
+      ];
+      function checkBadges() {
+        const l = sorted(), b = state.s.badges || (state.s.badges = {}), fresh = [];
+        for (const d of BADGES) if (!b[d.id] && d.ok(l)) { b[d.id] = today(); fresh.push(d); }
+        if (fresh.length) saveSettings();
+        return fresh.filter(d => !d.quiet);
+      }
+      let selBadge = null;
+      function badgeInfo(id) {
+        const d = BADGES.find(x => x.id === id), b = state.s.badges || {};
+        if (b[id]) return `<b>${d.label}</b> · câștigată pe ${fmtDate(b[id], true)}.<br>${d.desc}`;
+        let t = `<b>${d.label}</b><br>Cum o câștigi: ${d.desc}`;
+        if (d.prog) { const [c, m, u] = d.prog(sorted()); t += `<br>Progres: ${u === 'kg' ? c.toFixed(1) : c} din ${m} ${u}.`; }
+        return t;
+      }
+      function renderBadges() {
+        const b = state.s.badges || {};
+        $('#badgeCount').textContent = `${BADGES.filter(d => b[d.id]).length} din ${BADGES.length}`;
+        $('#badges').innerHTML = BADGES.map(d => `<button type="button" class="badge${b[d.id] ? ' on' : ''}${selBadge === d.id ? ' sel' : ''}" data-id="${d.id}"><div class="bi">${ico(d.icon)}</div>${d.label}</button>`).join('');
+        $('#badgeInfo').innerHTML = selBadge ? badgeInfo(selBadge) : 'Atinge o insignă ca să vezi cum o câștigi.';
+      }
+      $('#badges').addEventListener('click', e => { const t = e.target.closest('.badge'); if (!t) return; selBadge = selBadge === t.dataset.id ? null : t.dataset.id; haptic(); renderBadges(); });
+      function celebrate() {
+        const g = state.s.goal, l = sorted(); if (!g || !l.length || g.celebrated) return;
+        g.celebrated = true; saveSettings();
+        const start = g.start != null ? g.start : l[0].w, diff = Math.abs(start - l[l.length - 1].w), days = dayDiff(l[0].d, l[l.length - 1].d) + 1;
+        const nm = (state.s.name || tgName()).trim();
+        $('#gdTitle').textContent = nm ? `Felicitări, ${nm}!` : 'Felicitări!';
+        $('#gdLine').innerHTML = `Ai atins obiectivul de <b>${fmt(g.target)} ${unit()}</b>`;
+        $('#gdStat').textContent = diff >= 0.1 ? `${deltaWord(start, g.target)} ${fmt(diff)} ${unit()}${days > 1 ? ` în ${days} ${days % 100 === 0 || days % 100 >= 20 ? 'de zile' : 'zile'}` : ''}.` : '';
+        const sheet = $('#goalDone .sheet'); $$('.conf', sheet).forEach(e => e.remove());
+        const cols = ['#1D9E75', '#F2B33D', '#E24B4A', '#378ADD', '#D4537E'];
+        for (let i = 0; i < 22; i++) { const c = document.createElement('span'); c.className = 'conf'; c.style.cssText = `left:${Math.random() * 96}%;background:${cols[i % cols.length]};animation-delay:${(Math.random() * 1.4).toFixed(2)}s;animation-duration:${(2.2 + Math.random()).toFixed(2)}s`; sheet.append(c); }
+        $('#goalDone').hidden = false; hapticOk();
+      }
+      const deltaWord = (start, t) => t < start ? 'Ai slăbit' : 'Ai crescut cu';
+      const closeDone = () => { $('#goalDone').hidden = true; };
+      $('#gdOk').onclick = closeDone;
+      $('#gdNew').onclick = () => { closeDone(); setView('goal'); openGoalModal('new'); };
+      $('#goalDone').addEventListener('click', e => { if (e.target.id === 'goalDone') closeDone(); });
+      function maybeWelcome() {
+        if (seen().welcome || sorted().length || state.s.goal) return;
+        const nm = (state.s.name || tgName()).trim();
+        $('#wTitle').textContent = nm ? `Bine ai venit, ${nm}!` : 'Bine ai venit!';
+        $('#welcome').hidden = false;
+      }
+      function closeWelcome() { $('#welcome').hidden = true; seen().welcome = 1; saveSettings(); }
+      $('#wOk').onclick = closeWelcome;
+      $('#welcome').addEventListener('click', e => { if (e.target.id === 'welcome') closeWelcome(); });
+      function announce(fresh, afterSave) {
+        const seenH = seen();
+        let h = null;
+        if (fresh.length) h = [`${ico('trophy')}<span>Realizare nouă: ${fresh[0].label}</span>`, goGoal];
+        else if (afterSave) {
+          const l = sorted();
+          if (!seenH.streak3 && streak(l) >= 3) { seenH.streak3 = 1; h = [`${ico('flame')}<span>Ai o serie de 3 zile. Continuă!</span>`, null]; }
+          else if (!state.s.goal && !seenH.goal) { seenH.goal = 1; h = [`${ico('target')}<span>Setează un obiectiv ca să vezi progresul</span>`, goGoal]; }
+          else if (!seenH.avg && l.length >= 3) { seenH.avg = 1; h = [`<span>Linia punctată din grafic e media pe 7 zile</span>`, null]; }
+          if (h) saveSettings();
+        }
+        if (h) setTimeout(() => showHint(h[0], h[1]), 2400);
+      }
+      function setView(v) {
+        $$('.view').forEach(e => e.classList.toggle('active', e.id === 'v-' + v));
+        $$('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+        window.scrollTo(0, 0); haptic();
+        if (v === 'home') renderChart();
+      }
+      $$('nav button').forEach(b => b.onclick = () => setView(b.dataset.v));
 
-/* ---------- Analytics ---------- */
-function regressionSlopePerDay(list) {
-  if (list.length < 3) return null;
-  const t0 = list[0].d, xs = list.map(e => dayDiff(t0, e.d)), ys = list.map(e => e.w);
-  if (xs[xs.length - 1] - xs[0] < 6) return null;
-  const n = xs.length, mx = xs.reduce((a, b) => a + b) / n, my = ys.reduce((a, b) => a + b) / n;
-  let num = 0, den = 0;
-  xs.forEach((x, i) => { num += (x - mx) * (ys[i] - my); den += (x - mx) ** 2; });
-  return den ? num / den : null;
-}
-function streak(list) {
-  if (!list.length) return 0;
-  const set = new Set(list.map(e => e.d));
-  let c = new Date(); if (!set.has(ymd(c))) c.setDate(c.getDate() - 1);
-  let n = 0; while (set.has(ymd(c))) { n++; c.setDate(c.getDate() - 1); }
-  return n;
-}
-const bmiLabel = b => b < 18.5 ? 'Subponderal' : b < 25 ? 'Normal' : b < 30 ? 'Supraponderal' : 'Obezitate';
-function goalInfo(list) {
-  const g = state.s.goal; if (!g || !list.length) return null;
-  const cur = list[list.length - 1].w, start = g.start ?? list[0].w, target = g.target;
-  const total = start - target;
-  const progress = total === 0 ? 1 : Math.max(0, Math.min(1, (start - cur) / total));
-  return { cur, start, target, progress, remaining: cur - target, reached: total > 0 ? cur <= target : cur >= target };
-}
+      /* ---------- Analytics ---------- */
+      function regressionSlopePerDay(list) {
+        if (list.length < 3) return null;
+        const t0 = list[0].d, xs = list.map(e => dayDiff(t0, e.d)), ys = list.map(e => e.w);
+        if (xs[xs.length - 1] - xs[0] < 6) return null;
+        const n = xs.length, mx = xs.reduce((a, b) => a + b) / n, my = ys.reduce((a, b) => a + b) / n;
+        let num = 0, den = 0;
+        xs.forEach((x, i) => { num += (x - mx) * (ys[i] - my); den += (x - mx) ** 2; });
+        return den ? num / den : null;
+      }
+      function streak(list) {
+        if (!list.length) return 0;
+        const set = new Set(list.map(e => e.d));
+        let c = new Date(); if (!set.has(ymd(c))) c.setDate(c.getDate() - 1);
+        let n = 0; while (set.has(ymd(c))) { n++; c.setDate(c.getDate() - 1); }
+        return n;
+      }
+      const bmiLabel = b => b < 18.5 ? 'Subponderal' : b < 25 ? 'Normal' : b < 30 ? 'Supraponderal' : 'Obezitate';
+      function goalInfo(list) {
+        const g = state.s.goal; if (!g || !list.length) return null;
+        const cur = list[list.length - 1].w, start = g.start ?? list[0].w, target = g.target;
+        const total = start - target;
+        const progress = total === 0 ? 1 : Math.max(0, Math.min(1, (start - cur) / total));
+        return { cur, start, target, progress, remaining: cur - target, reached: total > 0 ? cur <= target : cur >= target };
+      }
 
-/* ---------- Render ---------- */
-function renderAll() {
-  $$('.unit').forEach(e => e.textContent = unit());
-  renderHero(); renderStats(); renderGoal(); renderList(); renderChart(); renderBadges();
-  $('#height').value = state.s.height || '';
-  $('#uname').value = state.s.name || tgName();
-  $('#unitSel').value = unit(); $('#sexSel').value = state.s.sex || '';
-  $('#themeSel').value = state.s.theme || 'auto'; applyTheme();
-  fillGoalInputs(); renderGoalView();
-}
-const MTYPES = [{ k: 'neck', l: 'Gât' }, { k: 'chest', l: 'Piept' }, { k: 'waist', l: 'Talie' }, { k: 'hips', l: 'Șolduri' }, { k: 'arm', l: 'Braț' }, { k: 'thigh', l: 'Coapsă' }];
-const measDates = () => Object.keys(state.meas).sort();
-const measSeries = k => measDates().filter(d => state.meas[d][k] > 0).map(d => ({ d, v: state.meas[d][k] }));
-const fmtDelta = d => `${d > 0 ? '+' : ''}${(Math.round(d * 10) / 10).toString().replace(/\.0$/, '')} cm`;
-const MSTD = {
-  f: { neck: .205, chest: .53, waist: .38, hips: .54, arm: .17, thigh: .31 },
-  m: { neck: .225, chest: .56, waist: .45, hips: .52, arm: .2, thigh: .32 },
-};
-function measTarget(k) {
-  const h = state.s.height, sx = state.s.sex;
-  return h && MSTD[sx] ? Math.round(MSTD[sx][k] * h * 10) / 10 : null;
-}
-function measPos(S, C, T) {
-  const tol = Math.max(1, T * 0.02);
-  if (Math.abs(C - T) <= tol) return 100;
-  const prog = Math.abs(S - T) > tol ? (S - C) / (S - T) : -(Math.abs(C - T) - tol) / (T * 0.1);
-  return 50 + 50 * Math.max(-1, Math.min(1, prog));
-}
-function measBarsHtml() {
-  const dates = measDates();
-  if (!dates.length) return { sub: 'Talie, piept, șolduri și altele', rows: '' };
-  const first = dates[0], last = dates[dates.length - 1];
-  const sub = first === last ? `Măsurat pe ${fmtDate(last, true)}` : `Din ${fmtDate(first)} până în ${fmtDate(last, true)}`;
-  const hasStd = MTYPES.some(t => measTarget(t.k) != null);
-  let rows = hasStd ? '<p class="mleg">Punctul gol e startul, la mijloc. Spre dreapta te apropii de standardul pentru înălțimea ta, iar cercul din capăt e ținta.</p>'
-    : '<p class="mleg">Adaugă înălțimea și sexul în Setări ca să vezi progresul față de standard.</p>';
-  rows += MTYPES.map(t => {
-    const s = measSeries(t.k); if (!s.length) return '';
-    const v0 = s[0].v, v1 = s[s.length - 1].v, T = measTarget(t.k);
-    const vals = s.length === 1 ? `<b>${v1} cm</b>` : `${v0} → <b>${v1} cm</b>`;
-    if (T == null) return `<div class="cmp"><span class="nm">${t.l}</span><div></div><span class="vl">${vals}</span></div>`;
-    const pos = measPos(v0, v1, T), cls = pos > 50.5 ? 'dn' : pos < 49.5 ? 'up' : 'eq';
-    const a = Math.min(50, pos), w = Math.abs(pos - 50);
-    return `<div class="cmp"><span class="nm">${t.l}</span>
-      <div class="tr"><i class="${cls}" style="left:${a}%;width:${w}%"></i><s style="left:50%"></s><b class="tg"></b><u class="${cls}" style="left:${pos}%"></u></div>
-      <span class="vl">${vals}<small>țintă ${T}</small></span></div>`;
-  }).join('');
-  return { sub, rows };
-}
-function measProgressHtml() {
-  const { sub, rows } = measBarsHtml();
-  return `<div class="msub"><div class="mh"><div><h4>Măsurători corporale</h4><p>${sub}</p></div><button type="button" class="plus" id="addMeas" aria-label="Adaugă măsurători">+</button></div>${rows}</div>`;
-}
-const mDate = $('#mDate');
-dateField(mDate);
-function fillMeas() {
-  const e = state.meas[mDate.value] || {};
-  MTYPES.forEach(t => { const s = measSeries(t.k); const inp = $('#m_' + t.k); inp.value = e[t.k] != null ? e[t.k] : ''; inp.placeholder = s.length ? String(s[s.length - 1].v) : 'cm'; });
-}
-function openMeasModal(date) {
-  mDate.value = typeof date === 'string' ? date : today(); fillMeas();
-  $('#mmTitle').textContent = state.meas[mDate.value] ? 'Modifică măsurătorile' : 'Adaugă măsurători';
-  $('#measModal').hidden = false; setTimeout(() => $('#m_neck').focus(), 50); }
-const closeMeasModal = () => { $('#measModal').hidden = true; };
-mDate.addEventListener('change', fillMeas);
-$('#cancelMeas').onclick = closeMeasModal;
-$('#measModal').addEventListener('click', e => { if (e.target.id === 'measModal') closeMeasModal(); });
-$('#saveMeas').onclick = async () => {
-  const d = mDate.value, vals = {};
-  if (!d) return toast('Data trebuie să fie în formatul zz.ll.aaaa');
-  if (d > today()) return toast('Data nu poate fi în viitor');
-  for (const t of MTYPES) {
-    const raw = $('#m_' + t.k).value.trim().replace(',', '.'); if (!raw) continue;
-    const v = parseFloat(raw);
-    if (!(v >= 10 && v <= 300)) return toast(`${t.l}: valoare invalidă`);
-    vals[t.k] = Math.round(v * 10) / 10;
-  }
-  if (!Object.keys(vals).length) return toast('Introdu cel puțin o măsurătoare');
-  state.meas[d] = vals; await saveMeasMonth(d.slice(0, 7));
-  closeMeasModal(); hapticOk(); toast('Măsurători salvate ✓'); renderGoal(); renderList();
-};
-function renderGoalView() {
-  const g = state.s.goal, past = state.s.pastGoals || [], card = $('#goalCard'), l = sorted();
-  card.hidden = !g && !past.length;
-  if (card.hidden) return;
-  const fd = d => d.split('-').reverse().join('.');
-  const line = (o, status, act) => {
-    const start = o.start != null ? o.start : l.length ? l[0].w : null;
-    const label = { ok: 'Atins', run: 'În proces', no: 'Neatins' }[status];
-    return `<div class="grow${act ? ' act' : ''}"><div class="gt"><b>${fmt(o.target)} ${unit()}</b><span>${start != null ? 'de la ' + fmt(start) : ''}${o.date ? ' · până ' + fd(o.date) : ''}</span></div><span class="gs ${status}">${label}</span></div>`;
-  };
-  let html = '';
-  if (g) {
-    const gi = goalInfo(l);
-    const status = gi && gi.reached ? 'ok' : g.date && g.date < today() ? 'no' : 'run';
-    html += line(g, status, true);
-  }
-  html += past.slice().reverse().map(p => line(p, p.reached ? 'ok' : 'no', false)).join('');
-  $('#goalView').innerHTML = html;
-}
-function applyTheme() {
-  const t = state.s.theme || 'auto', root = document.documentElement;
-  if (t === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
-  try {
-    if (t === 'auto') { tg.setHeaderColor('secondary_bg_color'); tg.setBackgroundColor('secondary_bg_color'); }
-    else { const c = getComputedStyle(root).getPropertyValue('--bg2').trim(); tg.setHeaderColor(c); tg.setBackgroundColor(c); }
-  } catch (e) {}
-}
-const tgName = () => { try { return tg.initDataUnsafe.user.first_name || ''; } catch (e) { return ''; } };
-function renderHero() {
-  const list = sorted(), pill = $('#curDelta');
-  const nm = (state.s.name || tgName()).trim(), hello = $('#hello');
-  hello.hidden = !nm; hello.textContent = nm ? `Salut, ${nm}` : '';
-  const spark = $('#spark'), minis = $('#minis');
-  if (!list.length) { $('#curW').textContent = '—'; $('#curSub').textContent = 'Adaugă prima ta măsurătoare'; pill.hidden = true; spark.hidden = true; minis.hidden = true; return; }
-  const last = list[list.length - 1], g = state.s.goal;
-  $('#curW').textContent = fmt(last.w);
-  let sub = last.d === today() ? 'Astăzi' : `Ultima măsurătoare: ${fmtDate(last.d, true)}`;
-  const wk = list.filter(e => dayDiff(e.d, last.d) < 7);
-  if (wk.length > 1) { const dw = last.w - wk[0].w; sub += ` · 7 zile: ${dw > 0 ? '+' : ''}${fmt(dw)} ${unit()}`; }
-  $('#curSub').textContent = sub;
-  if (list.length > 1) {
-    const diff = last.w - list[list.length - 2].w;
-    const towardGoal = g ? (g.target < (g.start ?? list[0].w) ? diff < 0 : diff > 0) : diff < 0;
-    pill.hidden = false; pill.className = 'pill ' + (diff === 0 ? '' : towardGoal ? 'good' : 'bad');
-    pill.textContent = `${diff > 0 ? '+' : ''}${fmt(diff)}`;
-  } else pill.hidden = true;
-  const pts = list.slice(-10);
-  if (pts.length > 1) {
-    const ws = pts.map(e => e.w), lo = Math.min(...ws), hi = Math.max(...ws), r = hi - lo || 1;
-    const xy = pts.map((e, i) => [4 + i * 112 / (pts.length - 1), 6 + (hi - e.w) / r * 40]);
-    spark.innerHTML = `<path d="${xy.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('')}" fill="none" stroke="var(--btn)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${xy[xy.length - 1][0]}" cy="${xy[xy.length - 1][1]}" r="4" fill="var(--btn)"/>`;
-    spark.hidden = false;
-  } else spark.hidden = true;
-  minis.hidden = !g;
-  const gi = goalInfo(list);
-  $('#mGoal').textContent = g ? `${fmt(g.target)} ${unit()}` : '—';
-  $('#mLeft').textContent = gi ? (gi.reached ? 'Atins 🎉' : `${fmt(Math.abs(gi.remaining))} ${unit()}`) : '—';
-  const st = streak(list);
-  $('#mStreak').textContent = `${st} ${st === 1 ? 'zi' : 'zile'}`;
-}
-function renderStats() {
-  const list = sorted(), el = $('#stats');
-  if (!list.length) { el.innerHTML = `<div style="grid-column:1/-1">${emptyBox('stats', 'Statisticile apar după prima cântărire')}</div>`; return; }
-  const cur = list[list.length - 1], first = list[0], ws = list.map(e => e.w);
-  const last7 = list.filter(e => dayDiff(e.d, cur.d) < 7).map(e => e.w);
-  const avg7 = last7.reduce((a, b) => a + b) / last7.length;
-  const total = cur.w - first.w;
-  const slope = regressionSlopePerDay(list.filter(e => dayDiff(e.d, cur.d) <= 30));
-  const rows = [
-    [`${total > 0 ? '+' : ''}${fmt(total)} ${unit()}`, 'Total față de start'],
-    [`${fmt(avg7)} ${unit()}`, 'Medie 7 zile'],
-    [`${fmt(Math.min(...ws))} ${unit()}`, 'Minim'],
-    [`${fmt(Math.max(...ws))} ${unit()}`, 'Maxim'],
-    [slope == null ? '—' : `${slope * 7 > 0 ? '+' : ''}${fmt(slope * 7, 2)} ${unit()}`, 'Ritm / săptămână'],
-    [`${streak(list)} 🔥`, 'Zile consecutive'],
-  ];
-  const h = state.s.height;
-  if (h) { const b = cur.w / ((h / 100) ** 2); rows.push([b.toFixed(1), `IMC · ${bmiLabel(b)}`]); }
-  rows.push([String(list.length), 'Măsurători']);
-  el.innerHTML = rows.map(([b, s]) => `<div class="stat"><b>${b}</b><span>${s}</span></div>`).join('');
-}
-function renderGoal() {
-  const list = sorted(), el = $('#goalProgress'), gi = goalInfo(list);
-  el.innerHTML = goalProgressHtml(list, gi) + measProgressHtml();
-}
-function goalProgressHtml(list, gi) {
-  if (!state.s.goal) { return emptyBox('target', 'Încă nu ai un obiectiv', '<button class="ebtn" id="goToGoal">Setează obiectivul</button>'); }
-  if (!gi) { return emptyBox('scale', 'Adaugă o măsurătoare pentru a vedea progresul'); }
-  const g = state.s.goal, pct = Math.round(gi.progress * 100);
-  let html = `<div class="between"><span>Start: ${fmt(gi.start)} ${unit()}</span><span>Țintă: ${fmt(gi.target)} ${unit()}</span></div>
+      /* ---------- Render ---------- */
+      function renderAll() {
+        $$('.unit').forEach(e => e.textContent = unit());
+        renderHero(); renderStats(); renderGoal(); renderList(); renderChart(); renderBadges();
+        $('#height').value = state.s.height || '';
+        $('#uname').value = state.s.name || tgName();
+        $('#unitSel').value = unit(); $('#sexSel').value = state.s.sex || '';
+        $('#themeSel').value = state.s.theme || 'auto'; applyTheme();
+        fillGoalInputs(); renderGoalView();
+      }
+      const MTYPES = [{ k: 'neck', l: 'Gât' }, { k: 'chest', l: 'Piept' }, { k: 'waist', l: 'Talie' }, { k: 'arm', l: 'Braț' }, { k: 'belly', l: 'Burtă' }, { k: 'buttocks', l: 'Fese' }, { k: 'foot', l: 'Picior' }];
+      const measDates = () => Object.keys(state.meas).sort();
+      const measSeries = k => measDates().filter(d => state.meas[d][k] > 0).map(d => ({ d, v: state.meas[d][k] }));
+      const fmtDelta = d => `${d > 0 ? '+' : ''}${(Math.round(d * 10) / 10).toString().replace(/\.0$/, '')} cm`;
+      const MSTD = {
+        f: { neck: .205, chest: .53, waist: .38, arm: .17, belly: .40, buttocks: .55, foot: .15 },
+        m: { neck: .21,  chest: .54, waist: .44, arm: .17, belly: .46, buttocks: .54, foot: .153 },
+      };
+      function measTarget(k) {
+        const h = state.s.height, sx = state.s.sex;
+        return h && MSTD[sx] ? Math.round(MSTD[sx][k] * h * 10) / 10 : null;
+      }
+      function measPos(S, C, T) {
+        const tol = Math.max(1, T * 0.02);
+        if (Math.abs(C - T) <= tol) return 100;
+        const prog = Math.abs(S - T) > tol ? (S - C) / (S - T) : -(Math.abs(C - T) - tol) / (T * 0.1);
+        return 50 + 50 * Math.max(-1, Math.min(1, prog));
+      }
+      function measBarsHtml() {
+        const dates = measDates();
+        if (!dates.length) return { sub: 'Gât, talie, piept și altele', rows: '' };
+        const first = dates[0], last = dates[dates.length - 1];
+        const sub = first === last ? `Măsurat pe ${fmtDate(last, true)}` : `Din ${fmtDate(first)} până în ${fmtDate(last, true)}`;
+        const hasStd = MTYPES.some(t => measTarget(t.k) != null);
+        let rows = hasStd ? '<p class="mleg">Punctul gol e startul, la mijloc. Spre dreapta te apropii de standardul pentru înălțimea ta, iar cercul din capăt e ținta.</p>'
+          : '<p class="mleg">Adaugă înălțimea și sexul în Setări ca să vezi progresul față de standard.</p>';
+        rows += MTYPES.map(t => {
+          const s = measSeries(t.k); if (!s.length) return '';
+          const v0 = s[0].v, v1 = s[s.length - 1].v, T = measTarget(t.k);
+          const vals = s.length === 1 ? `<b>${v1} cm</b>` : `${v0} → <b>${v1} cm</b>`;
+          if (T == null) return `<div class="cmp"><span class="nm">${t.l}</span><div></div><span class="vl">${vals}</span></div>`;
+          const pos = measPos(v0, v1, T), cls = pos > 50.5 ? 'dn' : pos < 49.5 ? 'up' : 'eq';
+          const a = Math.min(50, pos), w = Math.abs(pos - 50);
+          return `<div class="cmp"><span class="nm">${t.l}</span>
+            <div class="tr"><i class="${cls}" style="left:${a}%;width:${w}%"></i><s style="left:50%"></s><b class="tg"></b><u class="${cls}" style="left:${pos}%"></u></div>
+            <span class="vl">${vals}<small>țintă ${T}</small></span></div>`;
+        }).join('');
+        return { sub, rows };
+      }
+      function measProgressHtml() {
+        const { sub, rows } = measBarsHtml();
+        return `<div class="msub"><div class="mh"><div><h4>Măsurători corporale</h4><p>${sub}</p></div><button type="button" class="plus" id="addMeas" aria-label="Adaugă măsurători">+</button></div>${rows}</div>`;
+      }
+      const mDate = $('#mDate');
+      dateField(mDate);
+      function fillMeas() {
+        const e = state.meas[mDate.value] || {};
+        MTYPES.forEach(t => { const s = measSeries(t.k); const inp = $('#m_' + t.k); inp.value = e[t.k] != null ? e[t.k] : ''; inp.placeholder = s.length ? String(s[s.length - 1].v) : 'cm'; });
+      }
+      function openMeasModal(date) {
+        mDate.value = typeof date === 'string' ? date : today(); fillMeas();
+        $('#mmTitle').textContent = state.meas[mDate.value] ? 'Modifică măsurătorile' : 'Adaugă măsurători';
+        $('#measModal').hidden = false; setTimeout(() => $('#m_neck').focus(), 50);
+      }
+      const closeMeasModal = () => { $('#measModal').hidden = true; };
+      mDate.addEventListener('change', fillMeas);
+      $('#cancelMeas').onclick = closeMeasModal;
+      $('#measModal').addEventListener('click', e => { if (e.target.id === 'measModal') closeMeasModal(); });
+      $('#saveMeas').onclick = async () => {
+        const d = mDate.value, vals = {};
+        if (!d) return toast('Data trebuie să fie în formatul zz.ll.aaaa');
+        if (d > today()) return toast('Data nu poate fi în viitor');
+        for (const t of MTYPES) {
+          const raw = $('#m_' + t.k).value.trim().replace(',', '.'); if (!raw) continue;
+          const v = parseFloat(raw);
+          if (!(v >= 10 && v <= 300)) return toast(`${t.l}: valoare invalidă`);
+          vals[t.k] = Math.round(v * 10) / 10;
+        }
+        if (!Object.keys(vals).length) return toast('Introdu cel puțin o măsurătoare');
+        state.meas[d] = vals; await saveMeasMonth(d.slice(0, 7));
+        closeMeasModal(); hapticOk(); toast('Măsurători salvate ✓'); renderGoal(); renderList();
+      };
+      function renderGoalView() {
+        const g = state.s.goal, past = state.s.pastGoals || [], card = $('#goalCard'), l = sorted();
+        card.hidden = !g && !past.length;
+        if (card.hidden) return;
+        const fd = d => d.split('-').reverse().join('.');
+        const line = (o, status, act) => {
+          const start = o.start != null ? o.start : l.length ? l[0].w : null;
+          const label = { ok: 'Atins', run: 'În proces', no: 'Neatins' }[status];
+          return `<div class="grow${act ? ' act' : ''}"><div class="gt"><b>${fmt(o.target)} ${unit()}</b><span>${start != null ? 'de la ' + fmt(start) : ''}${o.date ? ' · până ' + fd(o.date) : ''}</span></div><span class="gs ${status}">${label}</span></div>`;
+        };
+        let html = '';
+        if (g) {
+          const gi = goalInfo(l);
+          const status = gi && gi.reached ? 'ok' : g.date && g.date < today() ? 'no' : 'run';
+          html += line(g, status, true);
+        }
+        html += past.slice().reverse().map(p => line(p, p.reached ? 'ok' : 'no', false)).join('');
+        $('#goalView').innerHTML = html;
+      }
+      function applyTheme() {
+        const t = state.s.theme || 'auto', root = document.documentElement;
+        if (t === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
+        try {
+          if (t === 'auto') { tg.setHeaderColor('secondary_bg_color'); tg.setBackgroundColor('secondary_bg_color'); }
+          else { const c = getComputedStyle(root).getPropertyValue('--bg2').trim(); tg.setHeaderColor(c); tg.setBackgroundColor(c); }
+        } catch (e) { }
+      }
+      const tgName = () => { try { return tg.initDataUnsafe.user.first_name || ''; } catch (e) { return ''; } };
+      function renderHero() {
+        const list = sorted(), pill = $('#curDelta');
+        const nm = (state.s.name || tgName()).trim(), hello = $('#hello');
+        hello.hidden = !nm; hello.textContent = nm ? `Salut, ${nm}` : '';
+        const spark = $('#spark'), minis = $('#minis');
+        if (!list.length) { $('#curW').textContent = '—'; $('#curSub').textContent = 'Adaugă prima ta măsurătoare'; pill.hidden = true; spark.hidden = true; minis.hidden = true; return; }
+        const last = list[list.length - 1], g = state.s.goal;
+        $('#curW').textContent = fmt(last.w);
+        let sub = last.d === today() ? 'Astăzi' : `Ultima măsurătoare: ${fmtDate(last.d, true)}`;
+        const wk = list.filter(e => dayDiff(e.d, last.d) < 7);
+        if (wk.length > 1) { const dw = last.w - wk[0].w; sub += ` · 7 zile: ${dw > 0 ? '+' : ''}${fmt(dw)} ${unit()}`; }
+        $('#curSub').textContent = sub;
+        if (list.length > 1) {
+          const diff = last.w - list[list.length - 2].w;
+          const towardGoal = g ? (g.target < (g.start ?? list[0].w) ? diff < 0 : diff > 0) : diff < 0;
+          pill.hidden = false; pill.className = 'pill ' + (diff === 0 ? '' : towardGoal ? 'good' : 'bad');
+          pill.textContent = `${diff > 0 ? '+' : ''}${fmt(diff)}`;
+        } else pill.hidden = true;
+        const pts = list.slice(-10);
+        if (pts.length > 1) {
+          const ws = pts.map(e => e.w), lo = Math.min(...ws), hi = Math.max(...ws), r = hi - lo || 1;
+          const xy = pts.map((e, i) => [4 + i * 112 / (pts.length - 1), 6 + (hi - e.w) / r * 40]);
+          spark.innerHTML = `<path d="${xy.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('')}" fill="none" stroke="var(--btn)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${xy[xy.length - 1][0]}" cy="${xy[xy.length - 1][1]}" r="4" fill="var(--btn)"/>`;
+          spark.hidden = false;
+        } else spark.hidden = true;
+        minis.hidden = !g;
+        const gi = goalInfo(list);
+        $('#mGoal').textContent = g ? `${fmt(g.target)} ${unit()}` : '—';
+        $('#mLeft').textContent = gi ? (gi.reached ? 'Atins 🎉' : `${fmt(Math.abs(gi.remaining))} ${unit()}`) : '—';
+        const st = streak(list);
+        $('#mStreak').textContent = `${st} ${st === 1 ? 'zi' : 'zile'}`;
+      }
+      function renderStats() {
+        const list = sorted(), el = $('#stats');
+        if (!list.length) { el.innerHTML = `<div style="grid-column:1/-1">${emptyBox('stats', 'Statisticile apar după prima cântărire')}</div>`; return; }
+        const cur = list[list.length - 1], first = list[0], ws = list.map(e => e.w);
+        const last7 = list.filter(e => dayDiff(e.d, cur.d) < 7).map(e => e.w);
+        const avg7 = last7.reduce((a, b) => a + b) / last7.length;
+        const total = cur.w - first.w;
+        const slope = regressionSlopePerDay(list.filter(e => dayDiff(e.d, cur.d) <= 30));
+        const rows = [
+          [`${total > 0 ? '+' : ''}${fmt(total)} ${unit()}`, 'Total față de start'],
+          [`${fmt(avg7)} ${unit()}`, 'Medie 7 zile'],
+          [`${fmt(Math.min(...ws))} ${unit()}`, 'Minim'],
+          [`${fmt(Math.max(...ws))} ${unit()}`, 'Maxim'],
+          [slope == null ? '—' : `${slope * 7 > 0 ? '+' : ''}${fmt(slope * 7, 2)} ${unit()}`, 'Ritm / săptămână'],
+          [`${streak(list)} 🔥`, 'Zile consecutive'],
+        ];
+        const h = state.s.height;
+        if (h) { const b = cur.w / ((h / 100) ** 2); rows.push([b.toFixed(1), `IMC · ${bmiLabel(b)}`]); }
+        rows.push([String(list.length), 'Măsurători']);
+        el.innerHTML = rows.map(([b, s]) => `<div class="stat"><b>${b}</b><span>${s}</span></div>`).join('');
+      }
+      function renderGoal() {
+        const list = sorted(), el = $('#goalProgress'), gi = goalInfo(list);
+        el.innerHTML = goalProgressHtml(list, gi) + measProgressHtml();
+      }
+      function goalProgressHtml(list, gi) {
+        if (!state.s.goal) { return emptyBox('target', 'Încă nu ai un obiectiv', '<button class="ebtn" id="goToGoal">Setează obiectivul</button>'); }
+        if (!gi) { return emptyBox('scale', 'Adaugă o măsurătoare pentru a vedea progresul'); }
+        const g = state.s.goal, pct = Math.round(gi.progress * 100);
+        let html = `<div class="between"><span>Start: ${fmt(gi.start)} ${unit()}</span><span>Țintă: ${fmt(gi.target)} ${unit()}</span></div>
     <div class="bar"><div style="width:${pct}%;background-size:${pct ? Math.round(10000 / pct) : 100}% 100%"></div></div>
     <div style="text-align:center;font-size:28px;font-weight:700">${pct}%</div>`;
-  if (gi.reached) html += `<div style="text-align:center;margin-top:8px">🎉 Obiectiv atins! Felicitări!</div>`;
-  else {
-    html += `<div style="text-align:center;color:var(--hint)">Mai ai ${fmt(Math.abs(gi.remaining))} ${unit()} până la țintă</div>`;
-    const last = list[list.length - 1];
-    const slope = regressionSlopePerDay(list.filter(e => dayDiff(e.d, last.d) <= 30));
-    const need = gi.target - gi.cur;
-    const lines = [];
-    if (slope && slope * need > 0) {
-      const eta = new Date(); eta.setDate(eta.getDate() + Math.ceil(need / slope));
-      lines.push(`📈 La ritmul actual, estimat: <b>${fmtDate(ymd(eta), true)}</b>`);
-    } else if (slope) lines.push('⚠️ Tendința actuală te îndepărtează de obiectiv.');
-    if (g.date) {
-      const days = dayDiff(today(), g.date);
-      if (days > 0) lines.push(`📅 Până la ${fmtDate(g.date, true)}: ${days} zile · necesar <b>${fmt(need / days * 7, 2)} ${unit()}/săpt.</b>`);
-      else lines.push('📅 Data țintă a trecut.');
-    }
-    if (lines.length) html += `<div style="margin-top:12px;font-size:14px;line-height:1.7">${lines.join('<br>')}</div>`;
-  }
-  return html;
-}
-function renderList() {
-  const w = sorted(), md = measDates(), el = $('#list'), f = state.histFilter || 'all';
-  $$('#hChips .chip').forEach(c => c.classList.toggle('on', c.dataset.f === f));
-  const items = [];
-  if (f !== 'm') w.forEach((e, i) => {
-    const prev = w[i - 1], diff = prev ? e.w - prev.w : null;
-    items.push({ d: e.d, o: 0, html: `<div class="item" data-d="${e.d}">
-      <div class="d">${fmtDate(e.d, true)}<small>${esc(e.n)}</small></div>
-      <div class="w">${fmt(e.w)} ${unit()}</div>
-      <div class="delta">${diff == null ? '' : (diff > 0 ? '+' : '') + fmt(diff)}</div>
-      <button class="x" data-del="${e.d}" aria-label="Șterge">✕</button></div>` });
-  });
-  if (f !== 'w') md.forEach(d => {
-    const sum = MTYPES.filter(t => state.meas[d][t.k] > 0).map(t => `${t.l} ${state.meas[d][t.k]}`).join(' · ');
-    items.push({ d, o: 1, html: `<div class="item" data-m="${d}">
-      <div class="d">${fmtDate(d, true)}<small>${sum}</small></div>
-      <span class="tag" title="Măsurători">${ico('ruler')}</span>
-      <button class="x" data-mdel="${d}" aria-label="Șterge">✕</button></div>` });
-  });
-  if (!items.length) {
-    el.innerHTML = f === 'm' ? emptyBox('ruler', 'Nicio măsurătoare corporală încă', '<button class="ebtn" id="goToMeas">Adaugă măsurători</button>')
-      : emptyBox('list', f === 'w' ? 'Nicio cântărire încă' : 'Nicio înregistrare încă', '<button class="ebtn" id="goToAdd">Adaugă prima cântărire</button>');
-    return;
-  }
-  items.sort((a, b) => a.d === b.d ? a.o - b.o : a.d < b.d ? 1 : -1);
-  el.innerHTML = items.map(x => x.html).join('');
-}
-const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        if (gi.reached) html += `<div style="text-align:center;margin-top:8px">🎉 Obiectiv atins! Felicitări!</div>`;
+        else {
+          html += `<div style="text-align:center;color:var(--hint)">Mai ai ${fmt(Math.abs(gi.remaining))} ${unit()} până la țintă</div>`;
+          const last = list[list.length - 1];
+          const slope = regressionSlopePerDay(list.filter(e => dayDiff(e.d, last.d) <= 30));
+          const need = gi.target - gi.cur;
+          const lines = [];
+          if (slope && slope * need > 0) {
+            const eta = new Date(); eta.setDate(eta.getDate() + Math.ceil(need / slope));
+            lines.push(`📈 La ritmul actual, estimat: <b>${fmtDate(ymd(eta), true)}</b>`);
+          } else if (slope) lines.push('⚠️ Tendința actuală te îndepărtează de obiectiv.');
+          if (g.date) {
+            const days = dayDiff(today(), g.date);
+            if (days > 0) lines.push(`📅 Până la ${fmtDate(g.date, true)}: ${days} zile · necesar <b>${fmt(need / days * 7, 2)} ${unit()}/săpt.</b>`);
+            else lines.push('📅 Data țintă a trecut.');
+          }
+          if (lines.length) html += `<div style="margin-top:12px;font-size:14px;line-height:1.7">${lines.join('<br>')}</div>`;
+        }
+        return html;
+      }
+      function renderList() {
+        const w = sorted(), md = measDates(), el = $('#list'), f = state.histFilter || 'all';
+        $$('#hChips .chip').forEach(c => c.classList.toggle('on', c.dataset.f === f));
+        const items = [];
+        if (f !== 'm') w.forEach((e, i) => {
+          const prev = w[i - 1], diff = prev ? e.w - prev.w : null;
+          items.push({
+            d: e.d, o: 0, html: `<div class="item" data-d="${e.d}">
+            <div class="d">${fmtDate(e.d, true)}<small>${esc(e.n)}</small></div>
+            <div class="w">${fmt(e.w)} ${unit()}</div>
+            <div class="delta ${diff < 0 ? 'bad' : ''}">${diff == null ? '' : (diff > 0 ? '+' : '') + fmt(diff)}</div>
+            <button class="x" data-del="${e.d}" aria-label="Șterge">✕</button></div>`
+          });
+        });
+        if (f !== 'w') md.forEach(d => {
+          const sum = MTYPES.filter(t => state.meas[d][t.k] > 0).map(t => `${t.l} ${state.meas[d][t.k]}`).join(' · ');
+          items.push({
+            d, o: 1, html: `<div class="item" data-m="${d}">
+            <div class="d">${fmtDate(d, true)}<small>${sum}</small></div>
+            <span class="tag" title="Măsurători">${ico('ruler')}</span>
+            <button class="x" data-mdel="${d}" aria-label="Șterge">✕</button></div>`
+          });
+        });
+        if (!items.length) {
+          el.innerHTML = f === 'm' ? emptyBox('ruler', 'Nicio măsurătoare corporală încă', '<button class="ebtn" id="goToMeas">Adaugă măsurători</button>')
+            : emptyBox('list', f === 'w' ? 'Nicio cântărire încă' : 'Nicio înregistrare încă', '<button class="ebtn" id="goToAdd">Adaugă prima cântărire</button>');
+          return;
+        }
+        items.sort((a, b) => a.d === b.d ? a.o - b.o : a.d < b.d ? 1 : -1);
+        el.innerHTML = items.map(x => x.html).join('');
+      }
+      const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-/* ---------- Chart (SVG) ---------- */
-function renderChart() {
-  const wrap = $('#chartWrap'); $$('svg,.empty', wrap).forEach(e => e.remove());
-  let list = sorted();
-  if (state.range) { const cut = new Date(); cut.setDate(cut.getDate() - state.range); const c = ymd(cut); list = list.filter(e => e.d >= c); }
-  $$('#chips .chip').forEach(c => c.classList.toggle('on', +c.dataset.r === state.range));
-  if (list.length < 2) {
-    const total = sorted().length;
-    wrap.insertAdjacentHTML('afterbegin', emptyBox('chart', total === 0 ? 'Adaugă prima cântărire ca să începi graficul' : total === 1 ? 'Adaugă încă o măsurătoare ca să vezi evoluția' : 'Nu sunt destule măsurători în perioada aleasă'));
-    return;
-  }
+      /* ---------- Chart (SVG) ---------- */
+      function renderChart() {
+        const wrap = $('#chartWrap'); $$('svg,.empty', wrap).forEach(e => e.remove());
+        let list = sorted();
+        if (state.range) { const cut = new Date(); cut.setDate(cut.getDate() - state.range); const c = ymd(cut); list = list.filter(e => e.d >= c); }
+        $$('#chips .chip').forEach(c => c.classList.toggle('on', +c.dataset.r === state.range));
+        if (list.length < 2) {
+          const total = sorted().length;
+          wrap.insertAdjacentHTML('afterbegin', emptyBox('chart', total === 0 ? 'Adaugă prima cântărire ca să începi graficul' : total === 1 ? 'Adaugă încă o măsurătoare ca să vezi evoluția' : 'Nu sunt destule măsurători în perioada aleasă'));
+          return;
+        }
 
-  const W = wrap.clientWidth || 320, H = wrap.clientHeight || 230, P = { l: 38, r: 12, t: 12, b: 24 };
-  const goal = state.s.goal ? state.s.goal.target : null;
-  const vals = list.map(e => toDisp(e.w)); if (goal != null) vals.push(toDisp(goal));
-  let lo = Math.min(...vals), hi = Math.max(...vals); const span = Math.max(hi - lo, 1);
-  lo -= span * .12; hi += span * .12;
-  const t0 = parse(list[0].d).getTime(), t1 = parse(list[list.length - 1].d).getTime();
-  const X = d => P.l + (parse(d).getTime() - t0) / (t1 - t0) * (W - P.l - P.r);
-  const Y = v => P.t + (hi - v) / (hi - lo) * (H - P.t - P.b);
-  const pts = list.map(e => [X(e.d), Y(toDisp(e.w)), e]);
-  // 7-day moving average
-  const ma = list.map(e => { const win = list.filter(o => { const k = dayDiff(o.d, e.d); return k >= 0 && k < 7; }); return [X(e.d), Y(toDisp(win.reduce((a, o) => a + o.w, 0) / win.length))]; });
-  const path = a => a.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('');
+        const W = wrap.clientWidth || 320, H = wrap.clientHeight || 230, P = { l: 38, r: 12, t: 12, b: 24 };
+        const goal = state.s.goal ? state.s.goal.target : null;
+        const vals = list.map(e => toDisp(e.w)); if (goal != null) vals.push(toDisp(goal));
+        let lo = Math.min(...vals), hi = Math.max(...vals); const span = Math.max(hi - lo, 1);
+        lo -= span * .12; hi += span * .12;
+        const t0 = parse(list[0].d).getTime(), t1 = parse(list[list.length - 1].d).getTime();
+        const X = d => P.l + (parse(d).getTime() - t0) / (t1 - t0) * (W - P.l - P.r);
+        const Y = v => P.t + (hi - v) / (hi - lo) * (H - P.t - P.b);
+        const pts = list.map(e => [X(e.d), Y(toDisp(e.w)), e]);
+        // 7-day moving average
+        const ma = list.map(e => { const win = list.filter(o => { const k = dayDiff(o.d, e.d); return k >= 0 && k < 7; }); return [X(e.d), Y(toDisp(win.reduce((a, o) => a + o.w, 0) / win.length))]; });
+        const path = a => a.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('');
 
-  let g = '';
-  for (let i = 0; i <= 4; i++) {
-    const v = lo + (hi - lo) * i / 4, y = Y(v);
-    g += `<line x1="${P.l}" x2="${W - P.r}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${P.l - 6}" y="${y + 4}" text-anchor="end" font-size="10" fill="var(--hint)">${v.toFixed(1)}</text>`;
-  }
-  [0, .5, 1].forEach((f, i) => {
-    const d = ymd(new Date(t0 + (t1 - t0) * f));
-    g += `<text x="${P.l + f * (W - P.l - P.r)}" y="${H - 6}" text-anchor="${i === 0 ? 'start' : i === 2 ? 'end' : 'middle'}" font-size="10" fill="var(--hint)">${fmtDate(d)}</text>`;
-  });
-  if (goal != null) { const y = Y(toDisp(goal)); g += `<line x1="${P.l}" x2="${W - P.r}" y1="${y}" y2="${y}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="6 4"/>`; }
-  const area = path(pts) + `L${pts[pts.length - 1][0]} ${H - P.b}L${pts[0][0]} ${H - P.b}Z`;
-  g += `<path d="${area}" fill="url(#gr)"/><path d="${path(ma)}" fill="none" stroke="var(--hint)" stroke-width="1.5" stroke-dasharray="2 3"/>`;
-  g += `<path d="${path(pts)}" fill="none" stroke="var(--btn)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
-  if (pts.length <= 45) g += pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="var(--bg)" stroke="var(--btn)" stroke-width="2"/>`).join('');
-  g += `<line id="cur" y1="${P.t}" y2="${H - P.b}" stroke="var(--hint)" stroke-width="1" opacity="0"/><circle id="curDot" r="6" fill="var(--btn)" opacity="0"/>`;
+        let g = '';
+        for (let i = 0; i <= 4; i++) {
+          const v = lo + (hi - lo) * i / 4, y = Y(v);
+          g += `<line x1="${P.l}" x2="${W - P.r}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${P.l - 6}" y="${y + 4}" text-anchor="end" font-size="10" fill="var(--hint)">${v.toFixed(1)}</text>`;
+        }
+        [0, .5, 1].forEach((f, i) => {
+          const d = ymd(new Date(t0 + (t1 - t0) * f));
+          g += `<text x="${P.l + f * (W - P.l - P.r)}" y="${H - 6}" text-anchor="${i === 0 ? 'start' : i === 2 ? 'end' : 'middle'}" font-size="10" fill="var(--hint)">${fmtDate(d)}</text>`;
+        });
+        if (goal != null) { const y = Y(toDisp(goal)); g += `<line x1="${P.l}" x2="${W - P.r}" y1="${y}" y2="${y}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="6 4"/>`; }
+        const area = path(pts) + `L${pts[pts.length - 1][0]} ${H - P.b}L${pts[0][0]} ${H - P.b}Z`;
+        g += `<path d="${area}" fill="url(#gr)"/><path d="${path(ma)}" fill="none" stroke="var(--hint)" stroke-width="1.5" stroke-dasharray="2 3"/>`;
+        g += `<path d="${path(pts)}" fill="none" stroke="var(--btn)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+        if (pts.length <= 45) g += pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="var(--bg)" stroke="var(--btn)" stroke-width="2"/>`).join('');
+        g += `<line id="cur" y1="${P.t}" y2="${H - P.b}" stroke="var(--hint)" stroke-width="1" opacity="0"/><circle id="curDot" r="6" fill="var(--btn)" opacity="0"/>`;
 
-  wrap.insertAdjacentHTML('afterbegin', `<svg viewBox="0 0 ${W} ${H}"><defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--btn)" stop-opacity=".25"/><stop offset="1" stop-color="var(--btn)" stop-opacity="0"/></linearGradient></defs>${g}</svg>`);
-  const svg = $('svg', wrap), tip = $('#tip'), cur = $('#cur', svg), dot = $('#curDot', svg);
-  const move = ev => {
-    const r = svg.getBoundingClientRect(), x = (ev.clientX - r.left) * W / r.width;
-    let best = pts[0]; for (const p of pts) if (Math.abs(p[0] - x) < Math.abs(best[0] - x)) best = p;
-    cur.setAttribute('x1', best[0]); cur.setAttribute('x2', best[0]); cur.setAttribute('opacity', 1);
-    dot.setAttribute('cx', best[0]); dot.setAttribute('cy', best[1]); dot.setAttribute('opacity', 1);
-    tip.textContent = `${fmtDate(best[2].d, true)} · ${fmt(best[2].w)} ${unit()}`;
-    tip.style.left = Math.min(Math.max(best[0] * r.width / W, 70), r.width - 70) + 'px';
-    tip.style.top = (best[1] * r.height / H - 10) + 'px'; tip.style.opacity = 1;
-  };
-  const leave = () => { tip.style.opacity = 0; cur.setAttribute('opacity', 0); dot.setAttribute('opacity', 0); };
-  svg.addEventListener('pointermove', move); svg.addEventListener('pointerdown', move);
-  svg.addEventListener('pointerleave', leave); svg.addEventListener('pointerup', () => setTimeout(leave, 1500));
-}
-$('#chips').onclick = e => { const c = e.target.closest('.chip'); if (c) { state.range = +c.dataset.r; haptic(); renderChart(); } };
-new ResizeObserver(() => $('#v-home').classList.contains('active') && renderChart()).observe($('#chartWrap'));
+        wrap.insertAdjacentHTML('afterbegin', `<svg viewBox="0 0 ${W} ${H}"><defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--btn)" stop-opacity=".25"/><stop offset="1" stop-color="var(--btn)" stop-opacity="0"/></linearGradient></defs>${g}</svg>`);
+        const svg = $('svg', wrap), tip = $('#tip'), cur = $('#cur', svg), dot = $('#curDot', svg);
+        const move = ev => {
+          const r = svg.getBoundingClientRect(), x = (ev.clientX - r.left) * W / r.width;
+          let best = pts[0]; for (const p of pts) if (Math.abs(p[0] - x) < Math.abs(best[0] - x)) best = p;
+          cur.setAttribute('x1', best[0]); cur.setAttribute('x2', best[0]); cur.setAttribute('opacity', 1);
+          dot.setAttribute('cx', best[0]); dot.setAttribute('cy', best[1]); dot.setAttribute('opacity', 1);
+          tip.textContent = `${fmtDate(best[2].d, true)} · ${fmt(best[2].w)} ${unit()}`;
+          tip.style.left = Math.min(Math.max(best[0] * r.width / W, 70), r.width - 70) + 'px';
+          tip.style.top = (best[1] * r.height / H - 10) + 'px'; tip.style.opacity = 1;
+        };
+        const leave = () => { tip.style.opacity = 0; cur.setAttribute('opacity', 0); dot.setAttribute('opacity', 0); };
+        svg.addEventListener('pointermove', move); svg.addEventListener('pointerdown', move);
+        svg.addEventListener('pointerleave', leave); svg.addEventListener('pointerup', () => setTimeout(leave, 1500));
+      }
+      $('#chips').onclick = e => { const c = e.target.closest('.chip'); if (c) { state.range = +c.dataset.r; haptic(); renderChart(); } };
+      new ResizeObserver(() => $('#v-home').classList.contains('active') && renderChart()).observe($('#chartWrap'));
 
-/* ---------- Entry form ---------- */
-const wIn = $('#wIn'), dIn = $('#dIn'), nIn = $('#nIn');
-function dateField(el) {
-  const proto = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value'), nat = el.parentNode.querySelector('.dnat');
-  Object.defineProperty(el, 'value', {
-    get() { const m = proto.get.call(el).match(/^(\d{2})\.(\d{2})\.(\d{4})$/); if (!m) return ''; const iso = `${m[3]}-${m[2]}-${m[1]}`; return ymd(parse(iso)) === iso ? iso : ''; },
-    set(v) { proto.set.call(el, v ? v.split('-').reverse().join('.') : ''); nat.value = v || ''; el.dispatchEvent(new Event('valuechange')); },
-  });
-  el.addEventListener('input', () => {
-    const d = proto.get.call(el).replace(/\D/g, '').slice(0, 8);
-    proto.set.call(el, d.length > 4 ? `${d.slice(0, 2)}.${d.slice(2, 4)}.${d.slice(4)}` : d.length > 2 ? `${d.slice(0, 2)}.${d.slice(2)}` : d);
-    if (d.length === 8) el.dispatchEvent(new Event('change'));
-  });
-  nat.addEventListener('change', () => { if (nat.value) { el.value = nat.value; el.dispatchEvent(new Event('change')); } });
-  el.addEventListener('focus', () => { nat.value = el.value; });
-}
-dateField(dIn); dateField($('#gDate'));
-const showNoteQuiet = on => { nIn.hidden = !on; $('#noteBtn').classList.toggle('on', on); };
-const showNote = on => { nIn.hidden = !on; $('#noteBtn').classList.toggle('on', on); if (on) nIn.focus(); };
-$('#noteBtn').onclick = () => showNote(nIn.hidden);
-dIn.addEventListener('valuechange', () => {
-  const v = dIn.value, y = new Date(); y.setDate(y.getDate() - 1);
-  const f = v ? v.split('-').reverse().join('.') : '';
-  $('#dLabel').textContent = !v ? 'Alege data' : v === today() ? `Astăzi · ${f}` : v === ymd(y) ? `Ieri · ${f}` : f;
-});
-$('.dbtn .dnat').addEventListener('click', e => { try { e.target.showPicker(); } catch (err) {} });
-function updateSaveBtn() {
-  const btn = $('#save'), d = dIn.value, en = state.entries[d];
-  btn.disabled = false;
-  if (state.editing) { btn.textContent = 'Actualizează'; return; }
-  if (!en) { btn.textContent = 'Salvează'; return; }
-  const v = parseFloat(wIn.value.replace(',', '.'));
-  const same = toDisp(en.w).toFixed(1) === (isNaN(v) ? '' : v.toFixed(1)) && nIn.value.trim() === (en.n || '');
-  if (same) { btn.disabled = true; btn.textContent = d === today() ? 'Ai adăugat pentru azi ✓' : `Adăugat pentru ${fmtDate(d, true)} ✓`; }
-  else btn.textContent = 'Actualizează';
-}
-function resetForm() {
-  state.editing = null;
-  dIn.value = today(); nIn.value = ''; showNoteQuiet(false);
-  dIn.parentNode.querySelector('.dnat').max = today();
-  const list = sorted();
-  wIn.value = list.length ? fmt(list[list.length - 1].w) : '';
-  $('#formTitle').textContent = 'Cântărire de azi'; $('#cancelEdit').hidden = true; updateSaveBtn();
-}
-function step(dir) {
-  const v = parseFloat(wIn.value.replace(',', '.')) || 0;
-  wIn.value = Math.max(0, v + dir * 0.1).toFixed(1); haptic(); updateSaveBtn();
-}
-$('#minus').onclick = () => step(-1); $('#plus').onclick = () => step(1);
-dIn.onchange = () => { const e = state.entries[dIn.value]; if (e) { wIn.value = fmt(e.w); nIn.value = e.n || ''; showNoteQuiet(!!e.n); } updateSaveBtn(); };
-['input', 'change'].forEach(ev => { wIn.addEventListener(ev, updateSaveBtn); nIn.addEventListener(ev, updateSaveBtn); });
-$('#cancelEdit').onclick = resetForm;
-$('#goalProgress').addEventListener('click', e => { if (e.target.closest('#goToGoal')) openGoalModal('new'); if (e.target.closest('#addMeas')) openMeasModal(); });
-$('#addGoal').onclick = () => openGoalModal('new');
-$('#goalView').addEventListener('click', e => { if (e.target.closest('.grow.act')) openGoalModal('edit'); });
-$('#list').addEventListener('click', e => { if (e.target.closest('#goToAdd')) { setView('home'); wIn.focus(); } if (e.target.closest('#goToMeas')) openMeasModal(); });
-$('#hChips').onclick = e => { const c = e.target.closest('.chip'); if (c) { state.histFilter = c.dataset.f; haptic(); renderList(); } };
+      /* ---------- Entry form ---------- */
+      const wIn = $('#wIn'), dIn = $('#dIn'), nIn = $('#nIn');
+      function dateField(el) {
+        const proto = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value'), nat = el.parentNode.querySelector('.dnat');
+        Object.defineProperty(el, 'value', {
+          get() { const m = proto.get.call(el).match(/^(\d{2})\.(\d{2})\.(\d{4})$/); if (!m) return ''; const iso = `${m[3]}-${m[2]}-${m[1]}`; return ymd(parse(iso)) === iso ? iso : ''; },
+          set(v) { proto.set.call(el, v ? v.split('-').reverse().join('.') : ''); nat.value = v || ''; el.dispatchEvent(new Event('valuechange')); },
+        });
+        el.addEventListener('input', () => {
+          const d = proto.get.call(el).replace(/\D/g, '').slice(0, 8);
+          proto.set.call(el, d.length > 4 ? `${d.slice(0, 2)}.${d.slice(2, 4)}.${d.slice(4)}` : d.length > 2 ? `${d.slice(0, 2)}.${d.slice(2)}` : d);
+          if (d.length === 8) el.dispatchEvent(new Event('change'));
+        });
+        nat.addEventListener('change', () => { if (nat.value) { el.value = nat.value; el.dispatchEvent(new Event('change')); } });
+        el.addEventListener('focus', () => { nat.value = el.value; });
+      }
+      dateField(dIn); dateField($('#gDate'));
+      const showNoteQuiet = on => { nIn.hidden = !on; $('#noteBtn').classList.toggle('on', on); };
+      const showNote = on => { nIn.hidden = !on; $('#noteBtn').classList.toggle('on', on); if (on) nIn.focus(); };
+      $('#noteBtn').onclick = () => showNote(nIn.hidden);
+      dIn.addEventListener('valuechange', () => {
+        const v = dIn.value, y = new Date(); y.setDate(y.getDate() - 1);
+        const f = v ? v.split('-').reverse().join('.') : '';
+        $('#dLabel').textContent = !v ? 'Alege data' : v === today() ? `Astăzi · ${f}` : v === ymd(y) ? `Ieri · ${f}` : f;
+      });
+      $('.dbtn .dnat').addEventListener('click', e => { try { e.target.showPicker(); } catch (err) { } });
+      function updateSaveBtn() {
+        const btn = $('#save'), d = dIn.value, en = state.entries[d];
+        btn.disabled = false;
+        if (state.editing) { btn.textContent = 'Actualizează'; return; }
+        if (!en) { btn.textContent = 'Salvează'; return; }
+        const v = parseFloat(wIn.value.replace(',', '.'));
+        const same = toDisp(en.w).toFixed(1) === (isNaN(v) ? '' : v.toFixed(1)) && nIn.value.trim() === (en.n || '');
+        if (same) { btn.disabled = true; btn.textContent = d === today() ? 'Ai adăugat pentru azi ✓' : `Adăugat pentru ${fmtDate(d, true)} ✓`; }
+        else btn.textContent = 'Actualizează';
+      }
+      function resetForm() {
+        state.editing = null;
+        dIn.value = today(); nIn.value = ''; showNoteQuiet(false);
+        dIn.parentNode.querySelector('.dnat').max = today();
+        const list = sorted();
+        wIn.value = list.length ? fmt(list[list.length - 1].w) : '';
+        $('#formTitle').textContent = 'Cântărire de azi'; $('#cancelEdit').hidden = true; updateSaveBtn();
+      }
+      function step(dir) {
+        const v = parseFloat(wIn.value.replace(',', '.')) || 0;
+        wIn.value = Math.max(0, v + dir * 0.1).toFixed(1); haptic(); updateSaveBtn();
+      }
+      $('#minus').onclick = () => step(-1); $('#plus').onclick = () => step(1);
+      dIn.onchange = () => { const e = state.entries[dIn.value]; if (e) { wIn.value = fmt(e.w); nIn.value = e.n || ''; showNoteQuiet(!!e.n); } updateSaveBtn(); };
+      ['input', 'change'].forEach(ev => { wIn.addEventListener(ev, updateSaveBtn); nIn.addEventListener(ev, updateSaveBtn); });
+      $('#cancelEdit').onclick = resetForm;
+      $('#goalProgress').addEventListener('click', e => { if (e.target.closest('#goToGoal')) openGoalModal('new'); if (e.target.closest('#addMeas')) openMeasModal(); });
+      $('#addGoal').onclick = () => openGoalModal('new');
+      $('#goalView').addEventListener('click', e => { if (e.target.closest('.grow.act')) openGoalModal('edit'); });
+      $('#list').addEventListener('click', e => { if (e.target.closest('#goToAdd')) { setView('home'); wIn.focus(); } if (e.target.closest('#goToMeas')) openMeasModal(); });
+      $('#hChips').onclick = e => { const c = e.target.closest('.chip'); if (c) { state.histFilter = c.dataset.f; haptic(); renderList(); } };
 
-$('#save').onclick = async () => {
-  const v = parseFloat(wIn.value.replace(',', '.')), d = dIn.value;
-  if (!(v > 0)) return toast('Introdu o greutate validă');
-  if (!d) return toast('Data trebuie să fie în formatul zz.ll.aaaa');
-  if (d > today()) return toast('Data nu poate fi în viitor');
-  const kg = Math.round(fromDisp(v) * 100) / 100;
-  if (kg < 20 || kg > 400) return toast('Valoare în afara intervalului');
-  const hadGoal = goalInfo(sorted());
-  const moved = state.editing && state.editing !== d;
-  if (moved) { delete state.entries[state.editing]; await saveMonth(state.editing.slice(0, 7)); }
-  state.entries[d] = { w: kg, n: nIn.value.trim() };
-  await saveMonth(d.slice(0, 7));
-  hapticOk(); toast('Salvat ✓');
-  const fresh = checkBadges();
-  resetForm(); renderAll();
-  announce(fresh, true);
-  const gi = goalInfo(sorted());
-  if (gi && gi.reached && !(hadGoal && hadGoal.reached)) setTimeout(celebrate, 700);
-};
+      $('#save').onclick = async () => {
+        const v = parseFloat(wIn.value.replace(',', '.')), d = dIn.value;
+        if (!(v > 0)) return toast('Introdu o greutate validă');
+        if (!d) return toast('Data trebuie să fie în formatul zz.ll.aaaa');
+        if (d > today()) return toast('Data nu poate fi în viitor');
+        const kg = Math.round(fromDisp(v) * 100) / 100;
+        if (kg < 20 || kg > 400) return toast('Valoare în afara intervalului');
+        const hadGoal = goalInfo(sorted());
+        const moved = state.editing && state.editing !== d;
+        if (moved) { delete state.entries[state.editing]; await saveMonth(state.editing.slice(0, 7)); }
+        state.entries[d] = { w: kg, n: nIn.value.trim() };
+        await saveMonth(d.slice(0, 7));
+        hapticOk(); toast('Salvat ✓');
+        const fresh = checkBadges();
+        resetForm(); renderAll();
+        announce(fresh, true);
+        const gi = goalInfo(sorted());
+        if (gi && gi.reached && !(hadGoal && hadGoal.reached)) setTimeout(celebrate, 700);
+      };
 
-/* ---------- History ---------- */
-$('#list').onclick = async e => {
-  const del = e.target.closest('[data-del]');
-  if (del) {
-    e.stopPropagation(); const d = del.dataset.del;
-    if (await confirmBox(`Ștergi măsurătoarea din ${fmtDate(d, true)}?`)) {
-      delete state.entries[d]; await saveMonth(d.slice(0, 7)); haptic('medium'); renderAll();
-    }
-    return;
-  }
-  const mdel = e.target.closest('[data-mdel]');
-  if (mdel) {
-    e.stopPropagation(); const d = mdel.dataset.mdel;
-    if (await confirmBox(`Ștergi măsurătorile din ${fmtDate(d, true)}?`)) {
-      delete state.meas[d]; await saveMeasMonth(d.slice(0, 7)); haptic('medium'); renderAll();
-    }
-    return;
-  }
-  const mit = e.target.closest('.item[data-m]');
-  if (mit) { openMeasModal(mit.dataset.m); return; }
-  const it = e.target.closest('.item'); if (!it) return;
-  const d = it.dataset.d, en = state.entries[d];
-  state.editing = d; dIn.value = d; wIn.value = fmt(en.w); nIn.value = en.n || ''; showNoteQuiet(!!en.n);
-  $('#formTitle').textContent = `Editezi: ${fmtDate(d, true)}`; $('#cancelEdit').hidden = false; updateSaveBtn();
-  setView('home');
-};
+      /* ---------- History ---------- */
+      $('#list').onclick = async e => {
+        const del = e.target.closest('[data-del]');
+        if (del) {
+          e.stopPropagation(); const d = del.dataset.del;
+          if (await confirmBox(`Ștergi măsurătoarea din ${fmtDate(d, true)}?`)) {
+            delete state.entries[d]; await saveMonth(d.slice(0, 7)); haptic('medium'); renderAll();
+          }
+          return;
+        }
+        const mdel = e.target.closest('[data-mdel]');
+        if (mdel) {
+          e.stopPropagation(); const d = mdel.dataset.mdel;
+          if (await confirmBox(`Ștergi măsurătorile din ${fmtDate(d, true)}?`)) {
+            delete state.meas[d]; await saveMeasMonth(d.slice(0, 7)); haptic('medium'); renderAll();
+          }
+          return;
+        }
+        const mit = e.target.closest('.item[data-m]');
+        if (mit) { openMeasModal(mit.dataset.m); return; }
+        const it = e.target.closest('.item'); if (!it) return;
+        const d = it.dataset.d, en = state.entries[d];
+        state.editing = d; dIn.value = d; wIn.value = fmt(en.w); nIn.value = en.n || ''; showNoteQuiet(!!en.n);
+        $('#formTitle').textContent = `Editezi: ${fmtDate(d, true)}`; $('#cancelEdit').hidden = false; updateSaveBtn();
+        setView('home');
+      };
 
-/* ---------- Goal / profile / data ---------- */
-let goalMode = 'edit';
-function fillGoalInputs() {
-  const g = goalMode === 'edit' ? state.s.goal : null;
-  $('#gTarget').value = g ? fmt(g.target) : '';
-  $('#gStart').value = g && g.start != null ? fmt(g.start) : '';
-  $('#gDate').value = g && g.date || '';
-}
-function openGoalModal(mode) {
-  goalMode = mode === 'new' || !state.s.goal ? 'new' : 'edit';
-  fillGoalInputs();
-  $('#gmTitle').textContent = goalMode === 'edit' ? 'Modifică obiectivul' : state.s.goal ? 'Obiectiv nou' : 'Setează obiectivul';
-  $('#goalModal').hidden = false;
-  setTimeout(() => $('#gTarget').focus(), 50);
-}
-const closeGoalModal = () => { $('#goalModal').hidden = true; };
-$('#cancelGoal').onclick = closeGoalModal;
-$('#goalModal').addEventListener('click', e => { if (e.target.id === 'goalModal') closeGoalModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeGoalModal(); closeMeasModal(); closeDone(); if (!$('#welcome').hidden) closeWelcome(); } });
-$('#saveGoal').onclick = async () => {
-  const t = parseFloat($('#gTarget').value.replace(',', '.')), s = parseFloat($('#gStart').value.replace(',', '.'));
-  if (!(t > 0)) return toast('Introdu greutatea țintă');
-  const l = sorted(), old = state.s.goal;
-  let start = s > 0 ? fromDisp(s) : null;
-  if (goalMode === 'new') {
-    if (old) { const gi = goalInfo(l); (state.s.pastGoals || (state.s.pastGoals = [])).push({ target: old.target, start: old.start != null ? old.start : l.length ? l[0].w : null, date: old.date, ended: today(), reached: !!(gi && gi.reached) }); }
-    if (start == null && l.length) start = l[l.length - 1].w;
-  }
-  state.s.goal = { target: fromDisp(t), start, date: $('#gDate').value || null };
-  await saveSettings(); closeGoalModal(); hapticOk(); toast('Obiectiv salvat ✓');
-  const fresh = checkBadges(); renderAll(); announce(fresh, false);
-};
-$('#themeSel').onchange = e => { state.s.theme = e.target.value; applyTheme(); renderChart(); saveSettings(); haptic(); };
-$('#saveProfile').onclick = async () => {
-  const h = parseInt($('#height').value, 10);
-  state.s.height = h >= 100 && h <= 250 ? h : null;
-  state.s.unit = $('#unitSel').value;
-  state.s.sex = $('#sexSel').value;
-  state.s.theme = $('#themeSel').value;
-  const un = $('#uname').value.trim().slice(0, 30);
-  state.s.name = un === tgName() ? '' : un;
-  await saveSettings(); hapticOk(); toast('Profil salvat ✓'); renderAll(); resetForm();
-};
-const buildCsv = () => 'data,greutate_kg,notita\n' + sorted().map(e => `${e.d},${e.w},"${e.n.replace(/"/g, '""')}"`).join('\n');
-$('#downloadCsv').onclick = () => {
-  if (!sorted().length) return toast('Nu sunt date de exportat');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([buildCsv()], { type: 'text/csv' }));
-  a.download = `greutate-${today()}.csv`; document.body.append(a); a.click(); a.remove();
-  toast('Descărcare pornită (dacă nu merge, folosește „Copiază CSV”)');
-};
-function splitCsvLine(line, sep) {
-  const out = []; let cur = '', q = false;
-  for (let i = 0; i < line.length; i++) {
-    const c = line[i];
-    if (q) { if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; }
-    else if (c === '"') q = true;
-    else if (c === sep) { out.push(cur); cur = ''; }
-    else cur += c;
-  }
-  return out.concat(cur).map(s => s.trim());
-}
-function parseCsv(text) {
-  const lines = text.replace(/^﻿/, '').split(/\r?\n/).filter(l => l.trim());
-  const res = { ok: {}, bad: 0 };
-  for (const line of lines) {
-    const sep = line.includes(';') ? ';' : ',';
-    const f = splitCsvLine(line, sep);
-    let m, d = null;
-    if ((m = f[0].match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))) d = `${m[1]}-${pad(+m[2])}-${pad(+m[3])}`;
-    else if ((m = f[0].match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})$/))) d = `${m[3]}-${pad(+m[2])}-${pad(+m[1])}`;
-    if (!d) { if (res.ok && Object.keys(res.ok).length === 0 && !res.bad && /[a-z]/i.test(f[0])) continue; res.bad++; continue; } // header
-    const w = parseFloat((f[1] || '').replace(',', '.'));
-    const dt = parse(d);
-    if (!(w >= 20 && w <= 400) || ymd(dt) !== d || d > today()) { res.bad++; continue; }
-    res.ok[d] = { w: Math.round(w * 100) / 100, n: (f[2] || '').slice(0, 60) };
-  }
-  return res;
-}
-async function importText(text) {
-  const { ok, bad } = parseCsv(text), days = Object.keys(ok);
-  if (!days.length) return toast('Nu am găsit rânduri valide');
-  const overwrite = days.filter(d => state.entries[d]).length;
-  if (!(await confirmBox(`Import ${days.length} măsurători${overwrite ? ` (${overwrite} existente vor fi suprascrise)` : ''}${bad ? `, ${bad} rânduri ignorate` : ''}?`))) return;
-  Object.assign(state.entries, ok);
-  for (const ym of new Set(days.map(d => d.slice(0, 7)))) await saveMonth(ym);
-  $('#csvText').value = ''; hapticOk(); toast(`Importate: ${days.length}`); resetForm(); renderAll();
-}
-$('#importCsv').onclick = () => importText($('#csvText').value);
-$('#pickCsv').onclick = () => $('#csvFile').click();
-$('#csvFile').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (f) importText(await f.text()); };
-$('#exportCsv').onclick = async () => {
-  const csv = buildCsv();
-  try { await navigator.clipboard.writeText(csv); toast('CSV copiat în clipboard'); }
-  catch (e) { const t = document.createElement('textarea'); t.value = csv; document.body.append(t); t.select(); document.execCommand('copy'); t.remove(); toast('CSV copiat'); }
-};
-$('#wipe').onclick = async () => {
-  if (!(await confirmBox('Sigur ștergi TOATE datele? Acțiunea nu poate fi anulată.'))) return;
-  const months = [...new Set(Object.keys(state.entries).map(d => 'e' + d.slice(0, 7)))].concat([...new Set(Object.keys(state.meas).map(d => 'm' + d.slice(0, 7)))], 's');
-  local.del(months); if (useCloud) try { await cloud.del(months); } catch (e) {}
-  state.entries = {}; state.meas = {}; state.s = { unit: 'kg', height: null, goal: null, name: '', theme: 'auto' };
-  haptic('heavy'); toast('Datele au fost șterse'); resetForm(); renderAll();
-};
+      /* ---------- Goal / profile / data ---------- */
+      let goalMode = 'edit';
+      function fillGoalInputs() {
+        const g = goalMode === 'edit' ? state.s.goal : null;
+        $('#gTarget').value = g ? fmt(g.target) : '';
+        $('#gStart').value = g && g.start != null ? fmt(g.start) : '';
+        $('#gDate').value = g && g.date || '';
+      }
+      function openGoalModal(mode) {
+        goalMode = mode === 'new' || !state.s.goal ? 'new' : 'edit';
+        fillGoalInputs();
+        $('#gmTitle').textContent = goalMode === 'edit' ? 'Modifică obiectivul' : state.s.goal ? 'Obiectiv nou' : 'Setează obiectivul';
+        $('#goalModal').hidden = false;
+        setTimeout(() => $('#gTarget').focus(), 50);
+      }
+      const closeGoalModal = () => { $('#goalModal').hidden = true; };
+      $('#cancelGoal').onclick = closeGoalModal;
+      $('#goalModal').addEventListener('click', e => { if (e.target.id === 'goalModal') closeGoalModal(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeGoalModal(); closeMeasModal(); closeDone(); if (!$('#welcome').hidden) closeWelcome(); } });
+      $('#saveGoal').onclick = async () => {
+        const t = parseFloat($('#gTarget').value.replace(',', '.')), s = parseFloat($('#gStart').value.replace(',', '.'));
+        if (!(t > 0)) return toast('Introdu greutatea țintă');
+        const l = sorted(), old = state.s.goal;
+        let start = s > 0 ? fromDisp(s) : null;
+        if (goalMode === 'new') {
+          if (old) { const gi = goalInfo(l); (state.s.pastGoals || (state.s.pastGoals = [])).push({ target: old.target, start: old.start != null ? old.start : l.length ? l[0].w : null, date: old.date, ended: today(), reached: !!(gi && gi.reached) }); }
+          if (start == null && l.length) start = l[l.length - 1].w;
+        }
+        state.s.goal = { target: fromDisp(t), start, date: $('#gDate').value || null };
+        await saveSettings(); closeGoalModal(); hapticOk(); toast('Obiectiv salvat ✓');
+        const fresh = checkBadges(); renderAll(); announce(fresh, false);
+      };
+      $('#themeSel').onchange = e => { state.s.theme = e.target.value; applyTheme(); renderChart(); saveSettings(); haptic(); };
+      $('#saveProfile').onclick = async () => {
+        const h = parseInt($('#height').value, 10);
+        state.s.height = h >= 100 && h <= 250 ? h : null;
+        state.s.unit = $('#unitSel').value;
+        state.s.sex = $('#sexSel').value;
+        state.s.theme = $('#themeSel').value;
+        const un = $('#uname').value.trim().slice(0, 30);
+        state.s.name = un === tgName() ? '' : un;
+        await saveSettings(); hapticOk(); toast('Profil salvat ✓'); renderAll(); resetForm();
+      };
+      const buildCsv = () => 'data,greutate_kg,notita\n' + sorted().map(e => `${e.d},${e.w},"${e.n.replace(/"/g, '""')}"`).join('\n');
+      $('#downloadCsv').onclick = () => {
+        if (!sorted().length) return toast('Nu sunt date de exportat');
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([buildCsv()], { type: 'text/csv' }));
+        a.download = `greutate-${today()}.csv`; document.body.append(a); a.click(); a.remove();
+        toast('Descărcare pornită (dacă nu merge, folosește „Copiază CSV”)');
+      };
+      function splitCsvLine(line, sep) {
+        const out = []; let cur = '', q = false;
+        for (let i = 0; i < line.length; i++) {
+          const c = line[i];
+          if (q) { if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; }
+          else if (c === '"') q = true;
+          else if (c === sep) { out.push(cur); cur = ''; }
+          else cur += c;
+        }
+        return out.concat(cur).map(s => s.trim());
+      }
+      function parseCsv(text) {
+        const lines = text.replace(/^﻿/, '').split(/\r?\n/).filter(l => l.trim());
+        const res = { ok: {}, bad: 0 };
+        for (const line of lines) {
+          const sep = line.includes(';') ? ';' : ',';
+          const f = splitCsvLine(line, sep);
+          let m, d = null;
+          if ((m = f[0].match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))) d = `${m[1]}-${pad(+m[2])}-${pad(+m[3])}`;
+          else if ((m = f[0].match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})$/))) d = `${m[3]}-${pad(+m[2])}-${pad(+m[1])}`;
+          if (!d) { if (res.ok && Object.keys(res.ok).length === 0 && !res.bad && /[a-z]/i.test(f[0])) continue; res.bad++; continue; } // header
+          const w = parseFloat((f[1] || '').replace(',', '.'));
+          const dt = parse(d);
+          if (!(w >= 20 && w <= 400) || ymd(dt) !== d || d > today()) { res.bad++; continue; }
+          res.ok[d] = { w: Math.round(w * 100) / 100, n: (f[2] || '').slice(0, 60) };
+        }
+        return res;
+      }
+      async function importText(text) {
+        const { ok, bad } = parseCsv(text), days = Object.keys(ok);
+        if (!days.length) return toast('Nu am găsit rânduri valide');
+        const overwrite = days.filter(d => state.entries[d]).length;
+        if (!(await confirmBox(`Import ${days.length} măsurători${overwrite ? ` (${overwrite} existente vor fi suprascrise)` : ''}${bad ? `, ${bad} rânduri ignorate` : ''}?`))) return;
+        Object.assign(state.entries, ok);
+        for (const ym of new Set(days.map(d => d.slice(0, 7)))) await saveMonth(ym);
+        $('#csvText').value = ''; hapticOk(); toast(`Importate: ${days.length}`); resetForm(); renderAll();
+      }
+      $('#importCsv').onclick = () => importText($('#csvText').value);
+      $('#pickCsv').onclick = () => $('#csvFile').click();
+      $('#csvFile').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (f) importText(await f.text()); };
+      $('#exportCsv').onclick = async () => {
+        const csv = buildCsv();
+        try { await navigator.clipboard.writeText(csv); toast('CSV copiat în clipboard'); }
+        catch (e) { const t = document.createElement('textarea'); t.value = csv; document.body.append(t); t.select(); document.execCommand('copy'); t.remove(); toast('CSV copiat'); }
+      };
+      $('#wipe').onclick = async () => {
+        if (!(await confirmBox('Sigur ștergi TOATE datele? Acțiunea nu poate fi anulată.'))) return;
+        const months = [...new Set(Object.keys(state.entries).map(d => 'e' + d.slice(0, 7)))].concat([...new Set(Object.keys(state.meas).map(d => 'm' + d.slice(0, 7)))], 's');
+        local.del(months); if (useCloud) try { await cloud.del(months); } catch (e) { }
+        state.entries = {}; state.meas = {}; state.s = { unit: 'kg', height: null, goal: null, name: '', theme: 'auto' };
+        haptic('heavy'); toast('Datele au fost șterse'); resetForm(); renderAll();
+      };
 
-/* ---------- Init ---------- */
-(async () => { await load(); checkBadges(); resetForm(); renderAll(); maybeWelcome(); })();
-})();
-</script>
+      /* ---------- Init ---------- */
+      (async () => { await load(); checkBadges(); resetForm(); renderAll(); maybeWelcome(); })();
+    })();
+  </script>
 </body>
 </html>
