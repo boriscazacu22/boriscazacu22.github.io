@@ -624,7 +624,7 @@
       }
       function renderMeasureHtml() {
         const { sub, rows } = measBarsHtml();
-         $('#measureView').innerHTML =`<div class="msub"><div class="mh"><div><h4>Măsurători corporale</h4><p>${sub}</p></div><button type="button" class="plus" id="addMeas" aria-label="Adaugă măsurători">+</button></div>${rows}</div>`;
+         $('#measureView').innerHTML = `<div class="msub"><div class="mh"><div><h4>Măsurători corporale</h4><p>${sub}</p></div><button type="button" class="plus" id="addMeas" aria-label="Adaugă măsurători">+</button></div>${rows}</div>`;
       }
       function applyTheme() {
         const t = state.s.theme || 'auto', root = document.documentElement;
@@ -866,7 +866,8 @@
       dIn.onchange = () => { const e = state.entries[dIn.value]; if (e) { wIn.value = fmt(e.w); nIn.value = e.n || ''; showNoteQuiet(!!e.n); } updateSaveBtn(); };
       ['input', 'change'].forEach(ev => { wIn.addEventListener(ev, updateSaveBtn); nIn.addEventListener(ev, updateSaveBtn); });
       $('#cancelEdit').onclick = resetForm;
-      $('#goalProgress').addEventListener('click', e => { if (e.target.closest('#goToGoal')) openGoalModal('new'); if (e.target.closest('#addMeas')) openMeasModal(); });
+      $('#goalProgress').addEventListener('click', e => { if (e.target.closest('#goToGoal')) openGoalModal('new'); });
+      $('#measureView').addEventListener('click', e => { if (e.target.closest('#addMeas')) openMeasModal(); });
       $('#addGoal').onclick = () => openGoalModal('new');
       $('#goalView').addEventListener('click', e => { if (e.target.closest('.grow.act')) openGoalModal('edit'); });
       $('#list').addEventListener('click', e => { if (e.target.closest('#goToAdd')) { setView('home'); wIn.focus(); } if (e.target.closest('#goToMeas')) openMeasModal(); });
