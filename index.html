@@ -94,10 +94,10 @@
         </h2>
         <div id="goalView"></div>
       </div>
-      <!-- <div class="card">
+      <div class="card">
         <h2>Măsurări</h2>
-        Aici vor fi
-      </div> -->
+        <div id="measureView"></div>
+      </div>
       <div class="card">
         <h2>Realizări · <span id="badgeCount"></span></h2>
         <div class="badges" id="badges"></div>
@@ -533,6 +533,7 @@
         $('#unitSel').value = unit(); $('#sexSel').value = state.s.sex || '';
         $('#themeSel').value = state.s.theme || 'auto'; applyTheme();
         fillGoalInputs(); renderGoalView();
+        renderMeasureHtml();
       }
       const MTYPES = [{ k: 'neck', l: 'Gât' }, { k: 'chest', l: 'Piept' }, { k: 'waist', l: 'Talie' }, { k: 'arm', l: 'Braț' }, { k: 'belly', l: 'Burtă' }, { k: 'buttocks', l: 'Fese' }, { k: 'foot', l: 'Picior' }];
       const measDates = () => Object.keys(state.meas).sort();
@@ -572,10 +573,6 @@
             <span class="vl">${vals}<small>țintă ${T}</small></span></div>`;
         }).join('');
         return { sub, rows };
-      }
-      function measProgressHtml() {
-        const { sub, rows } = measBarsHtml();
-        return `<div class="msub"><div class="mh"><div><h4>Măsurători corporale</h4><p>${sub}</p></div><button type="button" class="plus" id="addMeas" aria-label="Adaugă măsurători">+</button></div>${rows}</div>`;
       }
       const mDate = $('#mDate');
       dateField(mDate);
@@ -624,6 +621,10 @@
         }
         html += past.slice().reverse().map(p => line(p, p.reached ? 'ok' : 'no', false)).join('');
         $('#goalView').innerHTML = html;
+      }
+      function renderMeasureHtml() {
+        const { sub, rows } = measBarsHtml();
+         $('#measureView').innerHTML =`<div class="msub"><div class="mh"><div><h4>Măsurători corporale</h4><p>${sub}</p></div><button type="button" class="plus" id="addMeas" aria-label="Adaugă măsurători">+</button></div>${rows}</div>`;
       }
       function applyTheme() {
         const t = state.s.theme || 'auto', root = document.documentElement;
@@ -689,7 +690,7 @@
       }
       function renderGoal() {
         const list = sorted(), el = $('#goalProgress'), gi = goalInfo(list);
-        el.innerHTML = goalProgressHtml(list, gi) + measProgressHtml();
+        el.innerHTML = goalProgressHtml(list, gi);
       }
       function goalProgressHtml(list, gi) {
         if (!state.s.goal) { return emptyBox('target', 'Încă nu ai un obiectiv', '<button class="ebtn" id="goToGoal">Setează obiectivul</button>'); }
