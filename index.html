@@ -17,8 +17,7 @@
       <div class="card hero">
         <div class="hello" id="hello" hidden></div>
         <div class="top">
-          <div class="big"><span id="curW">—</span><small class="unit">kg</small><span class="pill" id="curDelta"
-              hidden></span></div>
+          <div class="big"><span id="curW">—</span><small class="unit">kg</small><span class="pill" id="curDelta" hidden></span></div>
           <svg id="spark" viewBox="0 0 120 52" hidden></svg>
         </div>
         <div class="sub" id="curSub">Adaugă prima ta măsurătoare</div>
@@ -95,6 +94,10 @@
         </h2>
         <div id="goalView"></div>
       </div>
+      <!-- <div class="card">
+        <h2>Măsurări</h2>
+        Aici vor fi
+      </div> -->
       <div class="card">
         <h2>Realizări · <span id="badgeCount"></span></h2>
         <div class="badges" id="badges"></div>
@@ -718,14 +721,17 @@
       function renderList() {
         const w = sorted(), md = measDates(), el = $('#list'), f = state.histFilter || 'all';
         $$('#hChips .chip').forEach(c => c.classList.toggle('on', c.dataset.f === f));
-        const items = [];
+        const items = [], goal = state.s.goal;
+        const isLoseWheight = goal ? (goal.target < (goal.start ?? w[0].w)) : null;
         if (f !== 'm') w.forEach((e, i) => {
           const prev = w[i - 1], diff = prev ? e.w - prev.w : null;
           items.push({
             d: e.d, o: 0, html: `<div class="item" data-d="${e.d}">
             <div class="d">${fmtDate(e.d, true)}<small>${esc(e.n)}</small></div>
             <div class="w">${fmt(e.w)} ${unit()}</div>
-            <div class="delta ${diff < 0 ? 'bad' : ''}">${diff == null ? '' : (diff > 0 ? '+' : '') + fmt(diff)}</div>
+            <div class="delta ${!isLoseWheight && diff < 0 ? 'bad' : isLoseWheight && diff > 0 ? 'bad' : ''}">
+              ${diff == null ? '' : (diff > 0 ? '+' : '') + fmt(diff)}
+            </div>
             <button class="x" data-del="${e.d}" aria-label="Șterge">✕</button></div>`
           });
         });
